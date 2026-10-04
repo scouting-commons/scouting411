@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const labelClassName =
-	"text-muted-foreground h-auto rounded-none p-0 pl-3 text-xs font-bold uppercase";
+	"h-auto rounded-none p-0 pl-3 text-xs font-bold uppercase";
 
 export function NavGroup({
 	label,
@@ -55,7 +55,7 @@ export function NavGroup({
 			<SidebarGroup className="gap-1 p-0 px-3">
 				<SidebarGroupLabel
 					render={<CollapsibleTrigger />}
-					className={`${labelClassName} group/trigger hover:text-foreground flex w-full cursor-pointer items-center justify-start gap-2 pr-3`}
+					className={`${labelClassName} group/trigger hover:text-sidebar-foreground flex w-full cursor-pointer items-center justify-start gap-2 pr-3`}
 				>
 					<FontAwesomeIcon
 						icon={faChevronRight}

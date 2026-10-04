@@ -21,6 +21,7 @@ import {
 	faAward,
 	faMedal,
 	faCompass,
+	faRobot,
 } from "@fortawesome/free-solid-svg-icons";
 import { SparklesIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -38,127 +39,141 @@ import { hubs } from "@/lib/hubs/hub";
 
 export function AppSidebar({ url }: { url: URL }) {
 	return (
-		<Sidebar className="border-r" aria-label="Main sidebar">
-			<SidebarHeader className="flex h-13 shrink-0 flex-row items-center justify-start gap-2 border-b px-4">
+		<Sidebar
+			className="border-sidebar-border border-r"
+			aria-label="Main sidebar"
+		>
+			<SidebarHeader className="border-sidebar-border flex h-13 shrink-0 flex-row items-center justify-between gap-2 border-b px-4">
 				<a
 					href="/"
-					className="font-display text-primary text-xl font-extrabold"
+					className="font-display text-sidebar-primary text-lg font-extrabold"
 				>
 					Scouting411
 				</a>
-				<Badge variant="secondary" className="text-muted-foreground font-mono">
+				<Badge
+					variant="secondary"
+					className="text-sidebar-foreground/70 font-mono"
+				>
 					alpha
 				</Badge>
 			</SidebarHeader>
 
-			<SidebarContent className="flex h-full flex-col gap-6 overflow-auto py-3">
+			<SidebarContent className="flex h-full flex-col gap-4 overflow-auto py-3">
 				<div className="flex flex-col px-3">
 					<CommandPaletteTrigger />
 				</div>
 
-				<NavGroup>
-					<NavLink
-						href="/"
-						label="Home"
-						currentUrl={url}
-						icon={faHouseChimney}
-					/>
-				</NavGroup>
-
-				<NavGroup label="hubs">
-					{hubs.map((hub) => (
+				<div className="flex flex-col gap-6">
+					<NavGroup>
 						<NavLink
-							key={hub.slug}
-							href={hub.links.page}
-							label={hub.name}
+							href="/"
+							label="Home"
 							currentUrl={url}
-							color={hub.color}
+							icon={faHouseChimney}
 						/>
-					))}
-				</NavGroup>
-
-				<NavGroup label="news">
-					<NavLink
-						href="/news/browse"
-						label="Newsfeed"
-						currentUrl={url}
-						icon={faNewspaper}
-					/>
-					<NavLink
-						href="/news/sources"
-						label="Sources"
-						currentUrl={url}
-						icon={faBullhorn}
-					/>
-					<NavLink
-						href="/news/subscribe"
-						label="Subscribe"
-						currentUrl={url}
-						icon={faRssSquare}
-					/>
-					<NavLink
-						href="/news/stats"
-						label="Stats"
-						currentUrl={url}
-						icon={faMagnifyingGlassChart}
-					/>
-					{import.meta.env.DEV && (
 						<NavLink
-							href="/api/updateAllFeeds"
-							label="Update All Feeds"
+							href="/mcp-server"
+							label="Agent setup"
 							currentUrl={url}
-							icon={faArrowsRotate}
-							newTab
+							icon={faRobot}
 						/>
-					)}
-				</NavGroup>
+					</NavGroup>
 
-				<NavGroup label="advancement">
-					<NavLink
-						href="/advancement/ranks"
-						label="Ranks"
-						currentUrl={url}
-						icon={faMedal}
-					/>
-					<NavLink
-						href="/advancement/merit-badges"
-						label="Merit Badges"
-						currentUrl={url}
-						icon={faAward}
-					/>
-					<NavLink
-						href="/advancement/adventures"
-						label="Adventures"
-						currentUrl={url}
-						icon={faCompass}
-					/>
-					{import.meta.env.DEV && (
+					<NavGroup label="hubs">
+						{hubs.map((hub) => (
+							<NavLink
+								key={hub.slug}
+								href={hub.links.page}
+								label={hub.name}
+								currentUrl={url}
+								color={hub.color}
+							/>
+						))}
+					</NavGroup>
+
+					<NavGroup label="news">
 						<NavLink
-							href="/api/updateAdvancement"
-							label="Update Advancement"
+							href="/news/browse"
+							label="Newsfeed"
 							currentUrl={url}
-							icon={faArrowsRotate}
-							newTab
+							icon={faNewspaper}
 						/>
-					)}
-				</NavGroup>
+						<NavLink
+							href="/news/sources"
+							label="Sources"
+							currentUrl={url}
+							icon={faBullhorn}
+						/>
+						<NavLink
+							href="/news/subscribe"
+							label="Subscribe"
+							currentUrl={url}
+							icon={faRssSquare}
+						/>
+						<NavLink
+							href="/news/stats"
+							label="Stats"
+							currentUrl={url}
+							icon={faMagnifyingGlassChart}
+						/>
+						{import.meta.env.DEV && (
+							<NavLink
+								href="/api/updateAllFeeds"
+								label="Ingest news"
+								currentUrl={url}
+								icon={faArrowsRotate}
+								newTab
+							/>
+						)}
+					</NavGroup>
 
-				<NavGroup label="resources">
-					<NavLink
-						href="/resources"
-						label="Resources"
-						currentUrl={url}
-						icon={faBookBookmark}
-					/>
-				</NavGroup>
+					<NavGroup label="advancement">
+						<NavLink
+							href="/advancement/ranks"
+							label="Ranks"
+							currentUrl={url}
+							icon={faMedal}
+						/>
+						<NavLink
+							href="/advancement/merit-badges"
+							label="Merit Badges"
+							currentUrl={url}
+							icon={faAward}
+						/>
+						<NavLink
+							href="/advancement/adventures"
+							label="Adventures"
+							currentUrl={url}
+							icon={faCompass}
+						/>
+						{import.meta.env.DEV && (
+							<NavLink
+								href="/api/updateAdvancement"
+								label="Ingest advancement"
+								currentUrl={url}
+								icon={faArrowsRotate}
+								newTab
+							/>
+						)}
+					</NavGroup>
+
+					<NavGroup label="resources">
+						<NavLink
+							href="/resources"
+							label="Resources"
+							currentUrl={url}
+							icon={faBookBookmark}
+						/>
+					</NavGroup>
+				</div>
 			</SidebarContent>
 
 			<SidebarFooter className="p-0">
-				<span className="text-muted-foreground p-3 py-1 text-xs">
+				<span className="text-sidebar-foreground/70 p-3 py-1 text-xs">
 					Not affiliated with Scouting America.
 				</span>
 				<TooltipProvider>
-					<div className="flex flex-row items-center justify-between gap-2 border-t p-4">
+					<div className="border-sidebar-border flex flex-row items-center justify-between gap-2 border-t p-4">
 						<Tooltip>
 							<TooltipTrigger
 								render={
