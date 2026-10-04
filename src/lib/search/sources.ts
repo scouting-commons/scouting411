@@ -26,7 +26,7 @@ const navigation = [
 	{ href: "/advancement/adventures", label: "Adventures" },
 	{ href: "/resources", label: "Resources" },
 	{ href: "/developers", label: "Developers" },
-	{ href: "/mcp-server", label: "MCP Server" },
+	{ href: "/agents", label: "Agent setup" },
 ];
 
 /**

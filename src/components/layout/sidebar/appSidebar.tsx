@@ -72,7 +72,7 @@ export function AppSidebar({ url }: { url: URL }) {
 							icon={faHouseChimney}
 						/>
 						<NavLink
-							href="/mcp-server"
+							href="/agents"
 							label="Agent setup"
 							currentUrl={url}
 							icon={faRobot}
@@ -229,7 +229,7 @@ export function AppSidebar({ url }: { url: URL }) {
 							<TooltipTrigger
 								render={
 									<a
-										href="/mcp-server"
+										href="/agents"
 										className={buttonVariants({
 											size: "icon",
 											variant: "outline",

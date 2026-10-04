@@ -51,7 +51,7 @@ export function Page() {
 					server: search, news, advancement requirements, and resources.
 				</p>
 				<a
-					href="/mcp-server"
+					href="/agents"
 					className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 self-start rounded-md px-4 py-2 text-sm font-semibold"
 				>
 					<SparklesIcon className="size-4" />

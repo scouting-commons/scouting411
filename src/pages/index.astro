@@ -1,70 +1,9 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 
-import { hubs } from "@/lib/hubs/hub";
-import { feedSlugs } from "@/lib/news/feeds/types";
-import { rpc } from "@/rpc/client";
-
 import { Page } from "@/pages/_index";
-
-export const prerender = false;
-
-const [latestPosts, hubPosts, ranks, meritBadges, adventures] =
-	await Promise.all([
-		rpc.news.posts.query({
-			paginate: {
-				page: 1,
-				maxPageSize: 6,
-			},
-		}),
-		Promise.all(
-			hubs.map(async (hub) => {
-				const { posts } = await rpc.news.posts.query({
-					feeds: hub.newsSources,
-					paginate: {
-						page: 1,
-						maxPageSize: 1,
-					},
-				});
-				return { hub, latestPost: posts[0] };
-			}),
-		),
-		rpc.advancement.ranks.list(),
-		rpc.advancement.meritBadges.list(),
-		rpc.advancement.adventures.list({}),
-	]);
-
-const eagleRequiredBadges = meritBadges.filter((badge) => badge.eagleRequired);
-
-// the page is an island, so its props are serialized into the html: pass a summary of
-// each advancement list rather than the lists themselves. each image is the ~100px art
-// (sizes differ by type), and upstream's small rank art 403s anyway
-const advancement = {
-	ranks: {
-		count: ranks.length,
-		// eagle scout, the top of the scouts bsa trail
-		image: ranks.findLast((rank) => rank.program === "Scouts BSA")?.images
-			.medium,
-	},
-	meritBadges: {
-		count: meritBadges.length,
-		eagleRequiredCount: eagleRequiredBadges.length,
-		image: eagleRequiredBadges[0]?.images.medium,
-	},
-	adventures: {
-		count: adventures.length,
-		image: adventures[0]?.images.small,
-	},
-};
 ---
 
 <Layout title="Home">
-	<Page
-		latestPosts={latestPosts}
-		hubPosts={hubPosts}
-		feedCount={feedSlugs.length}
-		postCount={latestPosts.pagination.totalItems}
-		advancement={advancement}
-		client:load
-	/>
+	<Page client:load />
 </Layout>
