@@ -29,19 +29,19 @@ export function AppShell({
 			<SidebarProvider>
 				<AppSidebar url={url} />
 				<SidebarInset>
-					<header className="bg-sidebar fixed top-0 z-10 flex h-13 w-full shrink-0 items-center gap-4 border-b px-4">
+					<header className="bg-background fixed top-0 z-10 flex h-13 w-full shrink-0 items-center gap-3 border-b px-4">
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger
 									render={
-										<SidebarTrigger className="md:hidden" variant="outline" />
+										<SidebarTrigger className="md:hidden" variant="ghost" />
 									}
 								/>
 								<TooltipContent>Toggle sidebar</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
 
-						<span className="font-serif font-bold">{title}</span>
+						<span className="text-sm font-medium">{title}</span>
 					</header>
 					<div className="mt-13">{children}</div>
 				</SidebarInset>
