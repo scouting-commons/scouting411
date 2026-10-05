@@ -70,16 +70,11 @@ export function Page({
 							: `No results for “${query}”. Try a shorter or different search.`}
 					</p>
 
-					{/* the news carousel sits among the results, after the first few, the way
-					a search engine's top stories do */}
 					<ol className="flex flex-col gap-7">
-						{results.slice(0, newsCarouselPosition).map((result) => (
-							<SearchResult key={result.id} item={result} origin={origin} />
-						))}
 						{news.length > 0 && (
 							<NewsCarousel query={query} posts={news} total={newsTotal} />
 						)}
-						{results.slice(newsCarouselPosition).map((result) => (
+						{results.map((result) => (
 							<SearchResult key={result.id} item={result} origin={origin} />
 						))}
 					</ol>
@@ -111,9 +106,6 @@ export function Page({
 		</div>
 	);
 }
-
-/** how many search results come before the news carousel on the all tab */
-const newsCarouselPosition = 3;
 
 /** the search page's url for a query on a tab. all is the default, so it goes unwritten */
 function searchHref(query: string, tab: SearchTab) {
@@ -163,7 +155,7 @@ function SearchTabs({
 }
 
 /**
- * search results don't cover news, so the latest matching posts sit among them in a
+ * search results don't cover news, so the latest matching posts lead them in a
  * carousel, with a link to the news tab for the rest
  */
 function NewsCarousel({
@@ -184,7 +176,7 @@ function NewsCarousel({
 				<div className="flex items-center justify-between gap-2">
 					<h2 className="flex items-center gap-2 font-serif text-lg font-bold">
 						<NewspaperIcon className="text-muted-foreground size-5" />
-						News
+						Top Stories
 					</h2>
 					<div className="flex gap-2">
 						<CarouselPrevious className="static" />

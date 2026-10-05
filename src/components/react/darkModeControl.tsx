@@ -47,7 +47,11 @@ export function DarkModeControl() {
 					render={
 						<DropdownMenuTrigger
 							render={
-								<Button variant="outline" size="icon">
+								<Button
+									variant="ghost"
+									size="icon-xs"
+									className="text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-transparent aria-expanded:bg-transparent"
+								>
 									<Sun className="scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
 									<Moon className="absolute scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
 									<span className="sr-only">Toggle theme</span>

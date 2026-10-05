@@ -141,7 +141,7 @@
 	--success: #039b03; /* the green status.scouting.org uses */
 	--border: var(--color-gray-3);
 	--input: var(--border);
-	--ring: var(--color-blue);
+	--ring: oklch(0.708 0 0);
 	--chart-1: oklch(0.87 0 0);
 	--chart-2: oklch(0.556 0 0);
 	--chart-3: oklch(0.439 0 0);
@@ -177,7 +177,7 @@
 	--success: oklch(0.723 0.219 149.579);
 	--border: var(--color-gray-9);
 	--input: var(--border);
-	--ring: var(--color-blue-light);
+	--ring: oklch(0.556 0 0);
 	--chart-1: oklch(0.87 0 0);
 	--chart-2: oklch(0.556 0 0);
 	--chart-3: oklch(0.439 0 0);

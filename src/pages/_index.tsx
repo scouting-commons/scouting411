@@ -28,7 +28,7 @@ export function Page() {
 					The unofficial front page of Scouting America
 				</h2>
 
-				<SearchForm className="mb-3 max-w-lg" />
+				<SearchForm autoFocus className="mb-3 max-w-lg" />
 
 				<ul className="mt-3 flex flex-wrap justify-center gap-2">
 					{quickLinks.map((link) => (

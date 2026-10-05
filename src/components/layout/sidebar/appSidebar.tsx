@@ -10,29 +10,18 @@ import {
 import {
 	faBookBookmark,
 	faBullhorn,
-	faCommentDots,
 	faHouseChimney,
 	faMagnifyingGlassChart,
 	faNewspaper,
 	faRssSquare,
-	faCode,
 	faArrowsRotate,
-	faCircleInfo,
 	faAward,
 	faMedal,
 	faCompass,
 	faRobot,
 } from "@fortawesome/free-solid-svg-icons";
-import { SparklesIcon } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DarkModeControl } from "@/components/react/darkModeControl";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { CommandPaletteTrigger } from "@/components/react/commandPalette";
 import { hubs } from "@/lib/hubs/hub";
@@ -168,83 +157,44 @@ export function AppSidebar({ url }: { url: URL }) {
 				</div>
 			</SidebarContent>
 
-			<SidebarFooter className="p-0">
-				<span className="text-sidebar-foreground/70 p-3 py-1 text-xs">
-					Not affiliated with Scouting America.
-				</span>
-				<TooltipProvider>
-					<div className="border-sidebar-border flex flex-row items-center justify-between gap-2 border-t p-4">
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<a
-										href="/about"
-										className={buttonVariants({
-											size: "icon",
-											variant: "outline",
-										})}
-									>
-										<FontAwesomeIcon icon={faCircleInfo} />
-										<span className="sr-only">About</span>
-									</a>
-								}
-							/>
-							<TooltipContent>About</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<a
-										href="https://github.com/scouting-commons/scouting411/issues/new/choose"
-										className={buttonVariants({
-											size: "icon",
-											variant: "outline",
-										})}
-									>
-										<FontAwesomeIcon icon={faCommentDots} />
-										<span className="sr-only">Send feedback</span>
-									</a>
-								}
-							/>
-							<TooltipContent>Send feedback</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<a
-										href="/developers"
-										className={buttonVariants({
-											size: "icon",
-											variant: "outline",
-										})}
-									>
-										<FontAwesomeIcon icon={faCode} />
-										<span className="sr-only">Developers</span>
-									</a>
-								}
-							/>
-							<TooltipContent>For developers</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<a
-										href="/agents"
-										className={buttonVariants({
-											size: "icon",
-											variant: "outline",
-										})}
-									>
-										<SparklesIcon />
-										<span className="sr-only">Use with AI</span>
-									</a>
-								}
-							/>
-							<TooltipContent>Use with AI</TooltipContent>
-						</Tooltip>
+			<SidebarFooter className="border-sidebar-border gap-3 border-t px-4 py-4">
+				<div className="flex items-center justify-between gap-2">
+					<nav
+						aria-label="Site"
+						className="text-sidebar-foreground/70 flex gap-3 text-xs"
+					>
+						<a href="/about" className="hover:text-sidebar-foreground">
+							About
+						</a>
+						<a
+							href="https://github.com/scouting-commons/scouting411/issues/new/choose"
+							className="hover:text-sidebar-foreground"
+						>
+							Feedback
+						</a>
+						<a href="/developers" className="hover:text-sidebar-foreground">
+							Developers
+						</a>
+					</nav>
+					<TooltipProvider>
 						<DarkModeControl />
-					</div>
-				</TooltipProvider>
+					</TooltipProvider>
+				</div>
+				<div className="text-sidebar-foreground/50 flex flex-col gap-0.5 text-xs">
+					<span>
+						A project by{" "}
+						<a
+							href="https://scoutingcommons.org"
+							rel="noopener noreferrer"
+							target="_blank"
+							className="hover:text-sidebar-foreground underline underline-offset-2"
+						>
+							Scouting Commons
+						</a>
+						.
+					</span>
+					<span>Not affiliated with Scouting America.</span>
+				</div>
 			</SidebarFooter>
 		</Sidebar>
 	);
