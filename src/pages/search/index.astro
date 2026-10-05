@@ -11,16 +11,19 @@ const input = Astro.url.searchParams.get("q")?.trim() ?? "";
 const launch = input.startsWith("!");
 const query = (launch ? input.slice(1) : input).trim();
 
+// the results are tabbed the way a search engine's are: everything, or just the news
+const tab = Astro.url.searchParams.get("tab") === "news" ? "news" : "all";
+
 // there's nothing to show without a query, and the homepage is where a search starts
 if (!query) return Astro.redirect("/");
 
-// search items don't cover news, so the latest matching posts come from the news query
-// alongside them
+// search items don't cover news, so the matching posts come from the news query alongside
+// them: the latest few for the all tab's carousel, or a full page for the news tab
 const [results, news] = await Promise.all([
 	rpc.search.query({ q: query }),
 	rpc.news.posts.query({
 		filter: { keyword: query },
-		paginate: { maxPageSize: 5 },
+		...(tab === "all" && { paginate: { maxPageSize: 8 } }),
 	}),
 ]);
 
@@ -30,9 +33,11 @@ const [topResult] = results;
 if (launch && topResult) return Astro.redirect(topResult.url);
 ---
 
-<Layout title="Search">
+<Layout title=`Search results for “${query}”`>
 	<Page
+		client:load
 		query={query}
+		tab={tab}
 		results={results}
 		news={news.posts}
 		newsTotal={news.pagination.totalItems}
