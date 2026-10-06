@@ -2,13 +2,13 @@
 import Layout from "@/components/layout/Layout.astro";
 import { PostComponent } from "@/components/react/post";
 import { getFeedBySlug, isFeedSlug } from "@/lib/news/feeds/feed";
-import { getFeedMetrics } from "@/lib/news/metrics/feedMetrics";
 import { rpc } from "@/rpc/client";
 
 import {
-	faSquareUpRight,
-	faRss,
+	faArrowLeft,
 	faArrowRight,
+	faArrowUpRightFromSquare,
+	faRss,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -26,8 +26,6 @@ const { posts } = await rpc.news.posts.query({
 	paginate: false,
 });
 
-const metrics = getFeedMetrics(posts);
-
 const recentPosts = posts.slice(0, 10);
 const latestPost = posts.at(0);
 const oldestPost = posts.at(-1);
@@ -35,112 +33,92 @@ const oldestPost = posts.at(-1);
 const formatDate = (date: Date) =>
 	date.toLocaleDateString("en-US", {
 		year: "numeric",
-		month: "long",
+		month: "short",
 		day: "numeric",
 	});
 
-const stats = [
+const details = [
+	feed.type.human,
+	`${Intl.NumberFormat().format(posts.length)} posts`,
+	latestPost && `Latest ${formatDate(latestPost.date)}`,
+	oldestPost && `Since ${formatDate(oldestPost.date)}`,
+].filter(Boolean);
+
+const links = [
 	{
-		label: "Indexed posts",
-		value: Intl.NumberFormat().format(metrics.posts.count),
+		label: "Website",
+		href: feed.links.homepage,
+		icon: faArrowUpRightFromSquare,
 	},
-	{
-		label: "Latest post",
-		value: latestPost ? formatDate(latestPost.date) : "—",
-	},
-	{
-		label: "Oldest post",
-		value: oldestPost ? formatDate(oldestPost.date) : "—",
-	},
-	{
-		label: "Source type",
-		value: feed.type.human,
-	},
+	{ label: "RSS", href: feed.links.rss, icon: faRss },
+	{ label: "Atom", href: feed.links.atom, icon: faRss },
 ];
 ---
 
 <Layout title={feed.name}>
-	<div class="mx-auto flex w-full max-w-4xl flex-col gap-6 p-8">
-		<div class="flex flex-col items-start gap-5 sm:flex-row sm:items-start">
-			<img
-				src={feed.coverImageSrc}
-				alt={`${feed.name} logo`}
-				class="bg-card h-32 w-full rounded-lg border object-contain p-3 sm:w-40 sm:shrink-0"
-			/>
+	<div class="mx-auto flex w-full max-w-4xl flex-col gap-8 p-8">
+		<a
+			href="/news/sources"
+			class="text-primary flex items-center gap-2 self-start text-sm font-medium hover:underline"
+		>
+			<FontAwesomeIcon icon={faArrowLeft} />
+			All sources
+		</a>
 
-			<div class="flex min-w-0 flex-col items-start gap-3">
+		<div class="flex flex-col gap-4 border-b pb-8">
+			<div class="flex items-center gap-4">
+				<img
+					src={feed.coverImageSrc}
+					alt=""
+					class="bg-card size-16 shrink-0 rounded-md border object-contain p-1.5"
+				/>
 				<h1 class="font-serif text-3xl font-bold wrap-anywhere hyphens-auto">
 					{feed.name}
 				</h1>
-				<p class="text-sm">{feed.description}</p>
-				<a
-					href={feed.links.homepage}
-					rel="noopener noreferrer"
-					target="_blank"
-					class="text-primary flex items-center gap-2 text-sm font-medium wrap-anywhere hyphens-auto hover:underline"
-				>
-					{feed.links.homepage}
-					<FontAwesomeIcon icon={faSquareUpRight} />
-				</a>
 			</div>
-		</div>
 
-		<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-			{stats.map((stat) => (
-				<div class="rounded-lg border p-4">
-					<div class="text-muted-foreground text-xs font-medium uppercase">
-						{stat.label}
-					</div>
-					<div class="font-serif text-lg font-bold">{stat.value}</div>
-				</div>
-			))}
-		</div>
+			<p class="text-muted-foreground max-w-prose">{feed.description}</p>
 
-		<div class="border-primary/30 bg-primary/5 flex flex-col items-start gap-3 rounded-lg border p-4 px-5 sm:flex-row sm:items-center sm:justify-between">
-			<div>
-				<div class="mb-2 font-serif font-bold">Subscribe to this source</div>
-				<p class="text-muted-foreground text-sm">
-					Follow {feed.name} in your feed reader.
-				</p>
+			<div class="text-muted-foreground flex flex-wrap gap-x-2 text-sm">
+				{details.map((detail, i) => (
+					<>
+						{i > 0 && <span aria-hidden="true">·</span>}
+						<span>{detail}</span>
+					</>
+				))}
 			</div>
-			<div class="flex gap-2">
-				<a
-					href={feed.links.rss}
-					rel="noopener noreferrer"
-					target="_blank"
-					class="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold whitespace-nowrap"
-				>
-					<FontAwesomeIcon icon={faRss} />
-					RSS
-				</a>
-				<a
-					href={feed.links.atom}
-					rel="noopener noreferrer"
-					target="_blank"
-					class="hover:border-primary hover:text-primary flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold whitespace-nowrap transition-colors"
-				>
-					<FontAwesomeIcon icon={faRss} />
-					Atom
-				</a>
+
+			<div class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+				{links.map((link) => (
+					<a
+						href={link.href}
+						rel="noopener noreferrer"
+						target="_blank"
+						class="text-primary flex items-center gap-1.5 font-medium hover:underline"
+					>
+						<FontAwesomeIcon icon={link.icon} size="sm" />
+						{link.label}
+					</a>
+				))}
 			</div>
 		</div>
 
 		<div class="flex flex-col gap-5">
-			<div class="flex items-center justify-between gap-4">
+			<div class="flex items-baseline justify-between gap-4">
 				<h2 class="font-serif text-xl font-bold">Recent posts</h2>
 				<a
 					href={feed.links.browsePosts}
 					class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
 				>
-					Browse all posts
-					<FontAwesomeIcon icon={faArrowRight} />
+					Browse all
+					<FontAwesomeIcon icon={faArrowRight} size="sm" />
 				</a>
 			</div>
 
 			{recentPosts.length === 0 ? (
-				<div class="text-muted-foreground rounded-lg border p-6 text-sm">
+				<p class="text-muted-foreground text-sm">
 					No posts have been indexed from this source yet.
-				</div>
+				</p>
 			) : (
 				recentPosts.map((post) => <PostComponent post={post} />)
 			)}
