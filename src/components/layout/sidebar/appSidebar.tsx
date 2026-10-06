@@ -32,7 +32,7 @@ export function AppSidebar({ url }: { url: URL }) {
 			className="border-sidebar-border border-r"
 			aria-label="Main sidebar"
 		>
-			<SidebarHeader className="border-sidebar-border flex h-13 shrink-0 flex-row items-center justify-between gap-2 border-b px-4">
+			<SidebarHeader className="border-sidebar-border h-header flex shrink-0 flex-row items-center justify-between gap-2 border-b px-4">
 				<a
 					href="/"
 					className="font-display text-sidebar-primary text-lg font-extrabold"

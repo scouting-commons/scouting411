@@ -34,6 +34,11 @@
 	}
 }
 
+@theme {
+	/* height of the app header, as h-header / mt-header utilities */
+	--spacing-header: calc(var(--spacing) * 13);
+}
+
 /* SHADCN STUFF */
 
 @import "tw-animate-css";

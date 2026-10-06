@@ -2,11 +2,15 @@ import { CardFeed } from "@/components/react/cardFeed";
 import { PostComponent } from "@/components/react/post";
 import type { Post } from "@/lib/news/feeds/post";
 import type { QueryInput } from "@/lib/news/query/types";
-import { SecondarySidebar } from "@/components/layout/sidebar/secondarySidebar";
+import {
+	SecondarySidebar,
+	SecondarySidebarTrigger,
+} from "@/components/layout/sidebar/secondarySidebar";
 import { useState, useEffect, useRef } from "react";
 import { safe } from "@orpc/client";
 import { rpc } from "@/rpc/client";
 import { FilterSidebar } from "@/pages/news/browse/_filterSidebar";
+import { PaginationControl } from "@/components/react/paginate";
 import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
 import type { PaginatedResults } from "@/util/paginateArray";
 
@@ -41,6 +45,8 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 			setResults(data);
 			// new results replace the whole list, so start reading from the top
 			contentRef.current?.scrollTo({ top: 0 });
+			// on mobile the window scrolls instead of the content
+			window.scrollTo({ top: 0 });
 		})();
 
 		return () => {
@@ -50,12 +56,21 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 
 	return (
 		<SecondarySidebar
+			label="Filters"
 			contentRef={contentRef}
 			sidebar={
 				<FilterSidebar query={query} setQuery={setQuery} results={results} />
 			}
 		>
 			<div className="flex flex-1 flex-col gap-5 p-8">
+				<div className="flex items-center justify-between gap-4">
+					<p className="text-muted-foreground text-sm">
+						{results &&
+							`${Intl.NumberFormat("en-us").format(results.pagination.totalItems)} results`}
+					</p>
+					<SecondarySidebarTrigger />
+				</div>
+
 				{results?.posts.length === 0 && (
 					<div className="flex flex-col items-center gap-4 p-8">
 						<div className="text-xl">No posts found matching your search.</div>
@@ -77,6 +92,28 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 							<PostComponent post={post} key={post.url} />
 						))}
 					</CardFeed>
+				)}
+
+				{/*
+				 * on mobile the sidebar's pager is hidden in the sheet. the sheet's form
+				 * remounts from the query each time it opens, so setting the query
+				 * directly here can't leave it stale
+				 */}
+				{results && results.pagination.totalPages > 1 && (
+					<div className="md:hidden">
+						<PaginationControl
+							page={results.pagination.page}
+							maxPage={results.pagination.totalPages}
+							onPageChange={(page) => {
+								if (Number.isInteger(page) && page >= 1) {
+									setQuery((query) => ({
+										...query,
+										paginate: { ...query.paginate, page },
+									}));
+								}
+							}}
+						/>
+					</div>
 				)}
 			</div>
 		</SecondarySidebar>
