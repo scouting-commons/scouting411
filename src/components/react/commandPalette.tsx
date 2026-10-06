@@ -127,6 +127,7 @@ function CommandPaletteContent() {
 					.filter((item) => item.type === type)
 					.map((item) => ({
 						id: item.id,
+						type: item.type,
 						name: item.name,
 						keywords: item.keywords,
 						description: item.description,

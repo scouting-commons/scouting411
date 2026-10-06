@@ -15,13 +15,21 @@ const secondaryWeight = 0.8;
  */
 const minScore = 0.1;
 
+/**
+ * types ranked after every other match, whatever their score. awards are numerous and
+ * mostly obscure, so they'd otherwise crowd out ranks and merit badges
+ */
+const demotedTypes: SearchItem["type"][] = ["award"];
+
 /** the fields `searchItems` scores. anything carrying them can be searched */
-type Searchable = Pick<SearchItem, "name" | "keywords" | "description">;
+type Searchable = Pick<SearchItem, "name" | "keywords" | "description"> & {
+	type?: SearchItem["type"];
+};
 
 /**
- * rank items against a query, best match first. weak matches are dropped, and ties keep
- * their input order. pure and safe for the browser, so the palette can run it locally
- * over the same items the server searches
+ * rank items against a query, best match first and demoted types last. weak matches are
+ * dropped, and ties keep their input order. pure and safe for the browser, so the
+ * palette can run it locally over the same items the server searches
  */
 export function searchItems<T extends Searchable>(
 	items: T[],
@@ -35,9 +43,16 @@ export function searchItems<T extends Searchable>(
 		.map((item) => ({ ...item, score: scoreItem(item, search) }))
 		.filter((result) => result.score >= minScore)
 		// sort is stable, so equal scores stay in registry order
-		.sort((a, b) => b.score - a.score);
+		.sort(
+			(a, b) =>
+				Number(isDemoted(a)) - Number(isDemoted(b)) || b.score - a.score,
+		);
 
 	return opts.limit === undefined ? results : results.slice(0, opts.limit);
+}
+
+function isDemoted(item: Searchable) {
+	return item.type !== undefined && demotedTypes.includes(item.type);
 }
 
 /** score one item using cmdk's fuzzy scorer */
