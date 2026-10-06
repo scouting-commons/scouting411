@@ -1,0 +1,89 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import { awardPath } from "@/lib/advancement/awards/types";
+import { slugify } from "@/lib/advancement/upstream";
+import { rpc } from "@/rpc/client";
+
+export const prerender = false;
+
+const awards = await rpc.advancement.awards.list();
+
+// awards arrive in program order, which Map.groupBy keeps
+const programs = [...Map.groupBy(awards, (award) => award.program)].map(
+	([program, programAwards]) => ({
+		slug: slugify(program),
+		name: program === "All" ? "All Programs" : program,
+		awards: programAwards,
+	}),
+);
+---
+
+<Layout title="Awards">
+	<div class="mx-auto flex w-full max-w-6xl flex-col gap-10 p-8">
+		<p class="border-primary/30 bg-primary/5 rounded-lg border p-4 px-5 text-sm">
+			These requirements are pulled daily from Scouting America's national
+			advancement data. Many awards have no requirements listed there. If
+			something looks wrong here,{" "}
+			<a
+				href="https://github.com/scouting-commons/scouting411/issues/new/choose"
+				rel="noopener noreferrer"
+				target="_blank"
+				class="text-primary wrap-anywhere hyphens-auto hover:underline"
+			>
+				report an issue
+			</a>
+			.
+		</p>
+
+		{awards.length === 0 && (
+			<div class="text-muted-foreground rounded-lg border p-6 text-sm">
+				No awards have been indexed yet.
+			</div>
+		)}
+
+		{programs.length > 0 && (
+			<nav class="flex flex-wrap gap-2 text-sm" aria-label="Programs">
+				{programs.map((program) => (
+					<a
+						href={`#${program.slug}`}
+						class="hover:border-primary hover:text-primary rounded-full border px-3 py-1 font-medium transition-colors"
+					>
+						{program.name}
+					</a>
+				))}
+			</nav>
+		)}
+
+		{programs.map((program) => (
+			<section id={program.slug} class="flex scroll-mt-8 flex-col gap-4">
+				<h2 class="border-b pb-2 font-serif text-xl font-bold">
+					{program.name}
+				</h2>
+				<div class="grid auto-rows-fr grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+					{program.awards.map((award) => (
+						<a
+							href={awardPath(award.slug)}
+							class="hover:border-primary group flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors"
+						>
+							{award.images ? (
+								<img
+									src={award.images.small}
+									alt=""
+									width="100"
+									height="100"
+									loading="lazy"
+									class="size-20 object-contain"
+								/>
+							) : (
+								<div class="bg-muted size-20 rounded-lg" />
+							)}
+							<span class="group-hover:text-primary font-serif text-sm font-bold">
+								{award.name}
+							</span>
+						</a>
+					))}
+				</div>
+			</section>
+		))}
+	</div>
+</Layout>

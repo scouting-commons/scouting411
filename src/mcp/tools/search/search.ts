@@ -21,7 +21,7 @@ export function searchTool(server: McpServer) {
 					),
 			}),
 			description: `Find things on Scouting411 by name: ranks, merit badges, Cub Scout
-adventures, official resources (handbooks, tools, reference sites), news sources,
+adventures, awards, official resources (handbooks, tools, reference sites), news sources,
 hubs, and site pages. Use it when you know roughly what you're after but not which
 list it's in, or to turn a name into a link. Matching is fuzzy on names and short
 descriptions, best match first, each result with its type and URL. Results

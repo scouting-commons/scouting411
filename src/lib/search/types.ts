@@ -1,7 +1,16 @@
 import { z } from "zod";
 
 const searchItemTypeSchema = z
-	.enum(["page", "hub", "feed", "resource", "rank", "meritBadge", "adventure"])
+	.enum([
+		"page",
+		"hub",
+		"feed",
+		"resource",
+		"rank",
+		"meritBadge",
+		"adventure",
+		"award",
+	])
 	.describe("What kind of thing the item is.");
 
 /**

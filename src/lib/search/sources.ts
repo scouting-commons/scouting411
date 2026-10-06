@@ -4,9 +4,11 @@ import { queryResources } from "@/lib/resources/query";
 import { listRanks } from "@/lib/advancement/ranks/query";
 import { listMeritBadges } from "@/lib/advancement/meritBadges/query";
 import { listAdventures } from "@/lib/advancement/adventures/query";
+import { listAwards } from "@/lib/advancement/awards/query";
 import { rankPath } from "@/lib/advancement/ranks/types";
 import { meritBadgePath } from "@/lib/advancement/meritBadges/types";
 import { adventurePath } from "@/lib/advancement/adventures/types";
+import { awardPath } from "@/lib/advancement/awards/types";
 import type { SearchItem } from "@/lib/search/types";
 
 /*
@@ -24,6 +26,7 @@ const navigation = [
 	{ href: "/advancement/ranks", label: "Ranks" },
 	{ href: "/advancement/merit-badges", label: "Merit Badges" },
 	{ href: "/advancement/adventures", label: "Adventures" },
+	{ href: "/advancement/awards", label: "Awards" },
 	{ href: "/resources", label: "Resources" },
 	{ href: "/developers", label: "Developers" },
 	{ href: "/agents", label: "Agent setup" },
@@ -103,6 +106,16 @@ const sources: (() => SearchItem[] | Promise<SearchItem[]>)[] = [
 			url: adventurePath(adventure.slug),
 			external: false,
 			image: adventure.images.small,
+		})),
+	async () =>
+		(await listAwards()).map((award) => ({
+			id: awardPath(award.slug),
+			type: "award",
+			name: award.name,
+			keywords: [award.program],
+			url: awardPath(award.slug),
+			external: false,
+			image: award.images?.small,
 		})),
 ];
 

@@ -18,6 +18,7 @@ import {
 	faAward,
 	faMedal,
 	faCompass,
+	faRibbon,
 	faRobot,
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeControl } from "@/components/react/darkModeControl";
@@ -134,6 +135,12 @@ export function AppSidebar({ url }: { url: URL }) {
 							label="Adventures"
 							currentUrl={url}
 							icon={faCompass}
+						/>
+						<NavLink
+							href="/advancement/awards"
+							label="Awards"
+							currentUrl={url}
+							icon={faRibbon}
 						/>
 						{import.meta.env.DEV && (
 							<NavLink

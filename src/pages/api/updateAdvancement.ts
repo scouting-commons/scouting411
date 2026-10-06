@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { ingestMeritBadges } from "@/lib/advancement/meritBadges/ingest";
 import { ingestRanks } from "@/lib/advancement/ranks/ingest";
 import { ingestAdventures } from "@/lib/advancement/adventures/ingest";
+import { ingestAwards } from "@/lib/advancement/awards/ingest";
 import { CRON_SECRET } from "astro:env/server";
 import { sendDevDebugEmail } from "@/lib/email/templates/devDebug";
 
@@ -14,16 +15,18 @@ export const GET: APIRoute = async (context) => {
 		return new Response("401 Unauthorized", { status: 401 });
 	}
 
-	const [meritBadges, ranks, adventures] = await Promise.all([
+	const [meritBadges, ranks, adventures, awards] = await Promise.all([
 		ingestMeritBadges(),
 		ingestRanks(),
 		ingestAdventures(),
+		ingestAwards(),
 	]);
-	const result = { meritBadges, ranks, adventures };
+	const result = { meritBadges, ranks, adventures, awards };
 	const failed =
 		meritBadges.errors.length > 0 ||
 		ranks.errors.length > 0 ||
-		adventures.errors.length > 0;
+		adventures.errors.length > 0 ||
+		awards.errors.length > 0;
 
 	if (failed) {
 		await sendDevDebugEmail({
@@ -32,6 +35,7 @@ export const GET: APIRoute = async (context) => {
 					meritBadges: meritBadges.errors,
 					ranks: ranks.errors,
 					adventures: adventures.errors,
+					awards: awards.errors,
 				},
 				null,
 				"\t",

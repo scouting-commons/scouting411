@@ -13,7 +13,7 @@ export const listSearchItemsProcedure = os
 			path: "/search/items",
 			tags: ["Search"],
 			description:
-				"Every searchable item on Scouting411: site pages, hubs, news sources, resources, ranks, merit badges, and Cub Scout adventures, each with its URL. Use it to search locally; to have the server rank matches, use the search endpoint instead. News posts are not included; query them separately.",
+				"Every searchable item on Scouting411: site pages, hubs, news sources, resources, ranks, merit badges, Cub Scout adventures, and awards, each with its URL. Use it to search locally; to have the server rank matches, use the search endpoint instead. News posts are not included; query them separately.",
 		}),
 	)
 	.output(z.array(searchItemSchema))
@@ -27,7 +27,7 @@ export const searchProcedure = os
 			path: "/search",
 			tags: ["Search"],
 			description:
-				"Search Scouting411's site pages, hubs, news sources, resources, ranks, merit badges, and Cub Scout adventures by name, best match first. Fuzzy, so partial words and abbreviations match. News posts are not included; query them separately.",
+				"Search Scouting411's site pages, hubs, news sources, resources, ranks, merit badges, Cub Scout adventures, and awards by name, best match first. Fuzzy, so partial words and abbreviations match. News posts are not included; query them separately.",
 		}),
 	)
 	.input(

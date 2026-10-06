@@ -1,0 +1,77 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import Requirements from "@/components/advancement/Requirements.astro";
+import { slugify } from "@/lib/advancement/upstream";
+import { rpc } from "@/rpc/client";
+import { safe } from "@orpc/client";
+
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export const prerender = false;
+
+const { slug = "" } = Astro.params;
+
+const { data: award } = await safe(rpc.advancement.awards.get({ slug }));
+
+if (!award) {
+	return new Response(null, { status: 404 });
+}
+
+const versionEffective = award.versionEffective
+	? new Date(`${award.versionEffective}T00:00:00`).toLocaleDateString("en-US", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		})
+	: undefined;
+---
+
+<Layout title={award.name}>
+	<div class="mx-auto flex w-full max-w-4xl flex-col gap-8 p-8">
+		<a
+			href={`/advancement/awards#${slugify(award.program)}`}
+			class="text-primary flex items-center gap-2 self-start text-sm font-medium hover:underline"
+		>
+			<FontAwesomeIcon icon={faArrowLeft} />
+			All awards
+		</a>
+
+		<div class="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+			{award.images && (
+				<img
+					src={award.images.medium}
+					alt={award.name}
+					width="200"
+					height="200"
+					class="size-32 shrink-0 object-contain"
+				/>
+			)}
+
+			<div class="flex min-w-0 flex-col items-start gap-2">
+				<h1 class="font-serif text-3xl font-bold wrap-anywhere hyphens-auto">
+					{award.name}
+				</h1>
+				<div class="text-muted-foreground text-sm">
+					{award.program === "All" ? "All programs" : award.program}
+					{award.adult && " · Adult award"}
+				</div>
+				{award.version && (
+					<div class="text-muted-foreground text-sm">
+						{versionEffective
+							? `${award.version} requirements, effective ${versionEffective}`
+							: `${award.version} requirements`}
+					</div>
+				)}
+			</div>
+		</div>
+
+		{award.requirements.length > 0 ? (
+			<Requirements requirements={award.requirements} />
+		) : (
+			<div class="text-muted-foreground rounded-lg border p-6 text-sm">
+				Scouting America doesn't list requirements for this award.
+			</div>
+		)}
+	</div>
+</Layout>

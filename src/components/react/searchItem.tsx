@@ -26,6 +26,7 @@ export const searchItemTypes: Record<
 	rank: { heading: "Ranks", label: "Rank" },
 	meritBadge: { heading: "Merit Badges", label: "Merit Badge" },
 	adventure: { heading: "Adventures", label: "Adventure" },
+	award: { heading: "Awards", label: "Award" },
 };
 
 /**

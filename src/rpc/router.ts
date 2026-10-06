@@ -14,6 +14,10 @@ import {
 	listAdventuresProcedure,
 } from "@/rpc/procedures/advancement/adventures";
 import {
+	getAwardProcedure,
+	listAwardsProcedure,
+} from "@/rpc/procedures/advancement/awards";
+import {
 	listSearchItemsProcedure,
 	searchProcedure,
 } from "@/rpc/procedures/search/search";
@@ -43,6 +47,10 @@ export const router = {
 		adventures: {
 			list: listAdventuresProcedure,
 			get: getAdventureProcedure,
+		},
+		awards: {
+			list: listAwardsProcedure,
+			get: getAwardProcedure,
 		},
 	},
 	search: {

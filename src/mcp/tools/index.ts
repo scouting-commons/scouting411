@@ -10,6 +10,7 @@ import {
 	getAdventureTool,
 	listAdventuresTool,
 } from "@/mcp/tools/advancement/adventures";
+import { getAwardTool, listAwardsTool } from "@/mcp/tools/advancement/awards";
 import { searchTool } from "@/mcp/tools/search/search";
 import { getSystemStatusTool } from "@/mcp/tools/status/status";
 
@@ -24,5 +25,7 @@ export const tools = [
 	getRankTool,
 	listAdventuresTool,
 	getAdventureTool,
+	listAwardsTool,
+	getAwardTool,
 	getSystemStatusTool,
 ];
