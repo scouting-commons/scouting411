@@ -6,6 +6,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { CommandPalette } from "@/components/react/commandPalette";
+import { KeyboardShortcuts } from "@/components/react/keyboardShortcuts";
 
 import {
 	TooltipProvider,
@@ -26,6 +27,7 @@ export function AppShell({
 	return (
 		<>
 			<CommandPalette />
+			<KeyboardShortcuts />
 			<SidebarProvider>
 				<AppSidebar url={url} />
 				<SidebarInset>

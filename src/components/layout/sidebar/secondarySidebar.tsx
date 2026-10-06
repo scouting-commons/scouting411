@@ -6,9 +6,11 @@ import {
 	type Ref,
 } from "react";
 import { SlidersHorizontalIcon } from "lucide-react";
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useIsMobile } from "@/util/hooks/use-mobile";
+import { cn } from "@/util/cn";
 
 const SecondarySidebarContext = createContext<{
 	label: string;
@@ -20,7 +22,7 @@ const SecondarySidebarContext = createContext<{
  * never scrolls: the content and the sidebar each scroll on their own, and
  * `contentRef` points at the content's scroll container. on mobile the sidebar
  * moves into a sheet, which the content opens with a `SecondarySidebarTrigger`,
- * and the page scrolls normally
+ * and the page scrolls normally. ctrl+alt+b toggles the sidebar in either mode
  */
 export function SecondarySidebar({
 	children,
@@ -35,6 +37,12 @@ export function SecondarySidebar({
 }) {
 	const isMobile = useIsMobile();
 	const [sheetOpen, setSheetOpen] = useState(false);
+	const [desktopOpen, setDesktopOpen] = useState(true);
+
+	useHotkey("Mod+Alt+B", () => {
+		if (isMobile) setSheetOpen((open) => !open);
+		else setDesktopOpen((open) => !open);
+	});
 
 	return (
 		<SecondarySidebarContext
@@ -63,7 +71,10 @@ export function SecondarySidebar({
 					// hidden below md too, so mobile doesn't flash it before hydration
 					<aside
 						aria-label={label}
-						className="bg-sidebar text-sidebar-foreground border-sidebar-border hidden w-64 shrink-0 flex-col border-l md:flex"
+						className={cn(
+							"bg-sidebar text-sidebar-foreground border-sidebar-border hidden w-64 shrink-0 flex-col border-l",
+							desktopOpen && "md:flex",
+						)}
 					>
 						{sidebar}
 					</aside>
