@@ -1,6 +1,7 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import Requirements from "@/components/advancement/Requirements.astro";
+import { placeholderImage } from "@/lib/advancement/awards/types";
 import { slugify } from "@/lib/advancement/upstream";
 import { rpc } from "@/rpc/client";
 import { safe } from "@orpc/client";
@@ -38,15 +39,13 @@ const versionEffective = award.versionEffective
 		</a>
 
 		<div class="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-			{award.images && (
-				<img
-					src={award.images.medium}
-					alt={award.name}
-					width="200"
-					height="200"
-					class="size-32 shrink-0 object-contain"
-				/>
-			)}
+			<img
+				src={award.images?.medium ?? placeholderImage}
+				alt={award.name}
+				width="200"
+				height="200"
+				class="size-32 shrink-0 object-contain"
+			/>
 
 			<div class="flex min-w-0 flex-col items-start gap-2">
 				<h1 class="font-serif text-3xl font-bold wrap-anywhere hyphens-auto">

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
-import { awardPath } from "@/lib/advancement/awards/types";
+import { awardPath, placeholderImage } from "@/lib/advancement/awards/types";
 import { slugify } from "@/lib/advancement/upstream";
 import { rpc } from "@/rpc/client";
 
@@ -65,18 +65,14 @@ const programs = [...Map.groupBy(awards, (award) => award.program)].map(
 							href={awardPath(award.slug)}
 							class="hover:border-primary group flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors"
 						>
-							{award.images ? (
-								<img
-									src={award.images.small}
-									alt=""
-									width="100"
-									height="100"
-									loading="lazy"
-									class="size-20 object-contain"
-								/>
-							) : (
-								<div class="bg-muted size-20 rounded-lg" />
-							)}
+							<img
+								src={award.images?.small ?? placeholderImage}
+								alt=""
+								width="100"
+								height="100"
+								loading="lazy"
+								class="size-20 object-contain"
+							/>
 							<span class="group-hover:text-primary font-serif text-sm font-bold">
 								{award.name}
 							</span>

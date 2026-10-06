@@ -11,13 +11,27 @@ import {
 } from "@/lib/advancement/parseRequirements";
 import type { Award, AwardDetail } from "@/lib/advancement/awards/types";
 
-/** fetch the list of every award, ordered by program and then name */
+/**
+ * fetch the list of awards, ordered by program and then name. left out are
+ * awards upstream flags `SBLHide` in `adminNotes` - one-off historical items
+ * like "#1 Most Connected Council 2012" - and retired awards, which upstream
+ * leaves `expiredDate` blank on but whose every version has expired
+ */
 export async function fetchAwards(): Promise<Award[]> {
 	const { data, error } = await listAwards();
 
 	if (error) throw new Error(`failed to fetch awards - ${error.message}`);
 
+	const today = new Date().toISOString().slice(0, 10);
+
 	return data.awards
+		.filter((award) => !award.adminNotes.includes("SBLHide"))
+		.filter((award) =>
+			award.versions.some(
+				(version) =>
+					!version.versionExpiryDt || version.versionExpiryDt > today,
+			),
+		)
 		.map((award) => ({
 			id: award.id,
 			slug: slugify(plainText(award.name)),

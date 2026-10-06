@@ -62,6 +62,10 @@ export const awardSlugSchema = z
 		'The award\'s slug, as returned by the list endpoint, e.g. "national-outdoor-achievement-award-adventure".',
 	);
 
+/** shown in place of art for awards that have none */
+export const placeholderImage =
+	"https://www.scouting.org/wp-content/uploads/2024/10/fleur-de-lis-2024-logo-4-c-bc-1@3x-266x300.png";
+
 /** the page for an award */
 export function awardPath(slug: string) {
 	return `/advancement/awards/${slug}`;
