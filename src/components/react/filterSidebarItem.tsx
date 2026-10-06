@@ -8,14 +8,14 @@ export function FilterSidebarItem({
 	accessory?: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-col gap-3 p-3">
-			<div className="flex items-center justify-between gap-2">
-				<span className="text-muted-foreground text-xs font-bold uppercase">
+		<section className="flex flex-col gap-2.5 px-4 py-4">
+			<div className="flex h-6 items-center justify-between gap-2">
+				<h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
 					{label}
-				</span>
+				</h2>
 				{accessory}
 			</div>
 			{children}
-		</div>
+		</section>
 	);
 }

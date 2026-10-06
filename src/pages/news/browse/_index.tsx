@@ -3,7 +3,7 @@ import { PostComponent } from "@/components/react/post";
 import type { Post } from "@/lib/news/feeds/post";
 import type { QueryInput } from "@/lib/news/query/types";
 import { SecondarySidebar } from "@/components/layout/sidebar/secondarySidebar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { safe } from "@orpc/client";
 import { rpc } from "@/rpc/client";
 import { FilterSidebar } from "@/pages/news/browse/_filterSidebar";
@@ -15,6 +15,7 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 	const [results, setResults] = useState<PaginatedResults<Post> | undefined>(
 		undefined,
 	);
+	const contentRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		/**
@@ -38,6 +39,8 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 			}
 
 			setResults(data);
+			// new results replace the whole list, so start reading from the top
+			contentRef.current?.scrollTo({ top: 0 });
 		})();
 
 		return () => {
@@ -47,6 +50,7 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 
 	return (
 		<SecondarySidebar
+			contentRef={contentRef}
 			sidebar={
 				<FilterSidebar query={query} setQuery={setQuery} results={results} />
 			}
