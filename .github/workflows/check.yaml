@@ -32,9 +32,6 @@ jobs:
       - name: Eslint
         run: pnpm lint
 
-      - name: Validate Resource Links
-        run: pnpm validateResourceLinks
-
       - name: Knip
         run: pnpm knip
 

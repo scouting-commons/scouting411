@@ -9,7 +9,7 @@ import type { Resource } from "@/lib/resources/types";
 export const resources: Resource[] = [
 	// marketing/landing pages
 	{
-		url: "https://scouting.org",
+		url: "https://www.scouting.org/",
 		title: "Scouting America Homepage",
 		description: "The homepage of Scouting America",
 	},
@@ -20,83 +20,83 @@ export const resources: Resource[] = [
 	},
 	{
 		url: "https://www.exploring.org/",
-		title: "Exploring",
+		title: "Exploring Homepage",
 		description: "The homepage of the Exploring program",
 	},
 	{
 		url: "https://nam.scouting.org/",
-		title: "National Annual Meeting",
+		title: "National Annual Meeting Homepage",
 		description: "The homepage for the National Annual Meeting",
 	},
 	{
 		url: "https://seascout.org/",
-		title: "Sea Scouts",
+		title: "Sea Scouts Homepage",
 		description: "The homepage of the Sea Scouts program",
 	},
 	{
 		url: "https://scoutingamericafoundation.org/",
-		title: "Scouting America Foundation",
+		title: "Scouting America Foundation Homepage",
 		description: "The homepage of the Scouting America Foundation",
 	},
 	{
 		url: "https://scoutingamericalegacy.org/",
-		title: "Scouting America Legacy",
+		title: "Scouting America Legacy Homepage",
 		description: "Information about charitable gift planning",
 	},
 	{
 		url: "https://nesa.org/",
-		title: "National Eagle Scout Association",
+		title: "National Eagle Scout Association Homepage",
 		description: "The homepage of the National Eagle Scout Association",
 	},
 	{
 		url: "https://scoutingalumni.org/",
-		title: "Scouting Alumni",
+		title: "Scouting Alumni Homepage",
 		description: "The homepage for Scouting Alumni",
 	},
 	{
 		url: "https://www.philmontscoutranch.org/",
-		title: "Philmont Scout Ranch",
+		title: "Philmont Scout Ranch Homepage",
 		description: "The homepage of Philmont Scout Ranch",
 	},
 	{
 		url: "https://seabaseha.org/",
-		title: "Sea Base",
+		title: "Sea Base Homepage",
 		description: "The homepage of Sea Base",
 	},
 	{
 		url: "https://www.summitbsa.org/",
-		title: "Summit Bechtel Reserve",
+		title: "Summit Bechtel Reserve Homepage",
 		description: "The homepage of Summit Bechtel Reserve",
 	},
 
 	{
 		url: "https://www.ntier.org/",
-		title: "Northern Tier",
+		title: "Northern Tier Homepage",
 		description: "The homepage of Northern Tier",
 	},
 	{
 		url: "https://jamboree.scouting.org/",
-		title: "National Jamboree",
+		title: "National Jamboree Homepage",
 		description: "The homepage of the National Jamboree",
 	},
 	{
 		url: "https://www.scouting.org/international/",
-		title: "International Scouting",
+		title: "International Scouting Homepage",
 		description: "Scouting America's international programs and opportunities",
 	},
 	{
 		url: "https://scouting-oec.org/",
-		title: "Outdoor Ethics",
+		title: "Outdoor Ethics Homepage",
 		description: "The homepage of Scouting America's outdoor ethics program",
 	},
 	{
 		url: "https://licensingbsa.org/",
-		title: "Licensing Programs",
+		title: "Licensing Programs Homepage",
 		description: "Scouting America's official licensing programs",
 	},
 	{
 		url: "https://donations.scouting.org/",
-		title: "Give to Scouting America",
+		title: "Give to Scouting America Homepage",
 		description: "Make a donation to Scouting America",
 	},
 
@@ -111,11 +111,11 @@ export const resources: Resource[] = [
 		title: "Tooth of Time Traders",
 		description: "Philmont Scout Ranch's online store",
 	},
-	{
-		url: "https://store.ntier.org/",
-		title: "Northern Tier Trading Post",
-		description: "Northern Tier's online store",
-	},
+	// {
+	// 	url: "https://store.ntier.org/",
+	// 	title: "Northern Tier Trading Post",
+	// 	description: "Northern Tier's online store",
+	// },
 	{
 		url: "https://store.summitbsa.org/",
 		title: "Garden Ground Outfitters",
@@ -159,11 +159,6 @@ export const resources: Resource[] = [
 			"This page includes the latest information concerning resources and developments affecting the Sea Scouts program.",
 	},
 
-	{
-		url: "https://www.scouting.org/commissioners/news-for-commissioners/",
-		title: "News for Commissioners",
-		description: "News and updates for commissioners",
-	},
 	{
 		url: "https://www.scouting.org/training/training-updates/",
 		title: "Training Updates",
@@ -265,12 +260,6 @@ export const resources: Resource[] = [
 		description: "The tool for finding Exploring units by location",
 	},
 	{
-		url: "https://scoutbook.scouting.org/",
-		title: "Scoutbook (legacy)",
-		description:
-			"The legacy version of Scoutbook, the tool for tracking scout advancement",
-	},
-	{
 		url: "https://advancements.scouting.org/",
 		title: "Scoutbook Plus",
 		description:
@@ -292,7 +281,7 @@ export const resources: Resource[] = [
 		description: "Take your official online training courses",
 	},
 	{
-		url: "https://scouting.org/outdoor-programs/tap",
+		url: "https://www.scouting.org/outdoor-programs/tap/",
 		title: "The Adventure Plan",
 		description:
 			"A step-by-step tool for planning safe and successful outdoor and high adventure trips, for units in every Scouting program",

@@ -20,25 +20,37 @@ if (arrayHasDupes(urls)) {
 console.log("All URLs are unique.");
 
 // check that all the urls are online
-await Promise.all(resources.map((config) => checkUrlStatus(config.url)));
+const failures = (
+	await Promise.all(resources.map((config) => checkUrlStatus(config.url)))
+).filter((failure) => failure !== undefined);
+if (failures.length > 0) {
+	throw new Error(
+		`${failures.length} URL(s) failed the status check:\n${failures.join("\n")}`,
+	);
+}
 console.log("All URLs are online.");
 
-/**
- * fetch a url and throw if it fails or returns a non-200 response code
- * @throws
- */
+/** fetch a url and return a failure message if it fails, redirects, or returns a non-200 response code */
 async function checkUrlStatus(url: string) {
 	const { data, error } = await tryCatch(fetch(url));
 
 	if (error) {
-		throw new Error(`Failed to fetch url "${url}". Error: ${error.message}`);
+		return `Failed to fetch url "${url}". Error: ${error.message}`;
 	}
 
-	if (data.status !== 200) {
-		throw new Error(
-			`Failed to fetch url "${url}". Status code: ${data.status}`,
-		);
+	// cloudflare blocks node's fetch on some sites no matter the headers, but a block means the site is up
+	const isCloudflareBlock =
+		data.status === 403 && data.headers.get("server") === "cloudflare";
+
+	if (data.status !== 200 && !isCloudflareBlock) {
+		return `Failed to fetch url "${url}". Status code: ${data.status}`;
 	}
+
+	if (data.redirected) {
+		return `URL "${url}" redirects to "${data.url}".`;
+	}
+
+	return undefined;
 }
 
 /**
@@ -68,5 +80,8 @@ function normalizeUrl(url: string) {
 		removeQueryParameters: true,
 		removeDirectoryIndex: true,
 		removeExplicitPort: true,
+		stripWWW: false,
+		removeTrailingSlash: false,
+		removeSingleSlash: false,
 	});
 }

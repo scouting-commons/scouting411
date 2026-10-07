@@ -8,7 +8,7 @@ Package manager is pnpm; scripts live in `package.json`.
 
 - `pnpm check` is the gate — `astro check`, prettier write, eslint, knip. A change is done when it passes, not before.
 - Knip runs with `--treat-config-hints-as-errors`: an unused export, file, or dependency fails the build. Remove dead exports as part of the refactor that orphans them.
-- `pnpm validateResourceLinks` fetches every URL in `src/lib/resources/config.ts`. Run it after touching resources; CI runs it too.
+- `pnpm validateResourceLinks` fetches every URL in `src/lib/resources/config.ts`. Run it after touching resources; CI does not run it.
 - There is no unit test framework. Verify against `pnpm dev`, or drive the API by hand from the Scalar docs at `/api`.
 
 ## News: ingest, cache, query

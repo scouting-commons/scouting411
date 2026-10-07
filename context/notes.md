@@ -66,7 +66,6 @@
 
 ## reference and guidance
 
-
 ## tools
 
 - https://assets.scouting.org/
