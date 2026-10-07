@@ -69,6 +69,37 @@ export const resources: Resource[] = [
 		description: "The homepage of Summit Bechtel Reserve",
 	},
 
+	{
+		url: "https://www.ntier.org/",
+		title: "Northern Tier",
+		description: "The homepage of Northern Tier",
+	},
+	{
+		url: "https://jamboree.scouting.org/",
+		title: "National Jamboree",
+		description: "The homepage of the National Jamboree",
+	},
+	{
+		url: "https://www.scouting.org/international/",
+		title: "International Scouting",
+		description: "Scouting America's international programs and opportunities",
+	},
+	{
+		url: "https://scouting-oec.org/",
+		title: "Outdoor Ethics",
+		description: "The homepage of Scouting America's outdoor ethics program",
+	},
+	{
+		url: "https://licensingbsa.org/",
+		title: "Licensing Programs",
+		description: "Scouting America's official licensing programs",
+	},
+	{
+		url: "https://donations.scouting.org/",
+		title: "Give to Scouting America",
+		description: "Make a donation to Scouting America",
+	},
+
 	// ecommerce
 	{
 		url: "https://www.scoutshop.org/",
@@ -128,6 +159,17 @@ export const resources: Resource[] = [
 			"This page includes the latest information concerning resources and developments affecting the Sea Scouts program.",
 	},
 
+	{
+		url: "https://www.scouting.org/commissioners/news-for-commissioners/",
+		title: "News for Commissioners",
+		description: "News and updates for commissioners",
+	},
+	{
+		url: "https://www.scouting.org/training/training-updates/",
+		title: "Training Updates",
+		description: "The latest changes to Scouting America training",
+	},
+
 	// reference and guidance
 	{
 		url: "https://scene.zeplin.io/project/59b6b6554fc4d8840a822300",
@@ -176,6 +218,27 @@ export const resources: Resource[] = [
 		url: "https://filestore.scouting.org/filestore/Outdoor%20Program/Aquatics/pdf/Aquatics_34346.pdf",
 		title: "Aquatics Supervision",
 		description: "A Leader's Guide to Youth Swimming and Boating Activities",
+	},
+
+	{
+		url: "https://scoutingwire.org/marketing-and-membership-hub/",
+		title: "Marketing and Membership Hub",
+		description: "Marketing and recruiting resources for growing membership",
+	},
+	{
+		url: "https://www.scouting.org/awards/awards-central/",
+		title: "Awards Central",
+		description: "Every national award available to youth and adults",
+	},
+	{
+		url: "https://www.scouting.org/awards/scholarships/",
+		title: "Scholarships",
+		description: "Scholarships available to Scouts",
+	},
+	{
+		url: "https://confluence.oa-scouting.org/",
+		title: "OA Documentation Directory",
+		description: "Documentation for Order of the Arrow programs and systems",
 	},
 
 	// forms
@@ -233,6 +296,16 @@ export const resources: Resource[] = [
 		title: "The Adventure Plan",
 		description:
 			"A step-by-step tool for planning safe and successful outdoor and high adventure trips, for units in every Scouting program",
+	},
+	{
+		url: "https://discussions.scouting.org/",
+		title: "Scouting Forums",
+		description: "The official discussion forums of Scouting America",
+	},
+	{
+		url: "https://lodgemaster.oa-scouting.org/",
+		title: "LodgeMaster",
+		description: "The tool for managing Order of the Arrow lodges",
 	},
 	{
 		url: "https://status.scouting.org/",

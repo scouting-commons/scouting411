@@ -57,46 +57,36 @@
 ## marketing / landing pages
 
 - https://stg.scouting.org/
-- https://donations.scouting.org/
 - https://councils.scouting.org/
 - https://arbsaf2018.scouting.org/bsa-foundation-annual-report-2018-home/
 - https://ar2018.scouting.org
 - https://ar2019.scouting.org/
 - https://www.bsarestructuring.org/
-- https://www.scouting.org/international/
 - https://nylt-leadershipacademy.org/
 
 ## reference and guidance
 
-- https://scoutingwire.org/marketing-and-membership-hub/
 - https://tap.scouting.org/
-- https://confluence.oa-scouting.org/
-- https://www.scouting.org/awards/awards-central/
 - https://www.scouting.org/resources/insignia-guide/
 
 ## tools
 
 - https://assets.scouting.org/
 - https://directory.scouting.org/alumni-dashboard
-- https://discussions.scouting.org/
 - https://id.oa-scouting.org/
 - https://registration.oa-scouting.org/
 - https://members.oa-scouting.org/
 - https://portal.oa-scouting.org/
-- https://lodgemaster.oa-scouting.org/
 - https://jira.oa-scouting.org/
 - https://oalodgemaster.featureupvote.com/
-- https://www.scouting.org/awards/scholarships/
 - https://api.scouting.org/organizations/v2/zip/12345/council
 - https://global.scoutingevent.com/
 
 ## other
 
 - https://www.myscoutshop.org/
-- https://licensingbsa.org/
 - https://open.spotify.com/show/57YZ4Fu74WkSHE5qyVkQS2
 - https://filestore.scouting.org/filestore ... figure out how to list everything or see updates?
-- https://scouting-oec.org/news/
 - https://hrgateway.intranet.mybsa.org/
   // bsa hr intranet, wordpress. site needs a login to browse, but the rest api is public:
   // /wp-json/wp/v2/posts (53) and /pages (138) as of 2026-09-24. could work with the wordpress adapter.
@@ -110,10 +100,8 @@ rsshub
 
 ## high adventure bases
 
-- https://www.ntier.org/
 - https://summiteventswv.com/
 - https://jamboreg.scouting.org/
-- https://jamboree.scouting.org/
 
 dimensions
 
