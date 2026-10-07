@@ -9,7 +9,6 @@ import { rpc } from "@/rpc/client";
 const quickLinks = [
 	{ href: "https://my.scouting.org", label: "my.Scouting" },
 	{ href: "https://advancements.scouting.org", label: "Scoutbook Plus" },
-	{ href: "https://scoutbook.scouting.org", label: "Scoutbook" },
 	{
 		href: "https://status.scouting.org",
 		label: "System Status",
