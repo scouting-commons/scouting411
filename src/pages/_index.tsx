@@ -48,7 +48,7 @@ export function Page() {
 				</ul>
 			</div>
 
-			<div className="grid grid-cols-1 gap-5">
+			<div className="grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
 				<IntegrationCard icon={<SearchIcon />} title="Browser search">
 					<p>
 						Add Scouting411 as a search engine: in Chrome, type scouting411.org
@@ -67,7 +67,7 @@ export function Page() {
 					</p>
 					<a
 						href="/news/subscribe"
-						className="text-primary w-fit font-semibold underline"
+						className="text-primary mt-auto w-fit font-medium hover:underline"
 					>
 						Subscribe <FontAwesomeIcon icon={faArrowRight} />
 					</a>
@@ -78,10 +78,10 @@ export function Page() {
 						Give an AI assistant first-party Scouting news, advancement, and
 						resources. Add this URL as a remote MCP server:
 					</p>
-					<Code className="block w-fit select-all">{mcpUrl}</Code>
+					<Code className="block w-fit wrap-anywhere select-all">{mcpUrl}</Code>
 					<a
 						href="/agents"
-						className="text-primary w-fit font-semibold underline"
+						className="text-primary mt-auto w-fit font-medium hover:underline"
 					>
 						Setup guide <FontAwesomeIcon icon={faArrowRight} />
 					</a>
@@ -139,12 +139,12 @@ function IntegrationCard({
 	children: ReactNode;
 }) {
 	return (
-		<div className="bg-card flex flex-col gap-3 rounded-lg border p-5">
+		<div className="border-border/60 flex flex-col gap-3 rounded-xl border p-5">
 			<h3 className="flex items-center gap-2 font-serif text-base font-bold">
-				<span className="text-primary [&_svg]:size-4">{icon}</span>
+				<span className="text-muted-foreground [&_svg]:size-4">{icon}</span>
 				{title}
 			</h3>
-			<div className="text-muted-foreground flex flex-col gap-2 text-sm">
+			<div className="text-muted-foreground flex flex-1 flex-col gap-2 text-sm">
 				{children}
 			</div>
 		</div>

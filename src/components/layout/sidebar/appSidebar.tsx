@@ -20,6 +20,7 @@ import {
 	faCompass,
 	faRibbon,
 	faRobot,
+	faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeControl } from "@/components/react/darkModeControl";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -76,6 +77,7 @@ export function AppSidebar({ url }: { url: URL }) {
 								href={hub.links.page}
 								label={hub.name}
 								currentUrl={url}
+								icon={faSquare}
 								color={hub.color}
 							/>
 						))}

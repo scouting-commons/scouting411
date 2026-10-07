@@ -280,7 +280,10 @@ function SearchResult({ item, origin }: { item: SearchItem; origin: string }) {
 
 	return (
 		<li className="flex gap-4">
-			<div className="bg-muted/40 text-muted-foreground mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-md border [&_svg]:size-5">
+			<div
+				className="bg-muted/40 text-muted-foreground mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-md border [&_svg]:size-5"
+				style={{ color: item.color }}
+			>
 				{searchItemMedia(item, "size-8 rounded-sm") ?? type.icon}
 			</div>
 

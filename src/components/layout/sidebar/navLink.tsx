@@ -16,8 +16,8 @@ export function NavLink({
 	label: string;
 	newTab?: boolean;
 	currentUrl: URL;
-	/** Pass either an icon or a color swatch. */
-	icon?: FontAwesomeIconProps["icon"];
+	icon: FontAwesomeIconProps["icon"];
+	/** the icon's color, muted if unset */
 	color?: string;
 }) {
 	const isActive = currentUrl.pathname === href;
@@ -35,19 +35,12 @@ export function NavLink({
 					rel={newTab ? "noopener noreferrer" : undefined}
 				>
 					<div className="flex items-center gap-2">
-						{icon && (
-							<FontAwesomeIcon
-								icon={icon}
-								size="sm"
-								className="text-sidebar-foreground/70"
-							/>
-						)}
-						{color && (
-							<span
-								className="size-3 shrink-0 rounded-xs"
-								style={{ backgroundColor: color }}
-							/>
-						)}
+						<FontAwesomeIcon
+							icon={icon}
+							size="sm"
+							className={cn(!color && "text-sidebar-foreground/70")}
+							style={{ color }}
+						/>
 						{label}
 					</div>
 					{newTab && <FontAwesomeIcon icon={faSquareUpRight} size="sm" />}

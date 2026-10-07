@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
-import { CompassIcon, ExternalLinkIcon, RssIcon } from "lucide-react";
+import {
+	CompassIcon,
+	ExternalLinkIcon,
+	RssIcon,
+	SquareIcon,
+} from "lucide-react";
 import type { SearchItem } from "@/lib/search/types";
 import { cn } from "@/util/cn";
 
@@ -11,12 +16,16 @@ export const searchItemTypes: Record<
 		heading: string;
 		/** singular, for one item */
 		label: string;
-		/** shown for items that have no media of their own */
+		/** shown for items that have no art of their own, in the item's color if it has one */
 		icon?: ReactNode;
 	}
 > = {
 	page: { heading: "Navigation", label: "Page", icon: <CompassIcon /> },
-	hub: { heading: "Hubs", label: "Hub" },
+	hub: {
+		heading: "Hubs",
+		label: "Hub",
+		icon: <SquareIcon className="fill-current" />,
+	},
 	feed: { heading: "Feeds", label: "Feed", icon: <RssIcon /> },
 	resource: {
 		heading: "Resources",
@@ -29,12 +38,9 @@ export const searchItemTypes: Record<
 	award: { heading: "Awards", label: "Award" },
 };
 
-/**
- * an item's own media — its art, or its color as a swatch — or undefined if it has
- * none, so the caller can fall back to its type's icon
- */
+/** an item's art, or undefined if it has none, so the caller can fall back to its type's icon */
 export function searchItemMedia(
-	item: Pick<SearchItem, "image" | "color">,
+	item: Pick<SearchItem, "image">,
 	className?: string,
 ): ReactNode {
 	if (item.image) {
@@ -44,15 +50,6 @@ export function searchItemMedia(
 				alt=""
 				loading="lazy"
 				className={cn("size-5 object-contain", className)}
-			/>
-		);
-	}
-
-	if (item.color) {
-		return (
-			<span
-				className={cn("size-2.5 shrink-0 rounded-xs", className)}
-				style={{ backgroundColor: item.color }}
 			/>
 		);
 	}

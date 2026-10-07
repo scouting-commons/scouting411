@@ -132,6 +132,7 @@ function CommandPaletteContent() {
 						keywords: item.keywords,
 						description: item.description,
 						icon: searchItemMedia(item),
+						color: item.color,
 						onSelect: handleSelection({
 							url: item.url,
 							newTab: item.external,
@@ -263,6 +264,8 @@ type Entry = {
 	keywords: string[];
 	description?: string | undefined;
 	icon?: ReactNode;
+	/** the section icon's color, muted if unset */
+	color?: string | undefined;
 	onSelect: () => void;
 };
 
@@ -285,10 +288,18 @@ function PaletteItem({
 	showType?: boolean;
 }) {
 	return (
-		<CommandItem value={entry.id} onSelect={entry.onSelect}>
+		<CommandItem
+			value={entry.id}
+			onSelect={entry.onSelect}
+			// the icon keeps its own color when selected, rather than turning foreground
+			className="data-selected:**:[svg]:text-inherit"
+		>
 			{entry.icon ?? (
 				// same footprint as the size-5 images, so names line up across types
-				<span className="text-muted-foreground flex size-5 shrink-0 items-center justify-center">
+				<span
+					className="text-muted-foreground flex size-5 shrink-0 items-center justify-center"
+					style={{ color: entry.color }}
+				>
 					{section.icon}
 				</span>
 			)}
