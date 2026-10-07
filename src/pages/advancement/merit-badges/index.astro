@@ -3,7 +3,7 @@ import Layout from "@/components/layout/Layout.astro";
 import { meritBadgePath } from "@/lib/advancement/meritBadges/types";
 import { rpc } from "@/rpc/client";
 
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faTableCells } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const prerender = false;
@@ -14,9 +14,15 @@ const meritBadges = (await rpc.advancement.meritBadges.list()).toSorted(
 
 // every badge is shown unless the eagle-required tab is asked for
 const tabs = [
-	{ label: "All badges", href: "/advancement/merit-badges", eagleOnly: false },
+	{
+		label: "All badges",
+		icon: faTableCells,
+		href: "/advancement/merit-badges",
+		eagleOnly: false,
+	},
 	{
 		label: "Eagle required",
+		icon: faStar,
 		href: "/advancement/merit-badges?filter=eagle-required",
 		eagleOnly: true,
 	},
@@ -60,18 +66,14 @@ const shownBadges = eagleOnly
 		)}
 
 		{meritBadges.length > 0 && (
-			<nav class="flex flex-wrap gap-2 text-sm" aria-label="Filter">
+			<nav class="flex gap-6 border-b text-sm" aria-label="Filter">
 				{tabs.map((tab) => (
 					<a
 						href={tab.href}
 						aria-current={tab.eagleOnly === eagleOnly ? "page" : undefined}
-						class:list={[
-							"rounded-full border px-3 py-1 font-medium transition-colors",
-							tab.eagleOnly === eagleOnly
-								? "bg-primary text-primary-foreground border-primary"
-								: "hover:border-primary hover:text-primary",
-						]}
+						class="text-muted-foreground hover:text-foreground aria-[current=page]:border-primary aria-[current=page]:text-foreground -mb-px flex items-center gap-1.5 border-b-2 border-transparent pb-2 font-medium [&_svg]:size-4"
 					>
+						<FontAwesomeIcon icon={tab.icon} />
 						{tab.label}
 					</a>
 				))}
