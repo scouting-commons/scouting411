@@ -66,8 +66,6 @@
 
 ## reference and guidance
 
-- https://tap.scouting.org/
-- https://www.scouting.org/resources/insignia-guide/
 
 ## tools
 
