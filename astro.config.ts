@@ -53,6 +53,17 @@ export default defineConfig({
 				access: "secret",
 			}),
 
+			/** my.scouting login for the announcements feed, which needs a signed-in user */
+			MY_SCOUTING_USERNAME: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+
+			MY_SCOUTING_PASSWORD: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+
 			RESEND_API_KEY: envField.string({
 				context: "server",
 				access: "secret",

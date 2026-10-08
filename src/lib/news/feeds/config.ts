@@ -5,6 +5,7 @@ import { WordpressAdapter } from "@/lib/news/ingest/upstream/adapters/wordpress"
 import { PodcastArchiveAdapter } from "@/lib/news/ingest/upstream/adapters/podcast-archive";
 import { StatuspageAdapter } from "@/lib/news/ingest/upstream/adapters/statuspage";
 import { OaNewsAdapter } from "@/lib/news/ingest/upstream/adapters/oaNews";
+import { MyScoutingAnnouncementsAdapter } from "@/lib/news/ingest/upstream/adapters/myScoutingAnnouncements";
 
 export const feedConfigs = [
 	{
@@ -402,5 +403,15 @@ export const feedConfigs = [
 			// api is preferable - it returns all of them in one request.
 			type: "jetpack-portfolio",
 		}),
+	},
+	{
+		name: "my.Scouting Announcements",
+		slug: "my-scouting-announcements",
+		description:
+			"Announcements from the my.Scouting homepage.",
+		coverImageSrc:
+			"https://www.scouting.org/wp-content/uploads/2026/01/BSA-logo.png",
+		homepageUrl: "https://my.scouting.org",
+		adapter: MyScoutingAnnouncementsAdapter(),
 	},
 ] as const satisfies FeedConfig[];
