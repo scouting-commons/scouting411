@@ -71,7 +71,7 @@ export function Page() {
 							every Sunday.
 						</p>
 						<a
-							href="/this-week"
+							href="/newspaper"
 							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
 							Read this week <Icon icon={ArrowRightIcon} />

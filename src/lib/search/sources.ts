@@ -19,7 +19,7 @@ import type { SearchItem } from "@/lib/search/types";
 /** site navigation pages */
 const navigation = [
 	{ href: "/", label: "Home" },
-	{ href: "/this-week", label: "This Week in Scouting" },
+	{ href: "/newspaper", label: "This Week in Scouting" },
 	{ href: "/news/browse", label: "News Archive" },
 	{ href: "/news/sources", label: "Sources" },
 	{ href: "/news/stats", label: "Stats" },

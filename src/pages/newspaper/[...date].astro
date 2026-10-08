@@ -1,0 +1,193 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
+import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { rpc } from "@/rpc/client";
+import { getEdition, leadPost } from "@/lib/newspaper/edition";
+import { ArrowLeftIcon, ArrowRightIcon, PrinterIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
+
+export const prerender = false;
+
+const edition = getEdition(Astro.params.date);
+
+if (!edition) {
+	throw new Response("Not found", { status: 404 });
+}
+
+const { date, start, end, filter } = edition;
+const query = { feeds: defaultVisibleFeedSlugs, filter };
+
+const { posts } = await rpc.news.posts.query({ ...query, paginate: false });
+
+// the lead runs on top, the rest under the day they were posted, newest first
+const lead = leadPost(posts);
+const days = [
+	...Map.groupBy(
+		posts.filter((post) => post !== lead),
+		(post) => post.date.toISOString().slice(0, 10),
+	).values(),
+].map((dayPosts) => ({ date: dayPosts[0]!.date, posts: dayPosts }));
+
+const sourceCount = new Set(posts.map((post) => post.feed.slug)).size;
+const browseHref = `/news/browse?${postsQueryParamsEncoder.encode(query)}`;
+
+const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
+	date.toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
+const shortDate = (date: Date) =>
+	formatDate(date, { month: "long", day: "numeric" });
+---
+
+<Layout title="This Week in Scouting">
+	<div class="mx-auto flex w-full max-w-6xl flex-col gap-10 p-4 md:p-8">
+		<header class="flex flex-col">
+			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-t border-b-4 border-double py-2 text-xs tracking-widest uppercase">
+				<span>{formatDate(date, { dateStyle: "full" })}</span>
+				<div class="flex gap-4">
+					<button
+						type="button"
+						onclick="window.print()"
+						class="hover:text-foreground flex items-center gap-1 uppercase print:hidden"
+					>
+						<Icon icon={PrinterIcon} small />
+						Print
+					</button>
+					<a
+						href="/newspaper/archive"
+						class="hover:text-foreground print:hidden"
+					>
+						Archive
+					</a>
+					<span>scouting411.org</span>
+				</div>
+			</div>
+			<h1 class="border-b-4 border-double py-4 text-center font-serif text-4xl font-black tracking-tight md:text-6xl">
+				This Week in Scouting
+			</h1>
+			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-b py-2 text-xs tracking-widest uppercase">
+				<span>
+					{shortDate(start)} - {shortDate(end)}
+				</span>
+				<span>
+					{posts.length} stories from {sourceCount} sources
+				</span>
+			</div>
+		</header>
+
+		{lead === undefined ? (
+			<p class="text-muted-foreground text-center font-serif italic">
+				Nothing was posted this week.
+			</p>
+		) : (
+			<>
+				<article class="grid items-center gap-6 md:grid-cols-2">
+					{lead.thumbnail && (
+						<img
+							class="aspect-video w-full object-cover"
+							src={lead.thumbnail}
+							alt=""
+						/>
+					)}
+					<div
+						class:list={[
+							"flex flex-col gap-3",
+							!lead.thumbnail && "md:col-span-2",
+						]}
+					>
+						<span class="text-primary text-xs font-bold tracking-widest uppercase">
+							Top story ·{" "}
+							<a href={lead.feed.links.overview} class="hover:underline">
+								{lead.feed.name}
+							</a>
+						</span>
+						<a
+							href={lead.url}
+							rel="noopener noreferrer"
+							target="_blank"
+							class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline"
+						>
+							{lead.title}
+						</a>
+						{lead.description && (
+							<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
+								{lead.description}
+							</p>
+						)}
+					</div>
+				</article>
+
+				<div class="flex flex-col">
+					{days.map((day) => (
+						<section class="border-foreground/40 grid gap-4 border-t py-6 md:grid-cols-[9rem_1fr]">
+							<h2 class="flex items-baseline gap-2 md:flex-col md:gap-0">
+								<span class="font-serif text-xl font-bold">
+									{formatDate(day.date, { weekday: "long" })}
+								</span>
+								<span class="text-muted-foreground text-xs tracking-widest uppercase">
+									{formatDate(day.date, { month: "short", day: "numeric" })}
+								</span>
+							</h2>
+							<div class="flex flex-col">
+								{day.posts.map((post) => (
+									<article class="flex gap-6 border-b py-3 first:pt-0">
+										<div class="flex min-w-0 flex-1 flex-col gap-1">
+											<a
+												href={post.feed.links.overview}
+												class="flex items-center gap-2 text-xs font-bold tracking-widest uppercase hover:underline"
+											>
+												<span class="bg-primary size-2 shrink-0" />
+												{post.feed.name}
+											</a>
+											<a
+												href={post.url}
+												rel="noopener noreferrer"
+												target="_blank"
+												class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+											>
+												{post.title}
+											</a>
+											{post.description && (
+												<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
+													{post.description}
+												</p>
+											)}
+										</div>
+										{post.thumbnail && (
+											<img
+												class="hidden aspect-8/5 w-28 shrink-0 object-cover sm:block"
+												src={post.thumbnail}
+												alt=""
+											/>
+										)}
+									</article>
+								))}
+							</div>
+						</section>
+					))}
+				</div>
+			</>
+		)}
+
+		<nav class="grid grid-cols-3 items-center gap-4 text-sm font-medium print:hidden">
+			<a
+				href={edition.previousHref}
+				class="text-primary flex items-center gap-2 hover:underline"
+			>
+				<Icon icon={ArrowLeftIcon} small />
+				Previous issue
+			</a>
+			<a href={browseHref} class="text-primary text-center hover:underline">
+				Browse this edition's news
+			</a>
+			{edition.nextHref && (
+				<a
+					href={edition.nextHref}
+					class="text-primary flex items-center justify-end gap-2 hover:underline"
+				>
+					Next issue
+					<Icon icon={ArrowRightIcon} small />
+				</a>
+			)}
+		</nav>
+	</div>
+</Layout>

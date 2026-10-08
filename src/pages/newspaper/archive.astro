@@ -1,0 +1,85 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
+import { editionsOf, leadPost } from "@/lib/newspaper/edition";
+import { rpc } from "@/rpc/client";
+
+export const prerender = false;
+
+const { posts } = await rpc.news.posts.query({
+	feeds: defaultVisibleFeedSlugs,
+	paginate: false,
+});
+
+const editions = editionsOf(posts).map((edition) => ({
+	...edition,
+	lead: leadPost(edition.posts)!,
+	sourceCount: new Set(edition.posts.map((post) => post.feed.slug)).size,
+}));
+
+const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
+	date.toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
+const shortDate = (date: Date) =>
+	formatDate(date, { month: "long", day: "numeric" });
+---
+
+<Layout title="This Week in Scouting: Archive">
+	<div class="mx-auto flex w-full max-w-6xl flex-col gap-10 p-4 md:p-8">
+		<header class="flex flex-col">
+			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-t border-b-4 border-double py-2 text-xs tracking-widest uppercase">
+				<a href="/newspaper" class="hover:text-foreground">
+					Latest issue
+				</a>
+				<span>scouting411.org</span>
+			</div>
+			<h1 class="border-b-4 border-double py-4 text-center font-serif text-4xl font-black tracking-tight md:text-6xl">
+				This Week in Scouting
+			</h1>
+			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-b py-2 text-xs tracking-widest uppercase">
+				<span>Archive</span>
+				<span>{editions.length} issues</span>
+			</div>
+		</header>
+
+		<div class="flex flex-col">
+			{editions.map((edition) => (
+				<a
+					href={edition.href}
+					class="group border-foreground/40 grid gap-4 border-t py-6 md:grid-cols-[12rem_1fr]"
+				>
+					<div class="flex flex-col">
+						<span class="font-serif text-xl font-bold">
+							{formatDate(edition.date, { dateStyle: "long" })}
+						</span>
+						<span class="text-muted-foreground text-xs tracking-widest uppercase">
+							{shortDate(edition.start)} - {shortDate(edition.end)}
+						</span>
+					</div>
+					<div class="flex gap-6">
+						<div class="flex min-w-0 flex-1 flex-col gap-1">
+							<span class="text-primary text-xs font-bold tracking-widest uppercase">
+								Top story · {edition.lead.feed.name}
+							</span>
+							<span class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto group-hover:underline">
+								{edition.lead.title}
+							</span>
+							<span class="text-muted-foreground text-sm">
+								{edition.posts.length}{" "}
+								{edition.posts.length === 1 ? "story" : "stories"} from{" "}
+								{edition.sourceCount}{" "}
+								{edition.sourceCount === 1 ? "source" : "sources"}
+							</span>
+						</div>
+						{edition.lead.thumbnail && (
+							<img
+								class="hidden aspect-[8/5] w-28 shrink-0 object-cover sm:block"
+								src={edition.lead.thumbnail}
+								alt=""
+							/>
+						)}
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+</Layout>
