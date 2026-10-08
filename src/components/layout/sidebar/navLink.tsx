@@ -19,7 +19,10 @@ export function NavLink({
 	/** the icon's color and fill, muted and unfilled if unset */
 	color?: string;
 }) {
-	const isActive = currentUrl.pathname === href;
+	// subpages keep their parent link active
+	const { pathname } = currentUrl;
+	const isActive =
+		pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
 	return (
 		<SidebarMenuButton
