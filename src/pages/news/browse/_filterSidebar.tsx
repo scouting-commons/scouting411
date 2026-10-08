@@ -230,23 +230,21 @@ export function FilterSidebar({
 
 				<form.Field name="feeds">
 					{(field) => {
-						/** an empty selection means every source, so show it that way */
-						const selected = field.state.value?.length
-							? field.state.value
-							: feeds.map((feed) => feed.slug);
+						/** only explicitly selected sources are checked. none checked means every source */
+						const selected = field.state.value ?? [];
 
 						return (
 							<FilterSidebarItem
-								label={`Sources (${selected.length}/${feeds.length})`}
+								label={`Sources (${selected.length ? `${selected.length}/${feeds.length}` : "all"})`}
 								accessory={
-									selected.length < feeds.length && (
+									selected.length > 0 && (
 										<Button
 											variant="ghost"
 											size="xs"
 											className="text-primary"
 											onClick={() => field.handleChange(undefined)}
 										>
-											Select all
+											Clear
 										</Button>
 									)
 								}
@@ -260,18 +258,18 @@ export function FilterSidebar({
 											<Checkbox
 												id={`source-${feed.slug}`}
 												checked={selected.includes(feed.slug)}
-												onCheckedChange={(checked) =>
-													field.handleChange(
-														/** rebuild from the canonical feed list so the order stays stable */
-														feeds
-															.filter((candidate) =>
-																candidate.slug === feed.slug
-																	? checked
-																	: selected.includes(candidate.slug),
-															)
-															.map((candidate) => candidate.slug),
-													)
-												}
+												onCheckedChange={(checked) => {
+													/** rebuild from the canonical feed list so the order stays stable */
+													const next = feeds
+														.filter((candidate) =>
+															candidate.slug === feed.slug
+																? checked
+																: selected.includes(candidate.slug),
+														)
+														.map((candidate) => candidate.slug);
+													/** keep the query sparse: no selection is the default */
+													field.handleChange(next.length ? next : undefined);
+												}}
 											/>
 											<label
 												htmlFor={`source-${feed.slug}`}
