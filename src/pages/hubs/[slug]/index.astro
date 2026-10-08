@@ -3,9 +3,8 @@ import Layout from "@/components/layout/Layout.astro";
 import { PostComponent } from "@/components/react/post";
 import { getHubBySlug } from "@/lib/hubs/hub";
 import { rpc } from "@/rpc/client";
-
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowRightIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -58,7 +57,7 @@ const formatDate = (date: Date) =>
 					class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
 				>
 					All {Intl.NumberFormat().format(pagination.totalItems)} in Browse
-					<FontAwesomeIcon icon={faArrowRight} />
+					<Icon icon={ArrowRightIcon} />
 				</a>
 			</div>
 

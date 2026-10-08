@@ -4,11 +4,11 @@ import Layout from "@/components/layout/Layout.astro";
 import { feeds } from "@/lib/news/feeds/feed";
 
 import {
-	faArrowRight,
-	faSquareUpRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronDownIcon } from "lucide-react";
+	ChevronDownIcon,
+	ArrowRightIcon,
+	SquareArrowOutUpRightIcon,
+} from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 // the server itself is served by `src/pages/mcp.ts`
 const mcpUrl = new URL("/mcp", Astro.site).href;
@@ -170,7 +170,7 @@ const clients = [
 						class="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold whitespace-nowrap"
 					>
 						Open OPML
-						<FontAwesomeIcon icon={faSquareUpRight} />
+						<Icon icon={SquareArrowOutUpRightIcon} />
 					</a>
 				</div>
 
@@ -341,7 +341,7 @@ const clients = [
 					href="/developers"
 					class="text-primary w-fit text-sm font-medium hover:underline"
 				>
-					Developer docs <FontAwesomeIcon icon={faArrowRight} />
+					Developer docs <Icon icon={ArrowRightIcon} />
 				</a>
 			</div>
 		</details>

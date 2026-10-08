@@ -1,10 +1,10 @@
 import {
-	faSquareUpRight,
-	faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BlocksIcon } from "lucide-react";
+	BlocksIcon,
+	GitBranchIcon,
+	SquareArrowOutUpRightIcon,
+	TriangleAlertIcon,
+} from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export function Page() {
 	return (
@@ -29,14 +29,11 @@ export function Page() {
 					className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 self-start rounded-md px-4 py-2 text-sm font-semibold"
 				>
 					API Reference
-					<FontAwesomeIcon icon={faSquareUpRight} />
+					<Icon icon={SquareArrowOutUpRightIcon} />
 				</a>
 
 				<div className="border-primary/30 bg-primary/5 flex gap-3 rounded-lg border p-4 text-sm">
-					<FontAwesomeIcon
-						icon={faTriangleExclamation}
-						className="mt-1 shrink-0"
-					/>
+					<Icon icon={TriangleAlertIcon} className="mt-1" />
 					<span>
 						The API is not versioned and is still subject to major breaking
 						changes. Pin nothing you can't fix quickly, and please open an issue
@@ -70,7 +67,7 @@ export function Page() {
 					target="_blank"
 					className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 self-start rounded-md px-4 py-2 text-sm font-semibold"
 				>
-					<FontAwesomeIcon icon={faGithub} />
+					<Icon icon={GitBranchIcon} />
 					GitHub Repo
 				</a>
 			</Section>

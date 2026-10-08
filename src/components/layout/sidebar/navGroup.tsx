@@ -1,6 +1,5 @@
 import React from "react";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronRightIcon } from "lucide-react";
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -13,6 +12,7 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Icon } from "@/components/react/icon";
 
 const labelClassName =
 	"h-auto rounded-none p-0 pl-3 text-xs font-bold uppercase";
@@ -57,10 +57,8 @@ export function NavGroup({
 					render={<CollapsibleTrigger />}
 					className={`${labelClassName} group/trigger hover:text-sidebar-foreground flex w-full cursor-pointer items-center justify-start gap-2 pr-3`}
 				>
-					<FontAwesomeIcon
-						icon={faChevronRight}
-						size="sm"
-
+					<Icon
+						icon={ChevronRightIcon}
 						className="transition-transform duration-200 group-data-panel-open/trigger:rotate-90"
 					/>
 					{label}

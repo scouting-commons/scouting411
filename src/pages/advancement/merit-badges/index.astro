@@ -2,9 +2,8 @@
 import Layout from "@/components/layout/Layout.astro";
 import { meritBadgePath } from "@/lib/advancement/meritBadges/types";
 import { rpc } from "@/rpc/client";
-
-import { faStar, faTableCells } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Grid3x3Icon, StarIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -16,13 +15,13 @@ const meritBadges = (await rpc.advancement.meritBadges.list()).toSorted(
 const tabs = [
 	{
 		label: "All badges",
-		icon: faTableCells,
+		icon: Grid3x3Icon,
 		href: "/advancement/merit-badges",
 		eagleOnly: false,
 	},
 	{
 		label: "Eagle required",
-		icon: faStar,
+		icon: StarIcon,
 		href: "/advancement/merit-badges?filter=eagle-required",
 		eagleOnly: true,
 	},
@@ -71,9 +70,9 @@ const shownBadges = eagleOnly
 					<a
 						href={tab.href}
 						aria-current={tab.eagleOnly === eagleOnly ? "page" : undefined}
-						class="text-muted-foreground hover:text-foreground aria-[current=page]:border-primary aria-[current=page]:text-foreground -mb-px flex items-center gap-1.5 border-b-2 border-transparent pb-2 font-medium [&_svg]:size-4"
+						class="text-muted-foreground hover:text-foreground aria-[current=page]:border-primary aria-[current=page]:text-foreground -mb-px flex items-center gap-1.5 border-b-2 border-transparent pb-2 font-medium"
 					>
-						<FontAwesomeIcon icon={tab.icon} />
+						<Icon icon={tab.icon} />
 						{tab.label}
 					</a>
 				))}
@@ -100,7 +99,10 @@ const shownBadges = eagleOnly
 					<span class="group-hover:text-primary font-serif text-sm font-bold">
 						{badge.eagleRequired && (
 							<>
-								<FontAwesomeIcon icon={faStar} className="text-primary mr-1" />
+								<Icon
+									icon={StarIcon}
+									className="fill-current text-primary mr-1"
+								/>
 								<span class="sr-only">Eagle required:</span>
 							</>
 						)}

@@ -1,5 +1,3 @@
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	ArrowUpRightIcon,
 	BlocksIcon,
@@ -7,11 +5,13 @@ import {
 	CalendarDaysIcon,
 	NewspaperIcon,
 	SearchIcon,
+	ArrowRightIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { SearchForm } from "@/components/react/searchForm";
 import { cn } from "@/util/cn";
 import { rpc } from "@/rpc/client";
+import { Icon } from "@/components/react/icon";
 
 const quickLinks = [
 	{ href: "https://my.scouting.org", label: "my.Scouting" },
@@ -73,7 +73,7 @@ export function Page() {
 							href="/this-week"
 							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
-							Read this week <FontAwesomeIcon icon={faArrowRight} />
+							Read this week <Icon icon={ArrowRightIcon} />
 						</a>
 					</Card>
 
@@ -86,7 +86,7 @@ export function Page() {
 							href="/news/browse"
 							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
-							Browse news <FontAwesomeIcon icon={faArrowRight} />
+							Browse news <Icon icon={ArrowRightIcon} />
 						</a>
 					</Card>
 
@@ -99,7 +99,7 @@ export function Page() {
 							href="/resources"
 							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
-							Browse resources <FontAwesomeIcon icon={faArrowRight} />
+							Browse resources <Icon icon={ArrowRightIcon} />
 						</a>
 					</Card>
 				</div>
@@ -119,13 +119,14 @@ export function Page() {
 
 					<Card icon={<BlocksIcon />} title="Integrations">
 						<p>
-							Connect Scouting411 to your AI assistant via MCP, your feed reader via RSS/Atom, and more.
+							Connect Scouting411 to your AI assistant via MCP, your feed reader
+							via RSS/Atom, and more.
 						</p>
 						<a
 							href="/integrations"
 							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
-							All integrations <FontAwesomeIcon icon={faArrowRight} />
+							All integrations <Icon icon={ArrowRightIcon} />
 						</a>
 					</Card>
 				</div>
@@ -209,7 +210,7 @@ function Card({
 	return (
 		<div className="border-border/60 flex flex-col gap-3 rounded-xl border p-5">
 			<h3 className="flex items-center gap-2 font-serif text-base font-bold">
-				<span className="text-muted-foreground [&_svg]:size-4">{icon}</span>
+				<span className="text-muted-foreground">{icon}</span>
 				{title}
 			</h3>
 			<div className="text-muted-foreground flex flex-1 flex-col gap-2 text-sm">

@@ -8,19 +8,20 @@ import {
 	SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
-	faBookBookmark,
-	faPlug,
-	faBullhorn,
-	faHouseChimney,
-	faMagnifyingGlassChart,
-	faNewspaper,
-	faArrowsRotate,
-	faAward,
-	faMedal,
-	faCompass,
-	faRibbon,
-	faSquare,
-} from "@fortawesome/free-solid-svg-icons";
+	BookMarkedIcon,
+	BlocksIcon,
+	RssIcon,
+	MegaphoneIcon,
+	HouseIcon,
+	ChartColumnIcon,
+	NewspaperIcon,
+	RefreshCwIcon,
+	AwardIcon,
+	MedalIcon,
+	CompassIcon,
+	RibbonIcon,
+	SquareIcon,
+} from "lucide-react";
 import { DarkModeControl } from "@/components/react/darkModeControl";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -55,29 +56,24 @@ export function AppSidebar({ url }: { url: URL }) {
 
 				<div className="flex flex-col gap-6">
 					<NavGroup>
-						<NavLink
-							href="/"
-							label="Home"
-							currentUrl={url}
-							icon={faHouseChimney}
-						/>
+						<NavLink href="/" label="Home" currentUrl={url} icon={HouseIcon} />
 						<NavLink
 							href="/this-week"
 							label="This Week in Scouting"
 							currentUrl={url}
-							icon={faNewspaper}
+							icon={NewspaperIcon}
 						/>
 						<NavLink
 							href="/resources"
 							label="Resources"
 							currentUrl={url}
-							icon={faBookBookmark}
+							icon={BookMarkedIcon}
 						/>
 						<NavLink
 							href="/integrations"
 							label="Integrations"
 							currentUrl={url}
-							icon={faPlug}
+							icon={BlocksIcon}
 						/>
 					</NavGroup>
 
@@ -86,26 +82,26 @@ export function AppSidebar({ url }: { url: URL }) {
 							href="/news/browse"
 							label="News Archive"
 							currentUrl={url}
-							icon={faNewspaper}
+							icon={RssIcon}
 						/>
 						<NavLink
 							href="/news/sources"
 							label="Sources"
 							currentUrl={url}
-							icon={faBullhorn}
+							icon={MegaphoneIcon}
 						/>
 						<NavLink
 							href="/news/stats"
 							label="Stats"
 							currentUrl={url}
-							icon={faMagnifyingGlassChart}
+							icon={ChartColumnIcon}
 						/>
 						{import.meta.env.DEV && (
 							<NavLink
 								href="/api/updateAllFeeds"
 								label="Ingest news"
 								currentUrl={url}
-								icon={faArrowsRotate}
+								icon={RefreshCwIcon}
 								newTab
 							/>
 						)}
@@ -116,32 +112,32 @@ export function AppSidebar({ url }: { url: URL }) {
 							href="/advancement/ranks"
 							label="Ranks"
 							currentUrl={url}
-							icon={faMedal}
+							icon={MedalIcon}
 						/>
 						<NavLink
 							href="/advancement/merit-badges"
 							label="Merit Badges"
 							currentUrl={url}
-							icon={faAward}
+							icon={AwardIcon}
 						/>
 						<NavLink
 							href="/advancement/adventures"
 							label="Adventures"
 							currentUrl={url}
-							icon={faCompass}
+							icon={CompassIcon}
 						/>
 						<NavLink
 							href="/advancement/awards"
 							label="Awards"
 							currentUrl={url}
-							icon={faRibbon}
+							icon={RibbonIcon}
 						/>
 						{import.meta.env.DEV && (
 							<NavLink
 								href="/api/updateAdvancement"
 								label="Ingest advancement"
 								currentUrl={url}
-								icon={faArrowsRotate}
+								icon={RefreshCwIcon}
 								newTab
 							/>
 						)}
@@ -153,7 +149,7 @@ export function AppSidebar({ url }: { url: URL }) {
 								href={hub.links.page}
 								label={hub.name}
 								currentUrl={url}
-								icon={faSquare}
+								icon={SquareIcon}
 								color={hub.color}
 							/>
 						))}

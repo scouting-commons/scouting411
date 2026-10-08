@@ -1,14 +1,9 @@
 ---
 import "@/global.css";
-// ship FontAwesome's CSS with the page; its default runtime injection makes icons flash unstyled until an island hydrates
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import Head from "@/components/layout/Head.astro";
 ---
 
 <script is:inline>
-	// the CSS is imported above, so stop FontAwesome from also injecting it at runtime
-	window.FontAwesomeConfig = { autoAddCss: false };
-
 	const getThemePreference = () => {
 		// if there is a saved preference, and it isn't "system", return the saved preference
 		const savedTheme = localStorage.getItem("theme");

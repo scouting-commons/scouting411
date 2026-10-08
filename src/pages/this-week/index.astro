@@ -3,9 +3,8 @@ import Layout from "@/components/layout/Layout.astro";
 import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
 import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
 import { rpc } from "@/rpc/client";
-
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowRightIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -197,7 +196,7 @@ const shortDate = (date: Date) =>
 			class="text-primary flex items-center justify-center gap-2 text-sm font-medium hover:underline"
 		>
 			Browse this edition's news
-			<FontAwesomeIcon icon={faArrowRight} size="sm" />
+			<Icon icon={ArrowRightIcon} small />
 		</a>
 	</div>
 </Layout>

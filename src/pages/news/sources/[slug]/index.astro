@@ -3,14 +3,13 @@ import Layout from "@/components/layout/Layout.astro";
 import { PostComponent } from "@/components/react/post";
 import { getFeedBySlug, isFeedSlug } from "@/lib/news/feeds/feed";
 import { rpc } from "@/rpc/client";
-
 import {
-	faArrowLeft,
-	faArrowRight,
-	faArrowUpRightFromSquare,
-	faRss,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+	ArrowLeftIcon,
+	ArrowRightIcon,
+	ExternalLinkIcon,
+	RssIcon,
+} from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -48,10 +47,10 @@ const links = [
 	{
 		label: "Website",
 		href: feed.links.homepage,
-		icon: faArrowUpRightFromSquare,
+		icon: ExternalLinkIcon,
 	},
-	{ label: "RSS", href: feed.links.rss, icon: faRss },
-	{ label: "Atom", href: feed.links.atom, icon: faRss },
+	{ label: "RSS", href: feed.links.rss, icon: RssIcon },
+	{ label: "Atom", href: feed.links.atom, icon: RssIcon },
 ];
 ---
 
@@ -61,7 +60,7 @@ const links = [
 			href="/news/sources"
 			class="text-primary flex items-center gap-2 self-start text-sm font-medium hover:underline"
 		>
-			<FontAwesomeIcon icon={faArrowLeft} />
+			<Icon icon={ArrowLeftIcon} />
 			All sources
 		</a>
 
@@ -96,7 +95,7 @@ const links = [
 						target="_blank"
 						class="text-primary flex items-center gap-1.5 font-medium hover:underline"
 					>
-						<FontAwesomeIcon icon={link.icon} size="sm" />
+						<Icon icon={link.icon} small />
 						{link.label}
 					</a>
 				))}
@@ -111,7 +110,7 @@ const links = [
 					class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
 				>
 					Browse all
-					<FontAwesomeIcon icon={faArrowRight} size="sm" />
+					<Icon icon={ArrowRightIcon} small />
 				</a>
 			</div>
 

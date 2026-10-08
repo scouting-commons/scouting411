@@ -4,9 +4,8 @@ import Requirements from "@/components/advancement/Requirements.astro";
 import { rankPath } from "@/lib/advancement/ranks/types";
 import { rpc } from "@/rpc/client";
 import { safe } from "@orpc/client";
-
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowLeftIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -34,7 +33,7 @@ const versionEffective = adventure.versionEffective
 			href={`/advancement/adventures#${adventure.rank.slug}`}
 			class="text-primary flex items-center gap-2 self-start text-sm font-medium hover:underline"
 		>
-			<FontAwesomeIcon icon={faArrowLeft} />
+			<Icon icon={ArrowLeftIcon} />
 			All adventures
 		</a>
 

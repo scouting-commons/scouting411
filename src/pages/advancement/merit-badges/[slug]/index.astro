@@ -3,12 +3,8 @@ import Layout from "@/components/layout/Layout.astro";
 import Requirements from "@/components/advancement/Requirements.astro";
 import { rpc } from "@/rpc/client";
 import { safe } from "@orpc/client";
-
-import {
-	faArrowLeft,
-	faArrowUpRightFromSquare,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
@@ -36,7 +32,7 @@ const versionEffective = meritBadge.versionEffective
 			href="/advancement/merit-badges"
 			class="text-primary flex items-center gap-2 self-start text-sm font-medium hover:underline"
 		>
-			<FontAwesomeIcon icon={faArrowLeft} />
+			<Icon icon={ArrowLeftIcon} />
 			All merit badges
 		</a>
 
@@ -75,7 +71,7 @@ const versionEffective = meritBadge.versionEffective
 					class="text-primary flex items-center gap-2 text-sm font-medium hover:underline"
 				>
 					View on scouting.org
-					<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+					<Icon icon={ExternalLinkIcon} />
 				</a>
 			</div>
 		</div>

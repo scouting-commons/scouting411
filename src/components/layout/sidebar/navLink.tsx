@@ -1,8 +1,7 @@
-import { faSquareUpRight } from "@fortawesome/free-solid-svg-icons";
-import type { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SquareArrowOutUpRightIcon, type LucideIcon } from "lucide-react";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { cn } from "@/util/cn";
+import { Icon } from "@/components/react/icon";
 
 export function NavLink({
 	href,
@@ -16,8 +15,8 @@ export function NavLink({
 	label: string;
 	newTab?: boolean;
 	currentUrl: URL;
-	icon: FontAwesomeIconProps["icon"];
-	/** the icon's color, muted if unset */
+	icon: LucideIcon;
+	/** the icon's color and fill, muted and unfilled if unset */
 	color?: string;
 }) {
 	const isActive = currentUrl.pathname === href;
@@ -35,15 +34,15 @@ export function NavLink({
 					rel={newTab ? "noopener noreferrer" : undefined}
 				>
 					<div className="flex items-center gap-2">
-						<FontAwesomeIcon
+						<Icon
 							icon={icon}
-							size="sm"
 							className={cn(!color && "text-sidebar-foreground/70")}
 							style={{ color }}
+							fill={color ? "currentColor" : "none"}
 						/>
 						{label}
 					</div>
-					{newTab && <FontAwesomeIcon icon={faSquareUpRight} size="sm" />}
+					{newTab && <Icon icon={SquareArrowOutUpRightIcon} />}
 				</a>
 			}
 		/>
