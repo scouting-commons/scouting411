@@ -59,7 +59,7 @@ export function AppSidebar({ url }: { url: URL }) {
 						<NavLink href="/" label="Home" currentUrl={url} icon={HouseIcon} />
 						<NavLink
 							href="/newspaper"
-							label="This Week in Scouting"
+							label="Newspaper"
 							currentUrl={url}
 							icon={NewspaperIcon}
 						/>
@@ -77,10 +77,10 @@ export function AppSidebar({ url }: { url: URL }) {
 						/>
 					</NavGroup>
 
-					<NavGroup label="news">
+					<NavGroup label="posts">
 						<NavLink
 							href="/news/browse"
-							label="News Archive"
+							label="Posts Archive"
 							currentUrl={url}
 							icon={RssIcon}
 						/>

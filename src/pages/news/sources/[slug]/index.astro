@@ -16,7 +16,7 @@ export const prerender = false;
 const { slug } = Astro.params;
 
 if (!slug || !isFeedSlug(slug)) {
-	throw new Response("Not found", { status: 404 });
+	return new Response(null, { status: 404 });
 }
 
 const feed = getFeedBySlug(slug);

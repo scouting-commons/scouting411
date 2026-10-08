@@ -14,7 +14,7 @@ export const prerender = false;
 export const GET: APIRoute = async (context) => {
 	const slug = context.params.slug!;
 	if (!isFeedSlug(slug)) {
-		throw new Response("Not found", { status: 404 });
+		return new Response("Not found", { status: 404 });
 	}
 	const feed = getFeedBySlug(slug);
 	const { posts } = await rpc.news.posts.query({

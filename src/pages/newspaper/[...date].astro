@@ -12,7 +12,7 @@ export const prerender = false;
 const edition = getEdition(Astro.params.date);
 
 if (!edition) {
-	throw new Response("Not found", { status: 404 });
+	return new Response(null, { status: 404 });
 }
 
 const { date, start, end, filter } = edition;

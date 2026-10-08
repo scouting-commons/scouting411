@@ -12,7 +12,7 @@ const { slug } = Astro.params;
 const hub = slug ? getHubBySlug(slug) : undefined;
 
 if (!hub) {
-	throw new Response("Not found", { status: 404 });
+	return new Response(null, { status: 404 });
 }
 
 const { posts, pagination } = await rpc.news.posts.query({

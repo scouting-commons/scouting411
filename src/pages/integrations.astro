@@ -7,6 +7,10 @@ import {
 	ChevronDownIcon,
 	ArrowRightIcon,
 	SquareArrowOutUpRightIcon,
+	SearchIcon,
+	RssIcon,
+	BotIcon,
+	CodeXmlIcon,
 } from "lucide-react";
 import { Icon } from "@/components/react/icon";
 
@@ -81,7 +85,10 @@ const clients = [
 		>
 			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
 				<div class="flex flex-col gap-1">
-					<h2 class="font-serif text-xl font-bold">Search engine</h2>
+					<h2 class="flex items-center gap-2 font-serif text-xl font-bold">
+						<Icon icon={SearchIcon} className="text-muted-foreground" />
+						Search engine
+					</h2>
 					<p class="text-muted-foreground text-sm">
 						Search Scouting411 from your browser's address bar.
 					</p>
@@ -111,7 +118,10 @@ const clients = [
 		>
 			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
 				<div class="flex flex-col gap-1">
-					<h2 class="font-serif text-xl font-bold">RSS feeds</h2>
+					<h2 class="flex items-center gap-2 font-serif text-xl font-bold">
+						<Icon icon={RssIcon} className="text-muted-foreground" />
+						RSS feeds
+					</h2>
 					<p class="text-muted-foreground text-sm">
 						Follow every official source in any feed reader.
 					</p>
@@ -234,7 +244,10 @@ const clients = [
 		>
 			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
 				<div class="flex flex-col gap-1">
-					<h2 class="font-serif text-xl font-bold">MCP server</h2>
+					<h2 class="flex items-center gap-2 font-serif text-xl font-bold">
+						<Icon icon={BotIcon} className="text-muted-foreground" />
+						MCP server
+					</h2>
 					<p class="text-muted-foreground text-sm">
 						Connect an AI assistant to first-party Scouting data.
 					</p>
@@ -334,7 +347,10 @@ const clients = [
 		>
 			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
 				<div class="flex flex-col gap-1">
-					<h2 class="font-serif text-xl font-bold">REST API</h2>
+					<h2 class="flex items-center gap-2 font-serif text-xl font-bold">
+						<Icon icon={CodeXmlIcon} className="text-muted-foreground" />
+						REST API
+					</h2>
 					<p class="text-muted-foreground text-sm">
 						Build on the same data in your own code.
 					</p>

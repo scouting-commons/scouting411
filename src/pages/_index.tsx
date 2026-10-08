@@ -78,10 +78,10 @@ export function Page() {
 						</a>
 					</Card>
 
-					<Card icon={RssIcon} title="News Archive">
+					<Card icon={RssIcon} title="Posts Archive">
 						<p>
-							Every post from every official source in one place, filterable by
-							source and date.
+							Every piece of news or editorial content from every official
+							source in one place, filterable by source and date.
 						</p>
 						<a
 							href="/news/browse"
