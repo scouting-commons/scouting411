@@ -86,10 +86,11 @@ export function CommandPaletteTrigger() {
 			variant="outline"
 			onClick={() => setOpen(true)}
 			aria-label="Launch"
-			className="items-center justify-between gap-2 px-1.5"
+			// pl matches the nav links' px-2.5, less the 1px border, so icons and labels line up
+			className="justify-between gap-2 pr-1.5 pl-[calc(--spacing(2.5)-1px)] font-normal"
 		>
 			<span className="flex items-center gap-2">
-				<Icon icon={ZapIcon} className="text-muted-foreground" />
+				<Icon icon={ZapIcon} className="text-muted-foreground size-4" />
 				<span className="text-muted-foreground">Launch...</span>
 			</span>
 			<KbdGroup className="inline-flex">

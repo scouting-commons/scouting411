@@ -2,7 +2,7 @@ import {
 	ArrowUpRightIcon,
 	BlocksIcon,
 	BookMarkedIcon,
-	CalendarDaysIcon,
+	RssIcon,
 	NewspaperIcon,
 	SearchIcon,
 	ArrowRightIcon,
@@ -65,7 +65,7 @@ export function Page() {
 				</p>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-					<Card icon={CalendarDaysIcon} title="This Week in Scouting">
+					<Card icon={NewspaperIcon} title="This Week in Scouting">
 						<p>
 							Last week's news from official sources, gathered into one edition
 							every Sunday.
@@ -78,7 +78,7 @@ export function Page() {
 						</a>
 					</Card>
 
-					<Card icon={NewspaperIcon} title="News">
+					<Card icon={RssIcon} title="News Archive">
 						<p>
 							Every post from every official source in one place, filterable by
 							source and date.

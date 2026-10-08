@@ -13,7 +13,7 @@ const secondaryWeight = 0.8;
  * query's letters in order scores something — "camping" matches "Champions for Nature"
  * at 0.025 — and that long tail is noise
  */
-const minScore = 0.1;
+const minScore = 0.4;
 
 /**
  * types ranked after every other match, whatever their score. awards are numerous and
