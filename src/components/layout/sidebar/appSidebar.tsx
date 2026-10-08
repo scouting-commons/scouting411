@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
 	faBookBookmark,
-	faCalendarWeek,
 	faBullhorn,
 	faHouseChimney,
 	faMagnifyingGlassChart,
@@ -65,9 +64,9 @@ export function AppSidebar({ url }: { url: URL }) {
 						/>
 						<NavLink
 							href="/this-week"
-							label="This week"
+							label="This Week in Scouting"
 							currentUrl={url}
-							icon={faCalendarWeek}
+							icon={faNewspaper}
 						/>
 						<NavLink
 							href="/resources"

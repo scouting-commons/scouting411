@@ -57,10 +57,10 @@ export function Page() {
 			<div className="flex w-full max-w-5xl flex-col gap-4">
 				<p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-center font-serif">
 					Official Scouting America news and resources are scattered across
-					dozens of blogs, newsrooms, and PDF libraries. Scouting411 gathers
-					them into one place, links back to every original, and opens it all up
-					for anything else to use, through RSS, a public API, and an MCP
-					server.
+					dozens of blogs, podcasts, newsrooms, websites, and PDF libraries.
+					Scouting411 gathers it all into one place and serves it up in every
+					format you want: a newsletter, a search engine, an AI plugin, and
+					more.
 				</p>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
