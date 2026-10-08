@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Icon } from "@/components/react/icon";
 
 export function PaginationControl({
 	page,
@@ -19,7 +20,7 @@ export function PaginationControl({
 				onClick={() => onPageChange(page - 1)}
 				disabled={page === 1}
 			>
-				<ChevronLeftIcon />
+				<Icon icon={ChevronLeftIcon} />
 				<span className="sr-only">Previous page</span>
 			</Button>
 			<span>{"Page "}</span>
@@ -41,7 +42,7 @@ export function PaginationControl({
 				onClick={() => onPageChange(page + 1)}
 				disabled={page === maxPage}
 			>
-				<ChevronRightIcon />
+				<Icon icon={ChevronRightIcon} />
 				<span className="sr-only">Next page</span>
 			</Button>
 		</div>

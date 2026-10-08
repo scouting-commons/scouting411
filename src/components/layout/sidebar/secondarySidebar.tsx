@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useIsMobile } from "@/util/hooks/use-mobile";
 import { cn } from "@/util/cn";
+import { Icon } from "@/components/react/icon";
 
 const SecondarySidebarContext = createContext<{
 	label: string;
@@ -101,7 +102,7 @@ export function SecondarySidebarTrigger() {
 			className="md:hidden"
 			onClick={context.openSheet}
 		>
-			<SlidersHorizontalIcon />
+			<Icon icon={SlidersHorizontalIcon} />
 			{context.label}
 		</Button>
 	);

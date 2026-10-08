@@ -6,6 +6,7 @@ import {
 	NewspaperIcon,
 	SearchIcon,
 	ArrowRightIcon,
+	type LucideIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { SearchForm } from "@/components/react/searchForm";
@@ -47,7 +48,7 @@ export function Page() {
 							>
 								{link.indicator}
 								{link.label}
-								<ArrowUpRightIcon className="size-3.5" />
+								<Icon icon={ArrowUpRightIcon} />
 							</a>
 						</li>
 					))}
@@ -64,7 +65,7 @@ export function Page() {
 				</p>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-					<Card icon={<CalendarDaysIcon />} title="This Week in Scouting">
+					<Card icon={CalendarDaysIcon} title="This Week in Scouting">
 						<p>
 							Last week's news from official sources, gathered into one edition
 							every Sunday.
@@ -77,7 +78,7 @@ export function Page() {
 						</a>
 					</Card>
 
-					<Card icon={<NewspaperIcon />} title="News">
+					<Card icon={NewspaperIcon} title="News">
 						<p>
 							Every post from every official source in one place, filterable by
 							source and date.
@@ -90,7 +91,7 @@ export function Page() {
 						</a>
 					</Card>
 
-					<Card icon={<BookMarkedIcon />} title="Resources">
+					<Card icon={BookMarkedIcon} title="Resources">
 						<p>
 							A directory of official national publications, guides, and tools
 							from Scouting America.
@@ -105,7 +106,7 @@ export function Page() {
 				</div>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<Card icon={<SearchIcon />} title="Search engine">
+					<Card icon={SearchIcon} title="Search engine">
 						<p>
 							One search across ranks, merit badges, adventures, news sources,
 							resources, and pages. Add it to your browser as a search engine,
@@ -117,7 +118,7 @@ export function Page() {
 						</p>
 					</Card>
 
-					<Card icon={<BlocksIcon />} title="Integrations">
+					<Card icon={BlocksIcon} title="Integrations">
 						<p>
 							Connect Scouting411 to your AI assistant via MCP, your feed reader
 							via RSS/Atom, and more.
@@ -203,14 +204,14 @@ function Card({
 	title,
 	children,
 }: {
-	icon: ReactNode;
+	icon: LucideIcon;
 	title: string;
 	children: ReactNode;
 }) {
 	return (
 		<div className="border-border/60 flex flex-col gap-3 rounded-xl border p-5">
 			<h3 className="flex items-center gap-2 font-serif text-base font-bold">
-				<span className="text-muted-foreground">{icon}</span>
+				<Icon icon={icon} className="text-muted-foreground" />
 				{title}
 			</h3>
 			<div className="text-muted-foreground flex flex-1 flex-col gap-2 text-sm">

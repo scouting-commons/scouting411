@@ -6,6 +6,7 @@ import {
 	InputGroupInput,
 } from "@/components/ui/input-group";
 import { cn } from "@/util/cn";
+import { Icon } from "@/components/react/icon";
 
 /** a plain get form to the search page, so it works without javascript */
 export function SearchForm({
@@ -32,7 +33,7 @@ export function SearchForm({
 			{tab && <input type="hidden" name="tab" value={tab} />}
 			<InputGroup className="h-11 rounded-full px-1.5">
 				<InputGroupAddon>
-					<SearchIcon />
+					<Icon icon={SearchIcon} />
 				</InputGroupAddon>
 				<InputGroupInput
 					name="q"
@@ -50,7 +51,7 @@ export function SearchForm({
 						className="rounded-full"
 						aria-label="Search"
 					>
-						<ArrowRightIcon />
+						<Icon icon={ArrowRightIcon} />
 					</InputGroupButton>
 				</InputGroupAddon>
 			</InputGroup>

@@ -33,6 +33,7 @@ import {
 	searchItemTypes,
 } from "@/components/react/searchItem";
 import { rpc } from "@/rpc/client";
+import { Icon } from "@/components/react/icon";
 
 /** global store for whether the command palette is open */
 const $commandPaletteOpen = atom(false);
@@ -88,7 +89,7 @@ export function CommandPaletteTrigger() {
 			className="items-center justify-between gap-2 px-1.5"
 		>
 			<span className="flex items-center gap-2">
-				<ZapIcon className="text-muted-foreground" />
+				<Icon icon={ZapIcon} className="text-muted-foreground" />
 				<span className="text-muted-foreground">Launch...</span>
 			</span>
 			<KbdGroup className="inline-flex">
@@ -142,7 +143,7 @@ function CommandPaletteContent() {
 			{
 				heading: "Site Theme",
 				label: "Theme",
-				icon: <SunMoonIcon />,
+				icon: <Icon icon={SunMoonIcon} />,
 				entries: [
 					{
 						id: "theme:dark",
@@ -238,7 +239,7 @@ function CommandPaletteContent() {
 								})}
 							>
 								<span className="text-muted-foreground flex size-5 shrink-0 items-center justify-center">
-									<SearchIcon />
+									<Icon icon={SearchIcon} />
 								</span>
 								See all results for “{search.trim()}”
 							</CommandItem>

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import type { SearchItem } from "@/lib/search/types";
 import { cn } from "@/util/cn";
+import { Icon } from "@/components/react/icon";
 
 /** how each type of search item is labelled, in display order */
 export const searchItemTypes: Record<
@@ -20,17 +21,21 @@ export const searchItemTypes: Record<
 		icon?: ReactNode;
 	}
 > = {
-	page: { heading: "Navigation", label: "Page", icon: <CompassIcon /> },
+	page: {
+		heading: "Navigation",
+		label: "Page",
+		icon: <Icon icon={CompassIcon} />,
+	},
 	hub: {
 		heading: "Hubs",
 		label: "Hub",
-		icon: <SquareIcon className="fill-current" />,
+		icon: <Icon icon={SquareIcon} className="fill-current" />,
 	},
-	feed: { heading: "Feeds", label: "Feed", icon: <RssIcon /> },
+	feed: { heading: "Feeds", label: "Feed", icon: <Icon icon={RssIcon} /> },
 	resource: {
 		heading: "Resources",
 		label: "Resource",
-		icon: <ExternalLinkIcon />,
+		icon: <Icon icon={ExternalLinkIcon} />,
 	},
 	rank: { heading: "Ranks", label: "Rank" },
 	meritBadge: { heading: "Merit Badges", label: "Merit Badge" },

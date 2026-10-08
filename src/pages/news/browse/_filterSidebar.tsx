@@ -31,6 +31,7 @@ import {
 import { PaginationControl } from "@/components/react/paginate";
 import { Button } from "@/components/ui/button";
 import { SearchIcon, XIcon } from "lucide-react";
+import { Icon } from "@/components/react/icon";
 
 /** value -> pretty label for the sort direction select */
 const sortDirectionItems = [
@@ -95,7 +96,7 @@ export function FilterSidebar({
 					{(field) => (
 						<InputGroup>
 							<InputGroupAddon>
-								<SearchIcon />
+								<Icon icon={SearchIcon} />
 							</InputGroupAddon>
 							<InputGroupInput
 								type="search"
@@ -114,7 +115,7 @@ export function FilterSidebar({
 										aria-label="Clear search"
 										onClick={() => field.handleChange(undefined)}
 									>
-										<XIcon />
+										<Icon icon={XIcon} />
 									</InputGroupButton>
 								</InputGroupAddon>
 							)}

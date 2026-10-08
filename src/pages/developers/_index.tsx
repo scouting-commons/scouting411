@@ -51,7 +51,7 @@ export function Page() {
 					href="/integrations"
 					className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 self-start rounded-md px-4 py-2 text-sm font-semibold"
 				>
-					<BlocksIcon className="size-4" />
+					<Icon icon={BlocksIcon} />
 					Integrations
 				</a>
 			</Section>

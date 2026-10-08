@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import type { SearchItem } from "@/lib/search/types";
 import type { Post } from "@/lib/news/feeds/post";
+import { Icon } from "@/components/react/icon";
 
 type SearchTab = "all" | "news";
 
@@ -130,8 +131,8 @@ function SearchTabs({
 	className?: string;
 }) {
 	const tabs = [
-		{ key: "all", label: "All", icon: <SearchIcon /> },
-		{ key: "news", label: "News", icon: <NewspaperIcon /> },
+		{ key: "all", label: "All", icon: <Icon icon={SearchIcon} /> },
+		{ key: "news", label: "News", icon: <Icon icon={NewspaperIcon} /> },
 	] as const;
 
 	return (
@@ -144,7 +145,7 @@ function SearchTabs({
 					key={key}
 					href={searchHref(query, key)}
 					aria-current={key === tab ? "page" : undefined}
-					className="text-muted-foreground hover:text-foreground aria-[current=page]:border-primary aria-[current=page]:text-foreground -mb-px flex items-center gap-1.5 border-b-2 border-transparent pb-2 font-medium [&_svg]:size-4"
+					className="text-muted-foreground hover:text-foreground aria-[current=page]:border-primary aria-[current=page]:text-foreground -mb-px flex items-center gap-1.5 border-b-2 border-transparent pb-2 font-medium"
 				>
 					{icon}
 					{label}
@@ -175,7 +176,7 @@ function NewsCarousel({
 			>
 				<div className="flex items-center justify-between gap-2">
 					<h2 className="flex items-center gap-2 font-serif text-lg font-bold">
-						<NewspaperIcon className="text-muted-foreground size-5" />
+						<Icon icon={NewspaperIcon} className="text-muted-foreground" />
 						Top Stories
 					</h2>
 					<div className="flex gap-2">
@@ -306,8 +307,10 @@ function SearchResult({ item, origin }: { item: SearchItem; origin: string }) {
 				>
 					{item.name}
 					{item.external && (
-						<ExternalLinkIcon
-							className="ml-1.5 inline size-3.5 align-baseline"
+						<Icon
+							icon={ExternalLinkIcon}
+							small
+							className="ml-1.5"
 							aria-label="(opens in a new tab)"
 						/>
 					)}
