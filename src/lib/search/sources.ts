@@ -19,18 +19,17 @@ import type { SearchItem } from "@/lib/search/types";
 /** site navigation pages */
 const navigation = [
 	{ href: "/", label: "Home" },
-	{ href: "/this-week", label: "This week" },
-	{ href: "/news/browse", label: "All news" },
+	{ href: "/this-week", label: "This Week in Scouting" },
+	{ href: "/news/browse", label: "News Archive" },
 	{ href: "/news/sources", label: "Sources" },
-	{ href: "/news/subscribe", label: "RSS subscribe" },
 	{ href: "/news/stats", label: "Stats" },
 	{ href: "/advancement/ranks", label: "Ranks" },
 	{ href: "/advancement/merit-badges", label: "Merit Badges" },
 	{ href: "/advancement/adventures", label: "Adventures" },
 	{ href: "/advancement/awards", label: "Awards" },
 	{ href: "/resources", label: "Resources" },
+	{ href: "/integrations", label: "Integrations" },
 	{ href: "/developers", label: "Developers" },
-	{ href: "/agents", label: "Agent setup" },
 ];
 
 /**

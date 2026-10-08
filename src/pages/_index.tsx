@@ -119,27 +119,13 @@ export function Page() {
 
 					<Card icon={<BlocksIcon />} title="Integrations">
 						<p>
-							Every official source is re-published as RSS and Atom feeds for
-							any feed reader, or all at once via OPML.
+							Connect Scouting411 to your AI assistant via MCP, your feed reader via RSS/Atom, and more.
 						</p>
 						<a
-							href="/news/subscribe"
-							className="text-primary w-fit font-medium hover:underline"
+							href="/integrations"
+							className="text-primary mt-auto w-fit font-medium hover:underline"
 						>
-							Subscribe <FontAwesomeIcon icon={faArrowRight} />
-						</a>
-						<p className="mt-2">
-							Give an AI assistant first-party Scouting news, advancement, and
-							resources. Add this URL as a remote MCP server:
-						</p>
-						<Code className="block w-fit wrap-anywhere select-all">
-							{mcpUrl}
-						</Code>
-						<a
-							href="/agents"
-							className="text-primary w-fit font-medium hover:underline"
-						>
-							Setup guide <FontAwesomeIcon icon={faArrowRight} />
+							All integrations <FontAwesomeIcon icon={faArrowRight} />
 						</a>
 					</Card>
 				</div>
@@ -210,9 +196,6 @@ function SystemStatusDot() {
 		/>
 	);
 }
-
-/** the public url of the mcp server, served by `src/pages/mcp.ts` */
-const mcpUrl = new URL("/mcp", import.meta.env.SITE).href;
 
 function Card({
 	icon,

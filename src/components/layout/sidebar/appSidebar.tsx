@@ -9,17 +9,16 @@ import {
 } from "@/components/ui/sidebar";
 import {
 	faBookBookmark,
+	faPlug,
 	faBullhorn,
 	faHouseChimney,
 	faMagnifyingGlassChart,
 	faNewspaper,
-	faRssSquare,
 	faArrowsRotate,
 	faAward,
 	faMedal,
 	faCompass,
 	faRibbon,
-	faRobot,
 	faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeControl } from "@/components/react/darkModeControl";
@@ -74,25 +73,18 @@ export function AppSidebar({ url }: { url: URL }) {
 							currentUrl={url}
 							icon={faBookBookmark}
 						/>
-					</NavGroup>
-
-					<NavGroup label="hubs">
-						{hubs.map((hub) => (
-							<NavLink
-								key={hub.slug}
-								href={hub.links.page}
-								label={hub.name}
-								currentUrl={url}
-								icon={faSquare}
-								color={hub.color}
-							/>
-						))}
+						<NavLink
+							href="/integrations"
+							label="Integrations"
+							currentUrl={url}
+							icon={faPlug}
+						/>
 					</NavGroup>
 
 					<NavGroup label="news">
 						<NavLink
 							href="/news/browse"
-							label="All news"
+							label="News Archive"
 							currentUrl={url}
 							icon={faNewspaper}
 						/>
@@ -154,20 +146,17 @@ export function AppSidebar({ url }: { url: URL }) {
 							/>
 						)}
 					</NavGroup>
-
-					<NavGroup label="integrations" collapsible defaultOpen={false}>
-						<NavLink
-							href="/agents"
-							label="Agent setup"
-							currentUrl={url}
-							icon={faRobot}
-						/>
-						<NavLink
-							href="/news/subscribe"
-							label="RSS subscribe"
-							currentUrl={url}
-							icon={faRssSquare}
-						/>
+					<NavGroup label="hubs">
+						{hubs.map((hub) => (
+							<NavLink
+								key={hub.slug}
+								href={hub.links.page}
+								label={hub.name}
+								currentUrl={url}
+								icon={faSquare}
+								color={hub.color}
+							/>
+						))}
 					</NavGroup>
 				</div>
 			</SidebarContent>

@@ -7,7 +7,7 @@
 [![CI](https://github.com/scouting-commons/scouting411/actions/workflows/check.yaml/badge.svg)](https://github.com/scouting-commons/scouting411/actions/workflows/check.yaml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 
-[**🌐 scouting411.org**](https://scouting411.org) · [🔌 API docs](https://scouting411.org/api) · [🤖 MCP server](https://scouting411.org/agents) · [Request a resource](https://github.com/scouting-commons/scouting411/issues/new/choose)
+[**🌐 scouting411.org**](https://scouting411.org) · [🔌 API docs](https://scouting411.org/api) · [🤖 MCP server](https://scouting411.org/integrations#mcp-server) · [Request a resource](https://github.com/scouting-commons/scouting411/issues/new/choose)
 
 </div>
 
@@ -34,9 +34,9 @@ Press <kbd>Ctrl</kbd>+<kbd>K</kbd> anywhere on the site to search it, or add Sco
 
 Everything on the site is open for reuse:
 
-- **Feeds.** Every source is re-published as [RSS, Atom](https://scouting411.org/news/subscribe), and a single OPML file, so you can follow along in any feed reader.
+- **Feeds.** Every source is re-published as [RSS, Atom](https://scouting411.org/integrations#rss-feeds), and a single OPML file, so you can follow along in any feed reader.
 - **REST API.** A public, CORS-enabled API with an OpenAPI spec and interactive docs at [scouting411.org/api](https://scouting411.org/api). See [developers](https://scouting411.org/developers) for more.
-- **MCP server.** Connect Claude or any MCP client to `https://scouting411.org/mcp` to search news, look up requirements, and check system status. Setup steps are on the [MCP server page](https://scouting411.org/agents).
+- **MCP server.** Connect Claude or any MCP client to `https://scouting411.org/mcp` to search news, look up requirements, and check system status. Setup steps are on the [MCP server page](https://scouting411.org/integrations#mcp-server).
 
 ## Adding a Resource
 

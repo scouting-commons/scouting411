@@ -1,0 +1,359 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+
+import { feeds } from "@/lib/news/feeds/feed";
+
+import {
+	faArrowRight,
+	faSquareUpRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronDownIcon } from "lucide-react";
+
+// the server itself is served by `src/pages/mcp.ts`
+const mcpUrl = new URL("/mcp", Astro.site).href;
+
+const capabilities = [
+	{
+		title: "Search",
+		description:
+			"Find ranks, merit badges, adventures, awards, resources, news sources, and site pages by name.",
+	},
+	{
+		title: "News",
+		description:
+			"Query posts from every official source, filtered by source, keyword, and date.",
+	},
+	{
+		title: "Advancement",
+		description:
+			"The current official requirements for every rank, merit badge, Cub Scout adventure, and award.",
+	},
+	{
+		title: "Resources",
+		description:
+			"Official handbooks, tools, and reference sites from the national organization.",
+	},
+];
+
+const clients = [
+	{
+		name: "Claude",
+		steps:
+			"Open Connectors in Claude's settings, choose Add custom connector, and paste the server URL.",
+	},
+	{
+		name: "Claude Code",
+		code: `claude mcp add --transport http scouting411 ${mcpUrl}`,
+	},
+	{
+		name: "VS Code",
+		steps: "Add to .vscode/mcp.json:",
+		code: JSON.stringify(
+			{ servers: { scouting411: { type: "http", url: mcpUrl } } },
+			null,
+			2,
+		),
+	},
+	{
+		name: "Cursor",
+		steps: "Add to mcp.json:",
+		code: JSON.stringify(
+			{ mcpServers: { scouting411: { url: mcpUrl } } },
+			null,
+			2,
+		),
+	},
+];
+---
+
+<Layout title="Integrations">
+	<div class="mx-auto flex w-full max-w-4xl flex-col gap-4 p-8">
+		<p class="text-sm">
+			Everything Scouting411 collects is open for anything else to use. Take it
+			into your browser, your feed reader, your AI assistant, or your own code.
+		</p>
+
+		<details
+			id="search-engine"
+			name="integration"
+			class="group scroll-mt-20 rounded-lg border"
+		>
+			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+				<div class="flex flex-col gap-1">
+					<h2 class="font-serif text-xl font-bold">Search engine</h2>
+					<p class="text-muted-foreground text-sm">
+						Search Scouting411 from your browser's address bar.
+					</p>
+				</div>
+				<ChevronDownIcon className="text-muted-foreground size-5 shrink-0 transition-transform group-open:rotate-180" />
+			</summary>
+			<div class="flex flex-col gap-3 border-t p-5">
+				<p class="text-sm">
+					Add Scouting411 as a search engine: in Chrome, type scouting411.org
+					and press Tab; in Firefox, use the address bar menu. Start a search
+					with{" "}
+					<code class="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
+						!
+					</code>{" "}
+					to jump straight to the top result.
+				</p>
+			</div>
+		</details>
+
+		<details
+			id="rss-feeds"
+			name="integration"
+			class="group scroll-mt-20 rounded-lg border"
+		>
+			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+				<div class="flex flex-col gap-1">
+					<h2 class="font-serif text-xl font-bold">RSS feeds</h2>
+					<p class="text-muted-foreground text-sm">
+						Follow every official source in any feed reader.
+					</p>
+				</div>
+				<ChevronDownIcon className="text-muted-foreground size-5 shrink-0 transition-transform group-open:rotate-180" />
+			</summary>
+			<div class="flex flex-col gap-6 border-t p-5">
+				<p class="text-sm">
+					The original/upstream news sources we use are published in a variety
+					of formats. For your convenience, Scouting411 parses and re-exports
+					these sources as a set of standards-compliant, non-paginated web feeds
+					for you. If you don't know what a web feed is, you can learn more at{" "}
+					<a
+						href="https://aboutfeeds.com/"
+						rel="noopener noreferrer"
+						target="_blank"
+						class="text-primary wrap-anywhere hyphens-auto hover:underline"
+					>
+						aboutfeeds.com
+					</a>
+					.
+				</p>
+
+				<div class="rounded-lg border p-4">
+					<div class="text-muted-foreground mb-2 text-xs font-medium uppercase">
+						Caveats
+					</div>
+					<ul class="flex flex-col gap-1.5 text-sm">
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							The feeds are not continuously updated. They may be stale by up to
+							24 hours at a given time.
+						</li>
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							We have not added support for media enclosures; these feeds will
+							not work with a podcast app.
+						</li>
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							While we have attempted to faithfully represent the original
+							content, the metadata and formatting of these feeds is not
+							identical to the upstream sources.
+						</li>
+					</ul>
+				</div>
+
+				<div class="border-primary/30 bg-primary/5 flex flex-col items-start gap-2 rounded-lg border p-4 px-5 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<div class="mb-2 font-serif font-bold">Import All Feeds</div>
+						<p class="text-muted-foreground text-sm">
+							Add every Scouting411 feed to your reader at once via OPML.
+						</p>
+					</div>
+					<a
+						href="/feeds/all/opml"
+						rel="noopener noreferrer"
+						target="_blank"
+						class="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold whitespace-nowrap"
+					>
+						Open OPML
+						<FontAwesomeIcon icon={faSquareUpRight} />
+					</a>
+				</div>
+
+				<div class="overflow-hidden rounded-lg border">
+					<table class="w-full border-collapse text-sm">
+						<thead>
+							<tr class="border-b">
+								<th class="px-4 py-3 text-left font-medium">Source</th>
+								<th class="px-4 py-3 text-left font-medium">Feeds</th>
+							</tr>
+						</thead>
+						<tbody>
+							{feeds.map((feed) => (
+								<tr class="hover:bg-muted border-b last:border-0">
+									<td class="px-4 py-3">
+										<a
+											class="text-primary font-medium wrap-anywhere hyphens-auto hover:underline"
+											href={feed.links.overview}
+										>
+											{feed.name}
+										</a>
+									</td>
+									<td class="px-4 py-3">
+										<div class="flex gap-2">
+											<a
+												href={feed.links.rss}
+												rel="noopener noreferrer"
+												target="_blank"
+												class="hover:border-primary hover:text-primary rounded-md border px-2.5 py-1 text-xs font-medium transition-colors"
+											>
+												RSS
+											</a>
+											<a
+												href={feed.links.atom}
+												rel="noopener noreferrer"
+												target="_blank"
+												class="hover:border-primary hover:text-primary rounded-md border px-2.5 py-1 text-xs font-medium transition-colors"
+											>
+												Atom
+											</a>
+										</div>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</details>
+
+		<details
+			id="mcp-server"
+			name="integration"
+			class="group scroll-mt-20 rounded-lg border"
+		>
+			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+				<div class="flex flex-col gap-1">
+					<h2 class="font-serif text-xl font-bold">MCP server</h2>
+					<p class="text-muted-foreground text-sm">
+						Connect an AI assistant to first-party Scouting data.
+					</p>
+				</div>
+				<ChevronDownIcon className="text-muted-foreground size-5 shrink-0 transition-transform group-open:rotate-180" />
+			</summary>
+			<div class="flex flex-col gap-8 border-t p-5">
+				<div class="flex flex-col gap-3">
+					<p class="text-sm">
+						Scouting411 runs an MCP server, so an AI assistant can look things
+						up here directly instead of relying on memory or web search. MCP
+						(the Model Context Protocol) is an open standard for connecting
+						assistants to outside tools and data. It's free, needs no account or
+						API key, and serves the same first-party data as this site,
+						refreshed daily.
+					</p>
+
+					<div class="border-primary/30 bg-primary/5 flex flex-col gap-2 rounded-lg border p-4 px-5">
+						<div class="font-serif font-bold">Server URL</div>
+						<code class="bg-background w-fit rounded border px-2 py-1 font-mono text-sm wrap-anywhere select-all">
+							{mcpUrl}
+						</code>
+						<p class="text-muted-foreground text-sm">
+							A remote MCP server over Streamable HTTP. Add it to any client
+							that supports remote servers.
+						</p>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-4">
+					<h3 class="font-serif text-lg font-bold">What it can do</h3>
+					<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						{capabilities.map((capability) => (
+							<li class="bg-card flex flex-col gap-1 rounded-lg border p-4">
+								<span class="font-serif font-bold">{capability.title}</span>
+								<span class="text-muted-foreground text-sm">
+									{capability.description}
+								</span>
+							</li>
+						))}
+					</ul>
+					<p class="text-muted-foreground text-sm">
+						It covers national, first-party material only: not council or unit
+						content, third-party commentary, or retail.
+					</p>
+				</div>
+
+				<div class="flex flex-col gap-4">
+					<h3 class="font-serif text-lg font-bold">Setup</h3>
+					<div class="flex flex-col gap-5">
+						{clients.map((client) => (
+							<div class="flex flex-col gap-2">
+								<h4 class="font-semibold">{client.name}</h4>
+								{client.steps && <p class="text-sm">{client.steps}</p>}
+								{client.code && <pre class="bg-muted overflow-x-auto rounded-md p-3 font-mono text-xs">
+										<code>{client.code}</code>
+									</pre>}
+							</div>
+						))}
+					</div>
+					<p class="text-muted-foreground text-sm">
+						Client menus change often; if these steps are out of date, check
+						your client's documentation for adding a remote MCP server.
+					</p>
+				</div>
+
+				<div class="flex flex-col gap-3">
+					<h3 class="font-serif text-lg font-bold">Good to know</h3>
+					<ul class="flex flex-col gap-1.5 text-sm">
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							Data is refreshed once a day, so it may be up to 24 hours behind
+							the original sources.
+						</li>
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							The server's tools are still evolving and may change without
+							notice.
+						</li>
+						<li class="flex gap-2">
+							<span class="text-muted-foreground">&bull;</span>
+							Scouting411 is not affiliated with Scouting America. Assistants
+							should cite the original source, which every result links to.
+						</li>
+					</ul>
+				</div>
+			</div>
+		</details>
+
+		<details
+			id="rest-api"
+			name="integration"
+			class="group scroll-mt-20 rounded-lg border"
+		>
+			<summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+				<div class="flex flex-col gap-1">
+					<h2 class="font-serif text-xl font-bold">REST API</h2>
+					<p class="text-muted-foreground text-sm">
+						Build on the same data in your own code.
+					</p>
+				</div>
+				<ChevronDownIcon className="text-muted-foreground size-5 shrink-0 transition-transform group-open:rotate-180" />
+			</summary>
+			<div class="flex flex-col gap-3 border-t p-5">
+				<p class="text-sm">
+					A free, public API for news, advancement, resources, and search, with
+					an OpenAPI spec and interactive docs.
+				</p>
+				<a
+					href="/developers"
+					class="text-primary w-fit text-sm font-medium hover:underline"
+				>
+					Developer docs <FontAwesomeIcon icon={faArrowRight} />
+				</a>
+			</div>
+		</details>
+	</div>
+</Layout>
+
+<script>
+	// open the section a link points at, like /integrations#mcp-server
+	const openLinkedSection = () => {
+		const target = document.getElementById(location.hash.slice(1));
+		if (target instanceof HTMLDetailsElement) target.open = true;
+	};
+	openLinkedSection();
+	window.addEventListener("hashchange", openLinkedSection);
+</script>
