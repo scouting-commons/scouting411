@@ -15,7 +15,7 @@ export function Icon({
 	return (
 		<LucideIcon
 			className={cn(
-				"shrink-0 align-[-0.125em]",
+				"inline-block shrink-0 align-[-0.125em]",
 				small ? "size-[0.875em]" : "size-[1em]",
 				className,
 			)}
