@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
 	faBookBookmark,
+	faCalendarWeek,
 	faBullhorn,
 	faHouseChimney,
 	faMagnifyingGlassChart,
@@ -63,10 +64,16 @@ export function AppSidebar({ url }: { url: URL }) {
 							icon={faHouseChimney}
 						/>
 						<NavLink
-							href="/agents"
-							label="Agent setup"
+							href="/this-week"
+							label="This week"
 							currentUrl={url}
-							icon={faRobot}
+							icon={faCalendarWeek}
+						/>
+						<NavLink
+							href="/resources"
+							label="Resources"
+							currentUrl={url}
+							icon={faBookBookmark}
 						/>
 					</NavGroup>
 
@@ -86,7 +93,7 @@ export function AppSidebar({ url }: { url: URL }) {
 					<NavGroup label="news">
 						<NavLink
 							href="/news/browse"
-							label="Newsfeed"
+							label="All news"
 							currentUrl={url}
 							icon={faNewspaper}
 						/>
@@ -95,12 +102,6 @@ export function AppSidebar({ url }: { url: URL }) {
 							label="Sources"
 							currentUrl={url}
 							icon={faBullhorn}
-						/>
-						<NavLink
-							href="/news/subscribe"
-							label="Subscribe"
-							currentUrl={url}
-							icon={faRssSquare}
 						/>
 						<NavLink
 							href="/news/stats"
@@ -155,12 +156,18 @@ export function AppSidebar({ url }: { url: URL }) {
 						)}
 					</NavGroup>
 
-					<NavGroup label="resources">
+					<NavGroup label="integrations" collapsible defaultOpen={false}>
 						<NavLink
-							href="/resources"
-							label="Resources"
+							href="/agents"
+							label="Agent setup"
 							currentUrl={url}
-							icon={faBookBookmark}
+							icon={faRobot}
+						/>
+						<NavLink
+							href="/news/subscribe"
+							label="RSS subscribe"
+							currentUrl={url}
+							icon={faRssSquare}
 						/>
 					</NavGroup>
 				</div>

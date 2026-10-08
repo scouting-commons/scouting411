@@ -1,0 +1,65 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import { PostComponent } from "@/components/react/post";
+import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { rpc } from "@/rpc/client";
+
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export const prerender = false;
+
+// the last seven days, today included, as utc dates to match the query filter
+const start = new Date();
+start.setUTCDate(start.getUTCDate() - 6);
+const from = start.toISOString().slice(0, 10);
+
+const { posts } = await rpc.news.posts.query({
+	filter: { from },
+	paginate: false,
+});
+
+const sourceCount = new Set(posts.map((post) => post.feed.slug)).size;
+const browseHref = `/news/browse?${postsQueryParamsEncoder.encode({ filter: { from } })}`;
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString("en-US", {
+		month: "long",
+		day: "numeric",
+		timeZone: "UTC",
+	});
+---
+
+<Layout title="This Week in Scouting">
+	<div class="mx-auto flex w-full max-w-4xl flex-col gap-8 p-8">
+		<div class="flex flex-col gap-2 border-b pb-8">
+			<h1 class="font-serif text-3xl font-bold">This Week in Scouting</h1>
+			<p class="text-muted-foreground">
+				{formatDate(start)} - {formatDate(new Date())} · {posts.length} posts
+				from
+				{sourceCount} sources
+			</p>
+		</div>
+
+		<div class="flex flex-col gap-5">
+			<div class="flex items-baseline justify-between gap-4">
+				<h2 class="font-serif text-xl font-bold">News</h2>
+				<a
+					href={browseHref}
+					class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
+				>
+					Browse
+					<FontAwesomeIcon icon={faArrowRight} size="sm" />
+				</a>
+			</div>
+
+			{posts.length === 0 ? (
+				<p class="text-muted-foreground text-sm">
+					Nothing has been posted this week.
+				</p>
+			) : (
+				posts.map((post) => <PostComponent post={post} />)
+			)}
+		</div>
+	</div>
+</Layout>

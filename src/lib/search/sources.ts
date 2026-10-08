@@ -19,9 +19,10 @@ import type { SearchItem } from "@/lib/search/types";
 /** site navigation pages */
 const navigation = [
 	{ href: "/", label: "Home" },
-	{ href: "/news/browse", label: "Newsfeed" },
+	{ href: "/this-week", label: "This week" },
+	{ href: "/news/browse", label: "All news" },
 	{ href: "/news/sources", label: "Sources" },
-	{ href: "/news/subscribe", label: "Subscribe" },
+	{ href: "/news/subscribe", label: "RSS subscribe" },
 	{ href: "/news/stats", label: "Stats" },
 	{ href: "/advancement/ranks", label: "Ranks" },
 	{ href: "/advancement/merit-badges", label: "Merit Badges" },
