@@ -8,6 +8,7 @@ export type FeedConfig = {
 	name: string;
 	slug: string;
 	description: string;
+	defaultVisible: boolean;
 	coverImageSrc: string;
 	homepageUrl: UrlShaped;
 	adapter: FeedAdapter;
@@ -16,6 +17,9 @@ export type FeedConfig = {
 export type FeedConfigEntry = (typeof feedConfigs)[number];
 
 export const feedSlugs = feedConfigs.map((feed) => feed.slug);
+export const defaultVisibleFeedSlugs = feedConfigs
+	.filter((feed) => feed.defaultVisible)
+	.map((feed) => feed.slug);
 export const feedSlugSchema = z.enum(feedSlugs);
 export type FeedSlug = z.infer<typeof feedSlugSchema>;
 

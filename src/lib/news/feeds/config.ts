@@ -11,6 +11,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting America News",
 		slug: "scouting-america-news",
+		defaultVisible: true,
 		description:
 			"General news from Scouting America, covering everything on scouting.org that is not part of another feed here.",
 		coverImageSrc:
@@ -34,6 +35,7 @@ export const feedConfigs = [
 	{
 		name: "International Adventure",
 		slug: "international-adventure",
+		defaultVisible: true,
 		description:
 			"The Blog and Newsletter of the Scouting America International Committee & Department",
 		coverImageSrc:
@@ -48,6 +50,7 @@ export const feedConfigs = [
 	{
 		name: "Scouts BSA Program Updates",
 		slug: "scouts-bsa-program-updates",
+		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Scouts BSA program.",
 		coverImageSrc:
@@ -62,6 +65,7 @@ export const feedConfigs = [
 	{
 		name: "Sea Scouts Program Updates",
 		slug: "sea-scouts-program-updates",
+		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Sea Scouts program.",
 		coverImageSrc:
@@ -76,6 +80,7 @@ export const feedConfigs = [
 	{
 		name: "Cub Scouts Program Updates",
 		slug: "cub-scouts-program-updates",
+		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Cub Scouts program.",
 		coverImageSrc:
@@ -91,6 +96,7 @@ export const feedConfigs = [
 	{
 		name: "#CubChatLive",
 		slug: "cubchat",
+		defaultVisible: true,
 		description: "The official video podcast of the Cub Scouts program.",
 		coverImageSrc:
 			"https://i0.wp.com/onscouting.org/wp-content/uploads/2022/01/cubchat-1280x720-1.png",
@@ -113,6 +119,7 @@ export const feedConfigs = [
 	{
 		name: "On Scouting",
 		slug: "on-scouting",
+		defaultVisible: true,
 		description:
 			"Editorial content for parents and volunteers. The adult counterpart of Scout Life magazine.",
 		coverImageSrc:
@@ -125,6 +132,7 @@ export const feedConfigs = [
 	{
 		name: "Trail to Adventure",
 		slug: "trail-to-adventure",
+		defaultVisible: true,
 		description:
 			"News and updates regarding scout camp administration. The Official Blog of the National Outdoor Programs and Properties Subcommittees.",
 		coverImageSrc:
@@ -138,6 +146,7 @@ export const feedConfigs = [
 	{
 		name: "Executive Communications",
 		slug: "executive-communications",
+		defaultVisible: true,
 		description:
 			"Hear from Scouting's Leadership: executives share thoughts on a variety of key Scouting topics.",
 		coverImageSrc:
@@ -151,6 +160,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni",
 		slug: "scouting-alumni",
+		defaultVisible: true,
 		description:
 			"The news feed of Scouting Alumni. Primarily editorial content with occasional news.",
 		coverImageSrc:
@@ -163,6 +173,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni - Ask the Chair",
 		slug: "scouting-alumni-chair",
+		defaultVisible: true,
 		description:
 			"The doorway to Scouting is always open for our alumni! Scouting Alumni National Chair Andrew Miller is available to answer your questions. We look forward to hearing from you!",
 		coverImageSrc:
@@ -176,6 +187,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni - Alumni Highlights",
 		slug: "scouting-alumni-highlights",
+		defaultVisible: true,
 		description:
 			"Miscellaneous news from Scouting Alumni, separate from their main news feed.",
 		coverImageSrc:
@@ -189,6 +201,7 @@ export const feedConfigs = [
 	{
 		name: "Scout Life",
 		slug: "scout-life",
+		defaultVisible: false,
 		description: "Editorial and entertainment content mainly for youth.",
 		coverImageSrc:
 			"https://scoutlife.org/wp-content/uploads/2026/06/SL-logo_white_340x72.png",
@@ -202,6 +215,7 @@ export const feedConfigs = [
 	{
 		name: "ScoutCast",
 		slug: "scoutcast",
+		defaultVisible: true,
 		description: "A defunct podcast for Scouts BSA unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/scoutcast",
 		coverImageSrc:
@@ -215,6 +229,7 @@ export const feedConfigs = [
 	{
 		name: "CubCast",
 		slug: "cubcast",
+		defaultVisible: true,
 		description: "A defunct podcast for Cub Scouts unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/cubcast",
 		coverImageSrc:
@@ -228,6 +243,7 @@ export const feedConfigs = [
 	{
 		name: "The Lookout",
 		slug: "the-lookout",
+		defaultVisible: true,
 		description:
 			"The Lookout: Sea Scout Podcast Network. Features both news and interviews.",
 		coverImageSrc:
@@ -241,6 +257,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Wire",
 		slug: "scouting-wire",
+		defaultVisible: true,
 		description:
 			"Billed as 'The Official Blog of the Scouting Movement'. General news and updates for professionals, volunteers, and parents.",
 		coverImageSrc:
@@ -254,6 +271,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Newsroom",
 		slug: "scouting-newsroom",
+		defaultVisible: true,
 		description:
 			"Provides updates and news press releases the national Scouting administration.",
 		coverImageSrc:
@@ -267,6 +285,7 @@ export const feedConfigs = [
 	{
 		name: "Abilities Digest",
 		slug: "abilities-digest",
+		defaultVisible: true,
 		description:
 			"Provides updates and news about special needs scouting. A publication of the National Special Needs and Disabilities Committee.",
 		homepageUrl: "https://ablescouts.org",
@@ -283,6 +302,7 @@ export const feedConfigs = [
 	{
 		name: "Summit Blog",
 		slug: "summit-blog",
+		defaultVisible: true,
 		description: "News and updates about the Summit Bechtel Reserve.",
 		coverImageSrc:
 			"https://www.summitbsa.org/wp-content/uploads/2018/01/cropped-SBR-BlackBearPaw_Combo_-Logo-1-1-192x192.png",
@@ -294,6 +314,7 @@ export const feedConfigs = [
 	{
 		name: "NESA News and Articles",
 		slug: "nesa",
+		defaultVisible: true,
 		description:
 			"The news feed of the National Eagle Scout Association. A mixture of editorial content and news.",
 		coverImageSrc:
@@ -306,6 +327,7 @@ export const feedConfigs = [
 	{
 		name: "NESA Events",
 		slug: "nesa-events",
+		defaultVisible: true,
 		description:
 			"A feed of events run by the National Eagle Scout Association.",
 		coverImageSrc:
@@ -319,6 +341,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting America Foundation",
 		slug: "scouting-america-foundation",
+		defaultVisible: true,
 		description:
 			"The news feed of the Scouting America Foundation. Mostly entertainment and editorial content.",
 		coverImageSrc:
@@ -331,6 +354,7 @@ export const feedConfigs = [
 	{
 		name: "OA News",
 		slug: "oa-news",
+		defaultVisible: true,
 		description:
 			"News and updates about the Order of the Arrow on the national level.",
 		coverImageSrc:
@@ -341,6 +365,7 @@ export const feedConfigs = [
 	{
 		name: "OA System Maintenance",
 		slug: "oa-system-maintenance",
+		defaultVisible: true,
 		description:
 			"Updates on Order of the Arrow's digital infrastructure maintenance and outages.",
 		coverImageSrc:
@@ -353,6 +378,7 @@ export const feedConfigs = [
 	{
 		name: "OA LodgeMaster Blog",
 		slug: "oa-lodgemaster",
+		defaultVisible: true,
 		description:
 			"The OA LodgeMaster Support Center blog. Contains changelog and news about the LodgeMaster program.",
 		coverImageSrc:
@@ -367,6 +393,7 @@ export const feedConfigs = [
 	{
 		name: "Sea Scouts News",
 		slug: "sea-scouts-news",
+		defaultVisible: true,
 		description: "News and updates about the Sea Scouts program.",
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2023/05/SeaScouts_Logo.png",
@@ -378,6 +405,7 @@ export const feedConfigs = [
 	{
 		name: "Troop Leader Resource Updates",
 		slug: "troop-leader-resource-updates",
+		defaultVisible: true,
 		description: "Updates and news about the Troop Leader Resource Hub.",
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2025/05/Scouting-America-Prepared-For-Life-Logo-stacked-4c-BC.png",
@@ -389,6 +417,7 @@ export const feedConfigs = [
 	{
 		name: "Duty to God BSA",
 		slug: "duty-to-god",
+		defaultVisible: true,
 		description:
 			"The blog of the National Religious Relationships Committee, covering religious emblems, chaplaincy, and Duty to God resources.",
 		coverImageSrc:
@@ -407,8 +436,8 @@ export const feedConfigs = [
 	{
 		name: "my.Scouting Announcements",
 		slug: "my-scouting-announcements",
-		description:
-			"Announcements from the my.Scouting homepage.",
+		defaultVisible: true,
+		description: "Announcements from the my.Scouting homepage.",
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2026/01/BSA-logo.png",
 		homepageUrl: "https://my.scouting.org",

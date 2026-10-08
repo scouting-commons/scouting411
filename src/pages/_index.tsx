@@ -1,6 +1,13 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ArrowUpRightIcon, BotIcon, RssIcon, SearchIcon } from "lucide-react";
+import {
+	ArrowUpRightIcon,
+	BlocksIcon,
+	BookMarkedIcon,
+	CalendarDaysIcon,
+	NewspaperIcon,
+	SearchIcon,
+} from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { SearchForm } from "@/components/react/searchForm";
 import { cn } from "@/util/cn";
@@ -47,45 +54,124 @@ export function Page() {
 				</ul>
 			</div>
 
-			<div className="grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
-				<IntegrationCard icon={<SearchIcon />} title="Browser search">
-					<p>
-						Add Scouting411 as a search engine: in Chrome, type scouting411.org
-						and press Tab; in Firefox, use the address bar menu.
-					</p>
-					<p>
-						Start a search with <Code>!</Code> to jump straight to the top
-						result.
-					</p>
-				</IntegrationCard>
+			<div className="flex w-full max-w-5xl flex-col gap-4">
+				<p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-center font-serif">
+					Official Scouting America news and resources are scattered across
+					dozens of blogs, newsrooms, and PDF libraries. Scouting411 gathers
+					them into one place, links back to every original, and opens it all up
+					for anything else to use, through RSS, a public API, and an MCP
+					server.
+				</p>
 
-				<IntegrationCard icon={<RssIcon />} title="RSS feeds">
-					<p>
-						Every official source, re-published as RSS and Atom feeds for any
-						feed reader, or all at once via OPML.
-					</p>
-					<a
-						href="/news/subscribe"
-						className="text-primary mt-auto w-fit font-medium hover:underline"
-					>
-						Subscribe <FontAwesomeIcon icon={faArrowRight} />
-					</a>
-				</IntegrationCard>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+					<Card icon={<CalendarDaysIcon />} title="This Week in Scouting">
+						<p>
+							Last week's news from official sources, gathered into one edition
+							every Sunday.
+						</p>
+						<a
+							href="/this-week"
+							className="text-primary mt-auto w-fit font-medium hover:underline"
+						>
+							Read this week <FontAwesomeIcon icon={faArrowRight} />
+						</a>
+					</Card>
 
-				<IntegrationCard icon={<BotIcon />} title="MCP server">
-					<p>
-						Give an AI assistant first-party Scouting news, advancement, and
-						resources. Add this URL as a remote MCP server:
-					</p>
-					<Code className="block w-fit wrap-anywhere select-all">{mcpUrl}</Code>
-					<a
-						href="/agents"
-						className="text-primary mt-auto w-fit font-medium hover:underline"
-					>
-						Setup guide <FontAwesomeIcon icon={faArrowRight} />
-					</a>
-				</IntegrationCard>
+					<Card icon={<NewspaperIcon />} title="News">
+						<p>
+							Every post from every official source in one place, filterable by
+							source and date.
+						</p>
+						<a
+							href="/news/browse"
+							className="text-primary mt-auto w-fit font-medium hover:underline"
+						>
+							Browse news <FontAwesomeIcon icon={faArrowRight} />
+						</a>
+					</Card>
+
+					<Card icon={<BookMarkedIcon />} title="Resources">
+						<p>
+							A directory of official national publications, guides, and tools
+							from Scouting America.
+						</p>
+						<a
+							href="/resources"
+							className="text-primary mt-auto w-fit font-medium hover:underline"
+						>
+							Browse resources <FontAwesomeIcon icon={faArrowRight} />
+						</a>
+					</Card>
+				</div>
+
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<Card icon={<SearchIcon />} title="Search engine">
+						<p>
+							One search across ranks, merit badges, adventures, news sources,
+							resources, and pages. Add it to your browser as a search engine,
+							too.
+						</p>
+						<p>
+							Start a search with <Code>!</Code> to jump straight to the top
+							result.
+						</p>
+					</Card>
+
+					<Card icon={<BlocksIcon />} title="Integrations">
+						<p>
+							Every official source is re-published as RSS and Atom feeds for
+							any feed reader, or all at once via OPML.
+						</p>
+						<a
+							href="/news/subscribe"
+							className="text-primary w-fit font-medium hover:underline"
+						>
+							Subscribe <FontAwesomeIcon icon={faArrowRight} />
+						</a>
+						<p className="mt-2">
+							Give an AI assistant first-party Scouting news, advancement, and
+							resources. Add this URL as a remote MCP server:
+						</p>
+						<Code className="block w-fit wrap-anywhere select-all">
+							{mcpUrl}
+						</Code>
+						<a
+							href="/agents"
+							className="text-primary w-fit font-medium hover:underline"
+						>
+							Setup guide <FontAwesomeIcon icon={faArrowRight} />
+						</a>
+					</Card>
+				</div>
 			</div>
+
+			<footer className="text-muted-foreground flex max-w-2xl flex-col gap-2 border-t pt-8 text-center text-sm">
+				<p>
+					Scouting411 is part of the{" "}
+					<a
+						href="https://scoutingcommons.org"
+						rel="noopener noreferrer"
+						target="_blank"
+						className="text-primary hover:underline"
+					>
+						Scouting Commons
+					</a>
+					, a home for free, community-built tools and open data, built in the
+					open by Scouts and Scouters. The code is open source on{" "}
+					<a
+						href="https://github.com/scouting-commons/scouting411"
+						rel="noopener noreferrer"
+						target="_blank"
+						className="text-primary hover:underline"
+					>
+						GitHub
+					</a>
+					.
+				</p>
+				<p className="text-xs">
+					Not affiliated with, endorsed by, or sponsored by Scouting America.
+				</p>
+			</footer>
 		</div>
 	);
 }
@@ -128,7 +214,7 @@ function SystemStatusDot() {
 /** the public url of the mcp server, served by `src/pages/mcp.ts` */
 const mcpUrl = new URL("/mcp", import.meta.env.SITE).href;
 
-function IntegrationCard({
+function Card({
 	icon,
 	title,
 	children,
