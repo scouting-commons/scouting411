@@ -31,7 +31,7 @@ export function AppShell({
 			<SidebarProvider>
 				<AppSidebar url={url} />
 				<SidebarInset>
-					<header className="bg-background h-header fixed top-0 z-10 flex w-full shrink-0 items-center gap-3 border-b px-4">
+					<header className="bg-background h-header fixed top-0 z-10 flex w-full shrink-0 items-center gap-3 border-b px-4 print:hidden">
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger
@@ -45,7 +45,7 @@ export function AppShell({
 
 						<span className="text-sm font-medium">{title}</span>
 					</header>
-					<div className="mt-header">{children}</div>
+					<div className="mt-header print:mt-0">{children}</div>
 				</SidebarInset>
 			</SidebarProvider>
 		</>
