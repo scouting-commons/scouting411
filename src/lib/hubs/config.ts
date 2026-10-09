@@ -12,6 +12,7 @@ export const hubsConfig: HubConfig[] = [
 			"executive-communications",
 			"scouting-america-news",
 			"scouting-wire",
+			"my-scouting-announcements",
 		],
 	},
 	{
