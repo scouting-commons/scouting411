@@ -1,4 +1,4 @@
-import { getMultipleFeedsPosts } from "@/lib/news/cache/fetch";
+import { getMultipleFeedsPosts } from "@/lib/news/db/fetch";
 import { sortPosts } from "@/lib/news/query/sort";
 import { paginateArray, type PaginatedResults } from "@/util/paginateArray";
 import { filterPosts } from "@/lib/news/query/filter";

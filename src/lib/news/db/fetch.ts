@@ -1,5 +1,5 @@
 import type { Feed, FeedSlug } from "@/lib/news/feeds/types";
-import { readPosts } from "@/lib/news/cache/cache";
+import { readPosts } from "@/lib/news/db/ops";
 import { hydratePost } from "@/lib/news/feeds/post";
 import { feeds } from "@/lib/news/feeds/feed";
 
