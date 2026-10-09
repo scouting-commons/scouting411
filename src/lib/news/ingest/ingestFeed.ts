@@ -6,7 +6,8 @@ import { getStoredUrls, insertPosts } from "@/lib/news/ingest/store";
 
 /**
  * fetch one feed's pages until one holds a post already stored, then store the
- * new posts. throws if the adapter fails or returns an empty page
+ * new posts. throws if the adapter fails, returns an empty page, or a podcast
+ * feed returns a post without audio
  */
 export async function ingestFeed(feed: FeedConfigEntry) {
 	const storedUrls = await getStoredUrls(feed.slug);
@@ -23,6 +24,14 @@ export async function ingestFeed(feed: FeedConfigEntry) {
 
 		const { data, error } = normalizePostData(page);
 		if (error) throw error;
+
+		if (
+			"kind" in feed &&
+			feed.kind === "podcast" &&
+			data.some((post) => !post.audio)
+		) {
+			throw new Error("podcast feed returned a post without audio");
+		}
 
 		const unseen = data.filter((post) => !storedUrls.has(post.url));
 		newPosts.push(...unseen);
