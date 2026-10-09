@@ -21,7 +21,7 @@ Three layers that meet only at the Postgres `posts` table. **A page request neve
 
 `feeds/feed.ts` hydrates configs into the alphabetized `feeds` array and assigns each feed its canonical `links` (overview, browsePosts, rss, atom). Link to `feed.links.*` rather than rebuilding those paths.
 
-**The cycle trap:** `feed.ts` imports `query/queryParams.ts` to build `links.browsePosts`. So the query layer takes `feedSlugs` from `feeds/types.ts`, not `feeds/feed.ts` — importing it from `feed.ts` closes a cycle back through `queryParams.ts` and breaks island hydration with a TDZ error at runtime, which typecheck will not catch. Keep the query layer importing from `feeds/config.ts` and `feeds/types.ts` only.
+**The cycle trap:** `feed.ts` imports `query/queryParams.ts` to build `links.browsePosts`. So the query layer takes `feedSlugs` from `feeds/types.ts`, not `feeds/feed.ts` — importing it from `feed.ts` closes a cycle back through `queryParams.ts` and breaks island hydration with a TDZ error at runtime, which typecheck will not catch. Keep `queryParams.ts` and everything it imports (`types.ts`, `filter.ts`, `sort.ts`) importing from `feeds/config.ts` and `feeds/types.ts` only. `read.ts` and `query.ts` can import `feed.ts`, since nothing `feed.ts` loads reaches them.
 
 ### Ingest (cron only) — `src/lib/news/ingest/`
 
@@ -33,13 +33,13 @@ One adapter per upstream type in `upstream/adapters/` (`rss.ts` via feedsmith, `
 
 ### Store: `src/lib/news/db/`
 
-`ops.ts` is the whole surface of the `posts` table. `insertPosts` appends with `onConflictDoNothing`, so a post already stored (same feed and url) is skipped and the table keeps every post ever seen, including ones that have dropped off upstream. `readPosts` reads every selected feed in one query and hydrates each row into a `Post` with its `Feed` attached. Route new post access through the query layer rather than calling `readPosts` directly.
+`ops.ts`'s `insertPosts` is the only write to the `posts` table. It appends with `onConflictDoNothing`, so a post already stored (same feed and url) is skipped and the table keeps every post ever seen, including ones that have dropped off upstream. The read side lives in the query layer: `query/read.ts`'s `readPosts` reads every selected feed in one query and hydrates each row into a `Post` with its `Feed` attached. Route new post access through `queryPosts` rather than calling `readPosts` directly.
 
 The table lives in `src/lib/db/schema.ts` (Drizzle over Neon Postgres, snake_case columns). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate` (drizzle-kit loads `.env` itself). Postgres can't drop an enum value in use, so delete a removed feed's rows first, and hand-edit a rename to `ALTER TYPE feed_slug RENAME VALUE`.
 
 ### Query — `src/lib/news/query/`
 
-`query.ts`'s `queryPosts(input)` is the single entry point: resolve → fetch selected feeds → `filter.ts` → `sort.ts` → `paginateArray`. Input is **sparse**: `types.ts`'s `queryInputSchema` makes every field optional and fills in nothing. Defaults live only in `resolve.ts`'s `resolvedQuerySchema`, which `queryPosts` applies internally — callers pass just what they care about, and never spell out defaults. Absent and empty `feeds` both mean every feed. `paginate: false` returns every match as one page.
+`query.ts`'s `queryPosts(input)` is the single entry point: resolve → `read.ts` fetches the selected feeds → `filter.ts` → `sort.ts` → `paginateArray`. Input is **sparse**: `types.ts`'s `queryInputSchema` makes every field optional and fills in nothing. Defaults live only in `resolve.ts`'s `resolvedQuerySchema`, which `queryPosts` applies internally — callers pass just what they care about, and never spell out defaults. Absent and empty `feeds` both mean every feed. `paginate: false` returns every match as one page.
 
 `queryParams.ts` encodes the sparse input to and from URL search params via `qs`, so browse URLs record only what the user touched. Its header comment explains why `arrayFormat: "brackets"` and `arrayLimit` are load-bearing — read it before changing those options.
 

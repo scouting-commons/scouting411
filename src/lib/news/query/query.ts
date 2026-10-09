@@ -1,4 +1,4 @@
-import { readPosts } from "@/lib/news/db/ops";
+import { readPosts } from "@/lib/news/query/read";
 import { sortPosts } from "@/lib/news/query/sort";
 import { paginateArray, type PaginatedResults } from "@/util/paginateArray";
 import { filterPosts } from "@/lib/news/query/filter";
