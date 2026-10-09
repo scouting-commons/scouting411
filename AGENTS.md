@@ -21,7 +21,7 @@ Three folders that meet only at the Postgres `posts` table: `feeds/` (config), `
 
 ### Feeds
 
-`feeds/config.ts` is the source of truth: every feed in one `const satisfies FeedConfig[]`, whose literal type drives `FeedSlug`, so adding a feed propagates types everywhere. Read an entry's `todo` notes before concluding a source is missing by oversight. `context/notes.md` lists candidate sources not yet built.
+`feeds/config.ts` is the source of truth: every feed in one `const satisfies FeedConfig[]`, whose literal type drives `FeedSlug`, so adding a feed propagates types everywhere. Each entry names its adapter as plain data (`{ type, opts }`) because the config ships to islands: `feeds/` reaches adapter code through `import type` only. Read an entry's `todo` notes before concluding a source is missing by oversight. `context/notes.md` lists candidate sources not yet built.
 
 `feeds/feed.ts` hydrates configs into the alphabetized `feeds` array with each feed's canonical `links`. Link to `feed.links.*` rather than rebuilding those paths.
 
@@ -31,7 +31,7 @@ Three folders that meet only at the Postgres `posts` table: `feeds/` (config), `
 
 `ingestAllFeeds.ts` runs every feed concurrently with `Promise.allSettled`, so a bad upstream fails only its own feed. Per feed, `ingestFeed.ts` runs the adapter and passes its output through `normalize.ts`, the zod schema that enforces what `PostData` claims (HTML stripped, entities decoded, http(s) URLs, ISO dates). Zero posts counts as a failure, so an empty upstream writes nothing. `store.ts`'s `insertPosts` appends with `onConflictDoNothing` on feed and url, so the table keeps every post ever seen, including ones gone from upstream.
 
-`adapters/` holds one adapter per upstream shape, each a `FeedAdapter` from `ingest/types.ts`. A new upstream shape gets a new adapter.
+`adapters/` holds one adapter per upstream shape, each typed as a `FeedAdapter<Opts>` from `ingest/types.ts`. A new upstream shape gets a new adapter, registered in `adapters/index.ts`.
 
 The `posts` table is in `src/infra/db/schema.ts` (Drizzle over Neon). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate`. Delete a removed feed's rows first (Postgres can't drop an enum value in use), and hand-edit a rename into `ALTER TYPE feed_slug RENAME VALUE`.
 
