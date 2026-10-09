@@ -70,4 +70,14 @@ export const tagConfigs = [
 		slug: "membership",
 		description: "Recruiting, marketing, joining, and registration",
 	},
+	{
+		name: "Commissioners",
+		slug: "commissioners",
+		description: "Commissioner service and support for units",
+	},
+	{
+		name: "Outdoor Program",
+		slug: "outdoor-program",
+		description: "Camping, aquatics, outdoor ethics, and trip planning",
+	},
 ] as const satisfies TagConfig[];

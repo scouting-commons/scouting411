@@ -99,7 +99,7 @@ export const resources: Resource[] = [
 		url: "https://scouting-oec.org/",
 		title: "Outdoor Ethics Homepage",
 		description: "The homepage of Scouting America's outdoor ethics program",
-		tags: [],
+		tags: ["outdoor-program"],
 	},
 	{
 		url: "https://licensingbsa.org/",
@@ -163,7 +163,7 @@ export const resources: Resource[] = [
 		title: "Commissioner Newsletter",
 		description:
 			"A twice-monthly publication by the National Commissioner Service Team. This communication is to all registered commissioners and is intended to be their single, best resource. Content includes tips on serving units, upcoming activities for commissioners, and changes to program elements.",
-		tags: [],
+		tags: ["commissioners"],
 	},
 
 	// periodicals and newsletters
@@ -245,7 +245,7 @@ export const resources: Resource[] = [
 		url: "https://filestore.scouting.org/filestore/Outdoor%20Program/Aquatics/pdf/Aquatics_34346.pdf",
 		title: "Aquatics Supervision",
 		description: "A Leader's Guide to Youth Swimming and Boating Activities",
-		tags: [],
+		tags: ["outdoor-program"],
 	},
 
 	{
@@ -330,7 +330,7 @@ export const resources: Resource[] = [
 		title: "The Adventure Plan",
 		description:
 			"A step-by-step tool for planning safe and successful outdoor and high adventure trips, for units in every Scouting program",
-		tags: ["high-adventure"],
+		tags: ["high-adventure", "outdoor-program"],
 	},
 	{
 		url: "https://discussions.scouting.org/",
