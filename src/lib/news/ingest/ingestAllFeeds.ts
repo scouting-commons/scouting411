@@ -1,5 +1,5 @@
 import { feedConfigs } from "@/lib/news/feeds/config";
-import { insertPosts } from "@/lib/news/db/ops";
+import { insertPosts } from "@/lib/news/ingest/store";
 import { ingestFeed } from "@/lib/news/ingest/upstream/ingestFeed";
 import type { IngestError } from "@/lib/news/ingest/types";
 
