@@ -28,6 +28,13 @@
 
 //todo add podcast rss feed adapter?
 
+## defunct podcasts
+
+- https://oa-scouting.org/article/council-fire-first-episode-2023
+- https://scoutlife.org/section/podask/
+- https://scoutingwire.org/planning-new-post-club-listen/
+- https://onscouting.org/2021/12/16/our-five-favorite-things-about-the-official-philmont-podcast/
+
 ## periodicals
 
 - https://www.scouting.org/international/resources/

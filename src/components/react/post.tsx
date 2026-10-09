@@ -35,6 +35,15 @@ export function PostComponent({ post }: { post: Post }) {
 					<span className="line-clamp-3 text-sm wrap-anywhere hyphens-auto">
 						{post.description || "No excerpt available."}
 					</span>
+					{post.audio && (
+						<audio
+							className="w-full"
+							controls
+							preload="none"
+							src={post.audio}
+							aria-label={`Listen to podcast ${post.title}`}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
