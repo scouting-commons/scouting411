@@ -37,7 +37,6 @@ const formatDate = (date: Date) =>
 	});
 
 const details = [
-	feed.type.human,
 	`${Intl.NumberFormat().format(posts.length)} posts`,
 	latestPost && `Latest ${formatDate(latestPost.date)}`,
 	oldestPost && `Since ${formatDate(oldestPost.date)}`,
