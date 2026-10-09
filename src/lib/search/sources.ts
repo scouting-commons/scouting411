@@ -1,6 +1,7 @@
 import { feeds } from "@/lib/news/feeds/feed";
 import { hubs } from "@/lib/hubs/hub";
 import { queryResources } from "@/lib/resources/query";
+import { getTagBySlug } from "@/lib/tags/tag";
 import { listRanks } from "@/lib/advancement/ranks/query";
 import { listMeritBadges } from "@/lib/advancement/meritBadges/query";
 import { listAdventures } from "@/lib/advancement/adventures/query";
@@ -72,7 +73,7 @@ const sources: (() => SearchItem[] | Promise<SearchItem[]>)[] = [
 			id: resource.url,
 			type: "resource",
 			name: resource.title,
-			keywords: [],
+			keywords: resource.tags.map((slug) => getTagBySlug(slug).name),
 			description: resource.description,
 			url: resource.url,
 			external: true,
