@@ -80,4 +80,14 @@ export const tagConfigs = [
 		slug: "outdoor-program",
 		description: "Camping, aquatics, outdoor ethics, and trip planning",
 	},
+	{
+		name: "Abilities",
+		slug: "abilities",
+		description: "Including and supporting Scouts with disabilities",
+	},
+	{
+		name: "Duty to God",
+		slug: "duty-to-god",
+		description: "Religious emblems, chaplaincy, and faith in Scouting",
+	},
 ] as const satisfies TagConfig[];

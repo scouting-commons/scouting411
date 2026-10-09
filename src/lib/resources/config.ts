@@ -206,7 +206,7 @@ export const resources: Resource[] = [
 		url: "https://ablescouts.org/toolbox/",
 		title: "The Inclusion Toolbox",
 		description: "Reference manual on supporting Scouts with disabilities",
-		tags: ["advancement"],
+		tags: ["advancement", "abilities"],
 	},
 	{
 		url: "https://troopleader.scouting.org/",
