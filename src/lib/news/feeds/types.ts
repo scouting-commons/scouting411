@@ -10,6 +10,8 @@ export type FeedConfig = {
 	defaultVisible: boolean;
 	coverImageSrc: string;
 	homepageUrl: string;
+	/** set when the feed is a podcast, whose posts are episodes */
+	kind?: "podcast";
 	adapter: AdapterConfig;
 };
 
@@ -52,6 +54,7 @@ export type Feed = {
 		/** upstream's html homepage */
 		homepage: string;
 	};
+	kind: FeedConfig["kind"];
 	/** slug of the adapter that ingests this feed */
 	adapter: AdapterConfig["type"];
 };

@@ -104,6 +104,7 @@ export const feedConfigs = [
 	{
 		name: "#CubChatLive",
 		slug: "cubchat",
+		kind: "podcast",
 		defaultVisible: true,
 		description: "The official video podcast of the Cub Scouts program.",
 		coverImageSrc:
@@ -250,6 +251,7 @@ export const feedConfigs = [
 	{
 		name: "ScoutCast",
 		slug: "scoutcast",
+		kind: "podcast",
 		defaultVisible: true,
 		description: "A defunct podcast for Scouts BSA unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/scoutcast",
@@ -267,6 +269,7 @@ export const feedConfigs = [
 	{
 		name: "CubCast",
 		slug: "cubcast",
+		kind: "podcast",
 		defaultVisible: true,
 		description: "A defunct podcast for Cub Scouts unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/cubcast",
@@ -284,6 +287,7 @@ export const feedConfigs = [
 	{
 		name: "The Lookout",
 		slug: "the-lookout",
+		kind: "podcast",
 		defaultVisible: true,
 		description:
 			"The Lookout: Sea Scout Podcast Network. Features both news and interviews.",
