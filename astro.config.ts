@@ -46,6 +46,13 @@ export default defineConfig({
 				access: "secret",
 			}),
 
+			/** neon postgres connection string */
+			DATABASE_URL: envField.string({
+				context: "server",
+				access: "secret",
+				startsWith: "postgres",
+			}),
+
 			// vercel.com/docs/cron-jobs/manage-cron-jobs?framework=other#securing-cron-jobs
 			/** token to secure the vercel cron job that updates all the upstream feeds. */
 			CRON_SECRET: envField.string({
