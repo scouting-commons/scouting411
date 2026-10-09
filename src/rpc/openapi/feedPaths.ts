@@ -25,7 +25,7 @@ export const feedPaths: OpenAPIV3_2.PathsObject = {
 		servers: siteRoot,
 		get: {
 			summary: "RSS feed for one source",
-			description: "One source's cached posts, re-published as RSS.",
+			description: "One source's stored posts, re-published as RSS.",
 			tags: ["Feeds"],
 			parameters: [slugParameter],
 			responses: {
@@ -38,7 +38,7 @@ export const feedPaths: OpenAPIV3_2.PathsObject = {
 		servers: siteRoot,
 		get: {
 			summary: "Atom feed for one source",
-			description: "One source's cached posts, re-published as Atom.",
+			description: "One source's stored posts, re-published as Atom.",
 			tags: ["Feeds"],
 			parameters: [slugParameter],
 			responses: {

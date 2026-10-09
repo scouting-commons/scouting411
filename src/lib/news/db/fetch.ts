@@ -3,7 +3,7 @@ import { readPosts } from "@/lib/news/db/ops";
 import { hydratePost } from "@/lib/news/feeds/post";
 import { feeds } from "@/lib/news/feeds/feed";
 
-/** fetches a feed's posts from redis */
+/** fetches a feed's posts from the database */
 async function getFeedPosts(feed: Feed) {
 	const postData = await readPosts(feed.slug);
 
@@ -12,7 +12,7 @@ async function getFeedPosts(feed: Feed) {
 	});
 }
 
-/** fetches all posts (across all feeds) from redis */
+/** fetches all posts (across all feeds) from the database */
 export async function getMultipleFeedsPosts(feedSlugs: FeedSlug[]) {
 	const selectedFeeds = feeds.filter((feed) => feedSlugs.includes(feed.slug));
 

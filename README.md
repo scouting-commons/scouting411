@@ -50,14 +50,14 @@ Know a national resource that belongs in the directory? [Open an issue](https://
 
 ## 🛠️ Development
 
-Scouting411 is built with [Astro](https://astro.build), React, and Tailwind, deployed on Vercel. A daily cron job pulls every upstream source into Redis, and pages only ever read from that cache.
+Scouting411 is built with [Astro](https://astro.build), React, and Tailwind, deployed on Vercel. A daily cron job pulls every upstream source into Postgres (news) and Redis (advancement), and pages only ever read from those stores.
 
 ```sh
 pnpm install
 pnpm dev
 ```
 
-You'll need a `.env` with `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, and `CRON_SECRET`. Before opening a pull request, run `pnpm check` (type check, format, lint, and knip). If you touched resources, also run `pnpm validateResourceLinks`.
+You'll need a `.env` with `DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, and `CRON_SECRET`. Before opening a pull request, run `pnpm check` (type check, format, lint, and knip). If you touched resources, also run `pnpm validateResourceLinks`.
 
 [`CLAUDE.md`](CLAUDE.md) has a full tour of the architecture.
 

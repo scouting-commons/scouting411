@@ -3,7 +3,7 @@ import { insertPosts } from "@/lib/news/db/ops";
 import { ingestFeed } from "@/lib/news/ingest/upstream/ingestFeed";
 import type { IngestError } from "@/lib/news/ingest/types";
 
-/** fetches the upstream post data for all feeds and updates the cache */
+/** fetches the upstream post data for all feeds and stores any new posts */
 export async function ingestAllFeeds() {
 	const errors: IngestError[] = [];
 

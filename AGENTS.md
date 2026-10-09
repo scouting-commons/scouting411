@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Scouting411 (scouting411.org) is an Astro + React site that aggregates official Scouting America news and resources. Two content systems: a **news aggregator** (a cron-refreshed cache of external Scouting feeds, browsable and filterable) and a **resources directory** (a hand-maintained list of official links).
+Scouting411 (scouting411.org) is an Astro + React site that aggregates official Scouting America news and resources. Two content systems: a **news aggregator** (a cron-fed archive of external Scouting feeds, browsable and filterable) and a **resources directory** (a hand-maintained list of official links).
 
 ## Working here
 
@@ -11,9 +11,9 @@ Package manager is pnpm; scripts live in `package.json`.
 - `pnpm validateResourceLinks` fetches every URL in `src/lib/resources/config.ts`. Run it after touching resources; CI does not run it.
 - There is no unit test framework. Verify against `pnpm dev`, or drive the API by hand from the Scalar docs at `/api`.
 
-## News: ingest, cache, query
+## News: ingest, store, query
 
-Three layers that meet only at the Redis cache. **A page request never fetches upstream** — it only reads Redis.
+Three layers that meet only at the Postgres `posts` table. **A page request never fetches upstream**: it only reads the database.
 
 ### Feed config is the source of truth
 
@@ -29,11 +29,13 @@ One adapter per upstream type in `upstream/adapters/` (`rss.ts` via feedsmith, `
 
 `upstream/ingestFeed.ts` runs one feed's adapter and pipes the output through `upstream/normalize.ts` — a zod schema that strips HTML, decodes entities, pins URLs to http(s), and coerces each upstream's date format to an ISO string. Adapters return raw-ish data; normalize enforces the invariants `PostData` claims.
 
-`execute/ingestAllFeeds.ts` runs every feed concurrently and isolates failures per feed, so one bad upstream cannot abort the run. **Zero posts counts as a failure** and the existing cache is left in place. Its only caller is `src/pages/api/updateAllFeeds.ts`, a daily Vercel cron (`vercel.json`) guarded by a `Bearer ${CRON_SECRET}` header.
+`execute/ingestAllFeeds.ts` runs every feed concurrently and isolates failures per feed, so one bad upstream cannot abort the run. **Zero posts counts as a failure** and nothing is written for that feed. Its only caller is `src/pages/api/updateAllFeeds.ts`, a daily Vercel cron (`vercel.json`) guarded by a `Bearer ${CRON_SECRET}` header.
 
-### Cache — `src/lib/news/cache/`
+### Store: `src/lib/news/db/`
 
-`cache.ts` is the whole Redis surface: JSON read/write at key `posts:{slug}`. `fetch.ts` reads one key per selected feed and hydrates `PostData` into `Post` with its `Feed` attached. Route new post access through the query layer rather than calling `fetch.ts` directly.
+`ops.ts` is the whole surface of the `posts` table. `insertPosts` appends with `onConflictDoNothing`, so a post already stored (same feed and url) is skipped and the table keeps every post ever seen, including ones that have dropped off upstream. `fetch.ts` reads the rows for each selected feed and hydrates `PostData` into `Post` with its `Feed` attached. Route new post access through the query layer rather than calling `fetch.ts` directly.
+
+The table lives in `src/lib/db/schema.ts` (Drizzle over Neon Postgres, snake_case columns). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate` (drizzle-kit loads `.env` itself). Postgres can't drop an enum value in use, so delete a removed feed's rows first, and hand-edit a rename to `ALTER TYPE feed_slug RENAME VALUE`.
 
 ### Query — `src/lib/news/query/`
 
@@ -43,17 +45,17 @@ One adapter per upstream type in `upstream/adapters/` (`rss.ts` via feedsmith, `
 
 Callers reach `queryPosts` through the `news.posts.query` procedure (see **API** below). The one exception is `src/lib/news/feeds/consumerOutput.ts`, which calls it directly because lib code sits below the router.
 
-Re-publishing routes: `src/pages/feeds/[slug]/rss.ts` and `atom.ts` serve one source's cached posts; `feeds/all/opml.ts` lists them all.
+Re-publishing routes: `src/pages/feeds/[slug]/rss.ts` and `atom.ts` serve one source's stored posts; `feeds/all/opml.ts` lists them all.
 
 ### The browse island
 
 `src/pages/news/browse/index.astro` decodes URL params server-side into `initialQuery`, then hands off to the `client:load` React island `_index.tsx`, which owns the sparse query in `useState` and pushes it back to the URL with `history.replaceState`. The sidebar form holds that same sparse input; an untouched field is `undefined` and displays its resolved value.
 
-That island's effect holds a **stale-response guard**: a narrow query resolves faster than a broad one (one Redis read per selected feed), so an in-flight broad query can otherwise land last and clobber a narrow one. Preserve it when editing the effect.
+That island's effect holds a **stale-response guard**: a narrow query resolves faster than a broad one (one database read per selected feed), so an in-flight broad query can otherwise land last and clobber a narrow one. Preserve it when editing the effect.
 
 ## Advancement — `src/lib/advancement/`
 
-A reference of official advancement data from the Scouting America API (`api.scouting.org/advancements`). Merit badges, ranks, Cub Scout adventures, and awards are built. Same rule as news: the cron ingests into Redis, pages only read it.
+A reference of official advancement data from the Scouting America API (`api.scouting.org/advancements`). Merit badges, ranks, Cub Scout adventures, and awards are built. Same rule as news, stored in Redis: the cron ingests, pages only read.
 
 - `upstream.ts`, `requirements.ts`, and `parseRequirements.ts` are shared across advancement types. `requirements.ts` holds only the `Requirement` schema; the parsing and sanitizing live in `parseRequirements.ts`, which only the ingest side imports. Keep `sanitize-html` out of `requirements.ts`: pages and the search sources reach it through each type's `types.ts`, so an import there loads `sanitize-html` on every SSR page that touches advancement (and into the browser bundle of any island that imports those types), and it crashes on Vercel (`ERR_REQUIRE_ESM`: it `require()`s the ESM-only `htmlparser2`). Requirements come upstream as a flat list; `orderRequirements` sorts siblings by `sortOrder` **as a decimal** ("1.05" < "1.1", "3.09" < "3.1") because upstream array order is unreliable. Requirement text is hand-written HTML, run through `sanitizeRequirementHtml` and rendered with `set:html` by `src/components/advancement/Requirements.astro`. `upstreamRequirementSchema` and `parseRequirement` cover the fields every type shares; a type-specific field (a merit badge's `counselorApproval`) is added with `.extend` and passes through `orderRequirements`.
 - `meritBadges/` — `upstream.ts` fetches and normalizes, `ingest.ts` writes the list to `advancement:meritBadges` and each badge's requirements to `advancement:meritBadges:{slug}`, isolating failures per badge. Callers reach them through the procedures under `advancement.meritBadges` in the router.
@@ -87,7 +89,7 @@ The `/search` page is server-rendered and redirects to `/` without a query. A le
 One oRPC router is the backend boundary for islands, SSR pages, the MCP tools in `src/mcp/tools/`, and the public REST API. oRPC is on the **v2 beta** (exact-pinned); v1 docs and examples do not match its API.
 
 - `router.ts` assembles the procedures in `procedures/`. A procedure is a thin wrapper over `src/lib`; logic lives in lib. Lib code imports nothing from `src/rpc/` — it would close a cycle (router → procedure → lib → client → `ssrClient.ts` → router).
-- **Callers** import `rpc` from `@/rpc/client`, on server and client alike. Under `import.meta.env.SSR` it loads `ssrClient.ts`, which registers an in-process router client on `globalThis.$client`, so SSR never makes HTTP calls; in the browser that import is stripped and calls go to `/rpc`. Keep the router import in `client.ts` type-only — a value import bundles the router, and Redis with it, into every island.
+- **Callers** import `rpc` from `@/rpc/client`, on server and client alike. Under `import.meta.env.SSR` it loads `ssrClient.ts`, which registers an in-process router client on `globalThis.$client`, so SSR never makes HTTP calls; in the browser that import is stripped and calls go to `/rpc`. Keep the router import in `client.ts` type-only — a value import bundles the router, and Redis and the database with it, into every island.
 - `$client` is shared across requests, so procedures get no per-request context. Astro has no request-scoped store: when a procedure needs one (auth), pass context per call or build a client per request in middleware on `Astro.locals`.
 
 Two handlers serve the same router:
@@ -102,7 +104,7 @@ The feed re-publishing routes are plain Astro routes, documented by hand in `ope
 ## Conventions
 
 - Routes are `.astro` files under `src/pages/`. Files prefixed with `_` (`_index.tsx`, `_filterSidebar.tsx`) are that page's React island, colocated with it — follow this for new page-specific components. Cross-page islands go in `src/components/react/`, chrome in `src/components/layout/`.
-- **Any page or route that reads Redis must `export const prerender = false`.**
+- **Any page or route that reads Redis or the database must `export const prerender = false`.**
 - `Layout.astro` wraps `RootLayout.astro` plus the `AppShell` island (sidebar, command palette, dark mode); pages supply `title` and children.
 - `src/components/ui/` is shadcn/ui, style `base-vega`, icons `lucide`, built on `@base-ui/react` (not Radix). Add components with the `shadcn` CLI so they match `components.json`. Knip ignores unused exports here.
 - Tailwind v4 via `@tailwindcss/vite` — there is no `tailwind.config`; the theme lives in `src/global.css`. Fonts are declared in `astro.config.ts` via Astro font providers, not imported in CSS.
@@ -111,4 +113,4 @@ The feed re-publishing routes are plain Astro routes, documented by hand in `ope
 
 ## Env and deployment
 
-Server env vars are schema-validated in `astro.config.ts` and imported from `astro:env/server`: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CRON_SECRET`. Local values live in a gitignored `.env`. Deployed to Vercel via `@astrojs/vercel` (`maxDuration: 300` for the feed-update function). `trailingSlash: "never"`.
+Server env vars are schema-validated in `astro.config.ts` and imported from `astro:env/server`: `DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CRON_SECRET`. Local values live in a gitignored `.env`. Deployed to Vercel via `@astrojs/vercel` (`maxDuration: 300` for the feed-update function). `trailingSlash: "never"`.

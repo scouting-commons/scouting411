@@ -23,7 +23,7 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 
 	useEffect(() => {
 		/**
-		 * a narrower query resolves faster than a broader one (one redis read per
+		 * a narrower query resolves faster than a broader one (one database read per
 		 * selected feed), so without this an in-flight broad query can land after a
 		 * narrow one and overwrite it. only the latest query may set posts.
 		 */
