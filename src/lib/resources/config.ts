@@ -376,9 +376,9 @@ export const resources: Resource[] = [
 	{
 		url: "https://www.scouting.org/outdoor-programs/tap/",
 		title: "The Adventure Plan",
-		type: "tool",
+		type: "reference",
 		description:
-			"A step-by-step tool for planning safe and successful outdoor and high adventure trips, for units in every Scouting program",
+			"A step-by-step guide for planning safe and successful outdoor and high adventure trips, for units in every Scouting program",
 		tags: ["high-adventure", "outdoor-program"],
 	},
 	{
