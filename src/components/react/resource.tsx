@@ -1,4 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import type { Resource } from "@/lib/resources/types";
+import { getTagBySlug } from "@/lib/tags/tag";
 
 export function Resource({ resource }: { resource: Resource }) {
 	return (
@@ -14,6 +16,16 @@ export function Resource({ resource }: { resource: Resource }) {
 				</a>
 
 				<p className="text-sm">{resource.description}</p>
+
+				{resource.tags.length > 0 && (
+					<div className="flex flex-wrap gap-1.5">
+						{resource.tags.map((slug) => (
+							<Badge key={slug} variant="secondary">
+								{getTagBySlug(slug).name}
+							</Badge>
+						))}
+					</div>
+				)}
 			</div>
 		</div>
 	);

@@ -1,9 +1,6 @@
 import type { Resource } from "@/lib/resources/types";
 
-// todo
-// I think eventually it will make sense to store these in a database
-// there should be dimensions for the type of resource, as well as topic tags
-
+// todo add tag for the type of resource, separate from the topic tags
 // eventually this could be fully searchable and filterable in the same way the feeds are
 
 export const resources: Resource[] = [

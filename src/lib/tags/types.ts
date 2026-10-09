@@ -9,3 +9,4 @@ export type TagConfig = {
 };
 
 export const tagSlugSchema = z.enum(tagConfigs.map((tag) => tag.slug));
+export type TagSlug = z.infer<typeof tagSlugSchema>;
