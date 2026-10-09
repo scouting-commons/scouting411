@@ -303,6 +303,24 @@ export const feedConfigs = [
 	},
 
 	{
+		name: "Hike On",
+		slug: "hike-on",
+		kind: "podcast",
+		defaultVisible: true,
+		description:
+			"The (defunct) official Philmont Scout Ranch podcast, exploring the characters, culture, and history of Philmont.",
+		coverImageSrc:
+			"https://d3t3ozftmdmh3i.cloudfront.net/production/podcast_uploaded_nologo/19109614/19109614-1636474771074-82b17660497c.jpg",
+		homepageUrl: "https://creators.spotify.com/pod/profile/hike-on/",
+		adapter: {
+			type: "rss",
+			opts: {
+				feedUrl: "https://anchor.fm/s/727f8b78/podcast/rss",
+			},
+		},
+	},
+
+	{
 		name: "Scouting Wire",
 		slug: "scouting-wire",
 		defaultVisible: true,
