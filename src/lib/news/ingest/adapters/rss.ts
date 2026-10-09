@@ -58,7 +58,6 @@ export function RssAdapter(opts: RssAdapterOpts): FeedAdapter {
 	return {
 		type: {
 			id: "rss",
-			human: "RSS",
 		},
 		execute,
 	};

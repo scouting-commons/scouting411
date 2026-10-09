@@ -17,7 +17,6 @@ export function PodcastArchiveAdapter(
 	return {
 		type: {
 			id: "podcast-archive",
-			human: "Podcast Archive",
 		},
 		execute: async () => {
 			const raw = archivedPostsSchema.parse(data);

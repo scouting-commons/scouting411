@@ -74,7 +74,6 @@ export function MyScoutingAnnouncementsAdapter(): FeedAdapter {
 	return {
 		type: {
 			id: "my-scouting-announcements",
-			human: "my.Scouting Announcements",
 		},
 		execute,
 	};

@@ -51,7 +51,6 @@ export function OaNewsAdapter(): FeedAdapter {
 	return {
 		type: {
 			id: "oa-news",
-			human: "OA News",
 		},
 		execute,
 	};

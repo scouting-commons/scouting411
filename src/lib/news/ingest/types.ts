@@ -26,8 +26,6 @@ export type FeedAdapter = {
 	type: {
 		/** machine id for the type of adapter (rss, wordpress-api, etc) */
 		id: string;
-		/** human-readable name for the type of feed adapter (RSS, Wordpress API, etc) */
-		human: string;
 	};
 
 	/** executes the fetching login and returns the post data */
