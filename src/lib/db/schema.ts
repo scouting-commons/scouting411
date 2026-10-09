@@ -26,9 +26,7 @@ export const posts = pgTable(
 		/** external image url to use as a thumbnail */
 		thumbnail: text(),
 		/** when upstream says the post was published */
-		publishedAt: timestamp({
-			withTimezone: true,
-		}).notNull(),
+		publishedAt: timestamp({ withTimezone: true }).notNull(),
 		/** when ingest first saw the post / when this database row was created */
 		createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 		/** when this database row was last updated */
