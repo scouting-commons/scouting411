@@ -33,7 +33,7 @@ Three folders that meet only at the Postgres `posts` table: `feeds/` (config), `
 
 `adapters/` holds one adapter per upstream shape, each a `FeedAdapter` from `ingest/types.ts`. A new upstream shape gets a new adapter.
 
-The `posts` table is in `src/lib/db/schema.ts` (Drizzle over Neon). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate`. Delete a removed feed's rows first (Postgres can't drop an enum value in use), and hand-edit a rename into `ALTER TYPE feed_slug RENAME VALUE`.
+The `posts` table is in `src/server/db/schema.ts` (Drizzle over Neon). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate`. Delete a removed feed's rows first (Postgres can't drop an enum value in use), and hand-edit a rename into `ALTER TYPE feed_slug RENAME VALUE`.
 
 ### Query
 

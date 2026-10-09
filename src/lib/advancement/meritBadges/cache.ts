@@ -1,4 +1,4 @@
-import { redis } from "@/lib/redis/client";
+import { redis } from "@/server/redis";
 import type {
 	MeritBadge,
 	MeritBadgeDetail,

@@ -1,4 +1,4 @@
-import { resend } from "@/lib/email/client";
+import { resend } from "@/server/email/client";
 import { DEVELOPER_DEBUG_EMAIL } from "astro:env/server";
 
 export async function sendDevDebugEmail({

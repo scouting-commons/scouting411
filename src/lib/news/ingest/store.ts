@@ -1,5 +1,5 @@
-import { db } from "@/lib/db/client";
-import { posts } from "@/lib/db/schema";
+import { db } from "@/server/db/client";
+import { posts } from "@/server/db/schema";
 import type { PostData } from "@/lib/news/ingest/types";
 import type { FeedSlug } from "@/lib/news/feeds/types";
 
