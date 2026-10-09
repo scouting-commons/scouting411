@@ -25,6 +25,7 @@ export const tagConfigs = [
 		name: "Venturing",
 		slug: "venturing",
 		description: "The Venturing program",
+		newsSources: [],
 	},
 	{
 		name: "Sea Scouts",
@@ -41,6 +42,7 @@ export const tagConfigs = [
 		name: "Exploring",
 		slug: "exploring",
 		description: "The Exploring program",
+		newsSources: [],
 	},
 	{
 		name: "Order of the Arrow",
@@ -54,11 +56,13 @@ export const tagConfigs = [
 		name: "Advancement",
 		slug: "advancement",
 		description: "Ranks, merit badges, adventures, and awards",
+		newsSources: [],
 	},
 	{
 		name: "Training",
 		slug: "training",
 		description: "Training for youth and adult leaders",
+		newsSources: [],
 	},
 	{
 		name: "High Adventure",
@@ -103,16 +107,19 @@ export const tagConfigs = [
 		name: "Membership",
 		slug: "membership",
 		description: "Recruiting, marketing, joining, and registration",
+		newsSources: [],
 	},
 	{
 		name: "Commissioners",
 		slug: "commissioners",
 		description: "Commissioner service and support for units",
+		newsSources: [],
 	},
 	{
 		name: "Outdoor Program",
 		slug: "outdoor-program",
 		description: "Camping, aquatics, outdoor ethics, and trip planning",
+		newsSources: [],
 	},
 	{
 		name: "Abilities",

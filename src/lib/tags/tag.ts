@@ -1,10 +1,38 @@
 import { tagConfigs } from "@/lib/tags/config";
-import type { TagSlug } from "@/lib/tags/types";
+import type { Tag, TagConfig, TagConfigEntry, TagSlug } from "@/lib/tags/types";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
+import { queryResourcesUrlParams } from "@/lib/resources/urlParams";
 
-/** the list of all tags, alphabetized */
-export const tags = tagConfigs.toSorted((a, b) => a.name.localeCompare(b.name));
+/** the list of all tags, hydrated and alphabetized */
+export const tags = tagConfigs
+	.map(hydrateTag)
+	.sort((a, b) => a.name.localeCompare(b.name));
+
+/** create a hydrated tag object from a config */
+function hydrateTag(config: TagConfigEntry): Tag {
+	// widen the literal entry so optional fields read as optional
+	const { name, description, color, newsSources }: TagConfig = config;
+
+	return {
+		name,
+		slug: config.slug,
+		description,
+		color,
+		newsSources,
+		links: {
+			page: `/hubs/${config.slug}`,
+			browseResources: `/resources?${queryResourcesUrlParams.encode({
+				tags: [config.slug],
+			})}`,
+			// an empty feeds query means every feed, so a tag without sources gets no link
+			browsePosts: newsSources.length
+				? `/news/browse?${queryPostsUrlParams.encode({ feeds: newsSources })}`
+				: undefined,
+		},
+	};
+}
 
 /** gets a tag by its slug */
 export function getTagBySlug(slug: TagSlug) {
-	return tagConfigs.find((tag) => tag.slug === slug)!;
+	return tags.find((tag) => tag.slug === slug)!;
 }
