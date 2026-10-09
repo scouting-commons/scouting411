@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import type { Predicate } from "@/util/utilTypes";
 
 export function filterPosts(

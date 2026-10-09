@@ -1,4 +1,4 @@
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import { compileIssue } from "@/lib/newspaper/compile";
 import { issueDateFor } from "@/lib/newspaper/schedule";
 import type { Issue } from "@/lib/newspaper/types";

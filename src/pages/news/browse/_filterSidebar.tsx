@@ -22,7 +22,7 @@ import { type ResolvedQuery, resolveQuery } from "@/lib/news/query/resolve";
 import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
 import { useForm } from "@tanstack/react-form";
 import type { PaginatedResults } from "@/util/paginateArray";
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import {
 	SidebarHeader,
 	SidebarContent,

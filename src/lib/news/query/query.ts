@@ -2,7 +2,7 @@ import { readPosts } from "@/lib/news/query/read";
 import { sortPosts } from "@/lib/news/query/sort";
 import { paginateArray, type PaginatedResults } from "@/util/paginateArray";
 import { filterPosts } from "@/lib/news/query/filter";
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import type { QueryInput } from "@/lib/news/query/types";
 import { resolveQuery } from "@/lib/news/query/resolve";
 

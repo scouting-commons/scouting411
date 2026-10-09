@@ -15,7 +15,7 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import type { SearchItem } from "@/lib/search/types";
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import { Icon } from "@/components/react/icon";
 
 type SearchTab = "all" | "news";

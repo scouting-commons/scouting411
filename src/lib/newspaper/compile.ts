@@ -1,4 +1,4 @@
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import { toIsoDate, type IsoDate } from "@/lib/newspaper/dates";
 import { weekOf } from "@/lib/newspaper/schedule";
 import type { Issue } from "@/lib/newspaper/types";

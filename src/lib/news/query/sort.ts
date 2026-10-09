@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 import type { ResolvedQuery } from "@/lib/news/query/resolve";
 
 export function sortPosts(posts: Post[], opts: ResolvedQuery["sort"]) {

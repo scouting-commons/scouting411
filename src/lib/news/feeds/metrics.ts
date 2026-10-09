@@ -1,4 +1,4 @@
-import type { Post } from "@/lib/news/feeds/post";
+import type { Post } from "@/lib/news/post";
 /** the fields of a post that content quality is measured against */
 type QualityInput = Pick<Post, "description" | "thumbnail">;
 
