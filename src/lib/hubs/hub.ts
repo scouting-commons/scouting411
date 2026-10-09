@@ -1,6 +1,7 @@
 import { hubsConfig } from "@/lib/hubs/config";
 import type { Hub } from "@/lib/hubs/types";
 import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
+import { queryResourcesUrlParams } from "@/lib/resources/urlParams";
 
 /** the hydrated list of all hubs */
 export const hubs: Hub[] = hubsConfig.map((config) => ({
@@ -9,6 +10,9 @@ export const hubs: Hub[] = hubsConfig.map((config) => ({
 		page: `/hubs/${config.slug}`,
 		browsePosts: `/news/browse?${queryPostsUrlParams.encode({
 			feeds: config.newsSources,
+		})}`,
+		browseResources: `/resources?${queryResourcesUrlParams.encode({
+			tags: [config.resourceTag],
 		})}`,
 	},
 }));

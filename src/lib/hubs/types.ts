@@ -1,4 +1,5 @@
 import type { FeedSlug } from "@/lib/news/feeds/types";
+import type { TagSlug } from "@/lib/tags/types";
 
 export type HubConfig = {
 	slug: string;
@@ -6,12 +7,14 @@ export type HubConfig = {
 	description: string;
 	color: string;
 	newsSources: FeedSlug[];
-	//todo add resourcesQuery here
+	/** the hub lists the resources with this tag */
+	resourceTag: TagSlug;
 };
 
 export type Hub = HubConfig & {
 	links: {
 		page: string;
 		browsePosts: string;
+		browseResources: string;
 	};
 };

@@ -25,6 +25,8 @@ const { posts, pagination } = await rpc.news.posts.query({
 
 const [featuredPost, ...recentPosts] = posts;
 
+const resources = await rpc.resources.query({ tags: [hub.resourceTag] });
+
 const formatDate = (date: Date) =>
 	date.toLocaleDateString("en-US", {
 		year: "numeric",
@@ -114,9 +116,41 @@ const formatDate = (date: Date) =>
 
 		<aside class="lg:-mt-20">
 			<div class="bg-card flex flex-col gap-3 rounded-lg border p-5 shadow-sm lg:sticky lg:top-17">
-				<h2 class="font-serif text-xl font-bold">Resources</h2>
-				<!-- todo list the hub's resources once hubs can query them -->
-				<p class="text-muted-foreground text-sm">Coming soon.</p>
+				<div class="flex items-center justify-between gap-4">
+					<h2 class="font-serif text-xl font-bold">Resources</h2>
+					{resources.length > 0 && (
+						<a
+							href={hub.links.browseResources}
+							class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
+						>
+							All {resources.length}
+							<Icon icon={ArrowRightIcon} />
+						</a>
+					)}
+				</div>
+				{resources.length > 0 ? (
+					<ul class="flex flex-col gap-3">
+						{resources.map((resource) => (
+							<li class="flex flex-col gap-0.5">
+								<a
+									href={resource.url}
+									rel="noopener noreferrer"
+									target="_blank"
+									class="text-primary font-medium hover:underline"
+								>
+									{resource.title}
+								</a>
+								<p class="text-muted-foreground line-clamp-2 text-sm">
+									{resource.description}
+								</p>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="text-muted-foreground text-sm">
+						No resources are tagged for this hub yet.
+					</p>
+				)}
 			</div>
 		</aside>
 	</div>

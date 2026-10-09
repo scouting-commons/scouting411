@@ -14,6 +14,7 @@ export const hubsConfig: HubConfig[] = [
 			"scouting-wire",
 			"my-scouting-announcements",
 		],
+		resourceTag: "national",
 	},
 	{
 		slug: "scouts-bsa",
@@ -25,6 +26,7 @@ export const hubsConfig: HubConfig[] = [
 			"troop-leader-resource-updates",
 			"scoutcast",
 		],
+		resourceTag: "scouts-bsa",
 	},
 	{
 		slug: "cub-scouts",
@@ -32,6 +34,7 @@ export const hubsConfig: HubConfig[] = [
 		description: "Scouting's program for kindergarten through fifth grade.",
 		color: "#FCD116",
 		newsSources: ["cub-scouts-program-updates", "cubchat", "cubcast"],
+		resourceTag: "cub-scouts",
 	},
 	{
 		slug: "order-of-the-arrow",
@@ -39,6 +42,7 @@ export const hubsConfig: HubConfig[] = [
 		description: "Scouting's national honor society.",
 		color: "#E31837",
 		newsSources: ["oa-news", "oa-lodgemaster", "oa-system-maintenance"],
+		resourceTag: "order-of-the-arrow",
 	},
 	{
 		slug: "sea-scouts",
@@ -50,6 +54,7 @@ export const hubsConfig: HubConfig[] = [
 			"sea-scouts-program-updates",
 			"the-lookout",
 		],
+		resourceTag: "sea-scouts",
 	},
 	{
 		slug: "alumni",
@@ -64,5 +69,6 @@ export const hubsConfig: HubConfig[] = [
 			"scouting-alumni-chair",
 			"scouting-alumni-highlights",
 		],
+		resourceTag: "alumni",
 	},
 ];
