@@ -1,5 +1,5 @@
 import { feedConfigs } from "@/lib/news/feeds/config";
-import { writePosts } from "@/lib/news/cache/cache";
+import { insertPosts } from "@/lib/news/cache/cache";
 import { ingestFeed } from "@/lib/news/ingest/upstream/ingestFeed";
 import type { IngestError } from "@/lib/news/ingest/types";
 
@@ -16,7 +16,7 @@ export async function ingestAllFeeds() {
 				return;
 			}
 
-			await writePosts({ feedSlug: feed.slug, postData: data });
+			await insertPosts({ feedSlug: feed.slug, postData: data });
 		}),
 	);
 
