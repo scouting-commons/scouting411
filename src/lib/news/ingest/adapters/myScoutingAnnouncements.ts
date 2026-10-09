@@ -20,7 +20,7 @@ const announcementsUrl =
  * announcements to those of "Information Delivery 5002", which posts the
  * recent ones.
  */
-export const myScoutingAnnouncementsAdapter: FeedAdapter = async () => {
+export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
 	const token = await signIn();
 
 	const url = new URL(announcementsUrl);
@@ -66,7 +66,7 @@ export const myScoutingAnnouncementsAdapter: FeedAdapter = async () => {
 
 	console.log(`fetched ${postData.length} posts from ${url}`);
 
-	return postData;
+	yield postData;
 };
 
 /** sign in to my.scouting and return a bearer token for api.scouting.org */

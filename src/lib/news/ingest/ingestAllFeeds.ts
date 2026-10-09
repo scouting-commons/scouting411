@@ -1,17 +1,11 @@
 import { feedConfigs } from "@/lib/news/feeds/config";
-import { insertPosts } from "@/lib/news/ingest/store";
 import { ingestFeed } from "@/lib/news/ingest/ingestFeed";
 import type { IngestError } from "@/lib/news/ingest/types";
 
 /** fetches the upstream post data for all feeds and stores any new posts */
 export async function ingestAllFeeds() {
 	const results = await Promise.allSettled(
-		feedConfigs.map(async (feedConfigEntry) =>
-			insertPosts({
-				feedSlug: feedConfigEntry.slug,
-				postData: await ingestFeed(feedConfigEntry),
-			}),
-		),
+		feedConfigs.map((feedConfigEntry) => ingestFeed(feedConfigEntry)),
 	);
 
 	const errors: IngestError[] = results.flatMap((result, i) =>

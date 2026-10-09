@@ -24,29 +24,16 @@ type WordpressAdapterOpts = {
 /** the number of milliseconds to wait between requests */
 const requestInterval = 500;
 
-export const wordpressAdapter: FeedAdapter<WordpressAdapterOpts> = async (
-	opts,
-) => {
-	const firstPage = await fetchPage(1, opts);
-
-	const remainingPages = Array.from(
-		{ length: firstPage.totalPages - 1 },
-		(_, i) => i + 2,
-	);
-
-	const functions = remainingPages.map(
-		(page) => async () => (await fetchPage(page, opts)).posts,
-	);
-
-	const remainingPagesPosts = await Promise.all(
-		functions.map(async (fn, i) => {
-			await sleep(requestInterval * i);
-			return fn();
-		}),
-	);
-
-	return [firstPage.posts, ...remainingPagesPosts].flat();
-};
+/** the api sorts newest first by default */
+export const wordpressAdapter: FeedAdapter<WordpressAdapterOpts> =
+	async function* (opts) {
+		for (let page = 1; ; page++) {
+			const { posts, totalPages } = await fetchPage(page, opts);
+			yield posts;
+			if (page >= totalPages) return;
+			await sleep(requestInterval);
+		}
+	};
 
 /** retrieve one page worth of objects */
 async function fetchPage(

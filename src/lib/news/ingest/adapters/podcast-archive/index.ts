@@ -10,31 +10,31 @@ type PodcastArchiveAdapterOpts = {
 	categoryId: number;
 };
 
-export const podcastArchiveAdapter: FeedAdapter<
-	PodcastArchiveAdapterOpts
-> = async (opts) => {
-	const raw = archivedPostsSchema.parse(data);
+export const podcastArchiveAdapter: FeedAdapter<PodcastArchiveAdapterOpts> =
+	async function* (opts) {
+		const raw = archivedPostsSchema.parse(data);
 
-	const postData: PostData[] = raw.flatMap((item) => {
-		if (!item.categories.includes(opts.categoryId)) {
-			return [];
-		}
+		const postData: PostData[] = raw.flatMap((item) => {
+			if (!item.categories.includes(opts.categoryId)) {
+				return [];
+			}
 
-		const url = extractAudioUrl(item.content.rendered);
-		if (!url) throw new Error(`no audio url found for ${item.title.rendered}`);
+			const url = extractAudioUrl(item.content.rendered);
+			if (!url)
+				throw new Error(`no audio url found for ${item.title.rendered}`);
 
-		return {
-			// date_gmt is gmt but carries no timezone designator, so it parses as local time without one
-			date: `${item.date_gmt}Z`,
-			description: stripPodcastChrome(item.excerpt.rendered),
-			title: item.title.rendered,
-			url,
-			thumbnail: undefined,
-		};
-	});
+			return {
+				// date_gmt is gmt but carries no timezone designator, so it parses as local time without one
+				date: `${item.date_gmt}Z`,
+				description: stripPodcastChrome(item.excerpt.rendered),
+				title: item.title.rendered,
+				url,
+				thumbnail: undefined,
+			};
+		});
 
-	return postData;
-};
+		yield postData;
+	};
 
 const archivedPostsSchema = z.array(
 	z.object({

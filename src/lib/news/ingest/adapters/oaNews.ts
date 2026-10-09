@@ -9,7 +9,7 @@ const newsUrl = "https://oa-scouting.org/news";
 const requestInterval = 500;
 
 /**
- * scrapes the order of the arrow's news listing page by page. the site is
+ * scrapes the order of the arrow's news listing page by page, newest first. the site is
  * drupal 11 with no json:api or rest module exposed, and /rss.xml is core's
  * stock frontpage feed, hard capped at 10 items and ignoring
  * page/items_per_page. sitemap.xml is no help either: its index points at the
@@ -20,30 +20,13 @@ const requestInterval = 500;
  * as the bootstrap cards the oa theme renders: a linked `h4` title, a teaser
  * `p`, a `time[datetime]` and an optional image.
  */
-export const oaNewsAdapter: FeedAdapter = async () => {
-	const firstPage = await fetchPage(0);
-
-	const remainingPages = Array.from(
-		{ length: firstPage.lastPage },
-		(_, i) => i + 1,
-	);
-
-	const remainingPagesPosts = await Promise.all(
-		remainingPages.map(async (page, i) => {
-			await sleep(requestInterval * i);
-			return (await fetchPage(page)).posts;
-		}),
-	);
-
-	const posts = [firstPage.posts, ...remainingPagesPosts].flat();
-
-	// a post published mid-crawl shifts every row down one, so the row at
-	// a page boundary can be read twice
-	const unique = [...new Map(posts.map((post) => [post.url, post])).values()];
-
-	console.log(`fetched ${unique.length} posts from ${newsUrl}`);
-
-	return unique;
+export const oaNewsAdapter: FeedAdapter = async function* () {
+	for (let page = 0; ; page++) {
+		const { posts, lastPage } = await fetchPage(page);
+		yield posts;
+		if (page >= lastPage) return;
+		await sleep(requestInterval);
+	}
 };
 
 /** retrieve and parse one page of the listing */

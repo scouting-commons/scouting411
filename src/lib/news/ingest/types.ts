@@ -21,7 +21,11 @@ export type IngestError = {
 };
 
 /**
- * fetches one type of upstream and returns its post data. annotate each adapter
- * with this so mistakes surface in its own file
+ * fetches one type of upstream and yields its post data a page at a time,
+ * newest first, so ingest can stop once it reaches posts it already has. an
+ * upstream without pages yields once. annotate each adapter with this so
+ * mistakes surface in its own file
  */
-export type FeedAdapter<Opts = undefined> = (opts: Opts) => Promise<PostData[]>;
+export type FeedAdapter<Opts = undefined> = (
+	opts: Opts,
+) => AsyncGenerator<PostData[]>;

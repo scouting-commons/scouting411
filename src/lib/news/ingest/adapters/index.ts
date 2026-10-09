@@ -18,7 +18,7 @@ export const adapters = {
 };
 
 /** run the adapter a feed config names, with its options */
-export function runAdapter(config: AdapterConfig): Promise<PostData[]> {
+export function runAdapter(config: AdapterConfig): AsyncGenerator<PostData[]> {
 	// AdapterConfig pairs each type with its own opts, which ts can't follow through the lookup
 	const adapter = adapters[config.type] as FeedAdapter<unknown>;
 	return adapter("opts" in config ? config.opts : undefined);

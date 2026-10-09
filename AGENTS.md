@@ -29,9 +29,9 @@ Three folders that meet only at the Postgres `posts` table: `feeds/` (config), `
 
 ### Ingest
 
-`ingestAllFeeds.ts` runs every feed concurrently with `Promise.allSettled`, so a bad upstream fails only its own feed. Per feed, `ingestFeed.ts` runs the adapter and passes its output through `normalize.ts`, the zod schema that enforces what `PostData` claims (HTML stripped, entities decoded, http(s) URLs, ISO dates). Zero posts counts as a failure, so an empty upstream writes nothing. `store.ts`'s `insertPosts` appends with `onConflictDoNothing` on feed and url, so the table keeps every post ever seen, including ones gone from upstream.
+`ingestAllFeeds.ts` runs every feed concurrently with `Promise.allSettled`, so a bad upstream fails only its own feed. Per feed, `ingestFeed.ts` pulls pages from the adapter, passes each through `normalize.ts` (the zod schema that enforces what `PostData` claims: HTML stripped, entities decoded, http(s) URLs, ISO dates), and stops at the first page holding a post already stored, so a daily run usually fetches one page and a new feed backfills its whole history. Only the new posts are written, in one insert at the end. An empty page counts as a failure, so an empty upstream writes nothing. `store.ts`'s `insertPosts` appends with `onConflictDoNothing` on feed and url, so the table keeps every post ever seen, including ones gone from upstream.
 
-`adapters/` holds one adapter per upstream shape, each typed as a `FeedAdapter<Opts>` from `ingest/types.ts`. A new upstream shape gets a new adapter, registered in `adapters/index.ts`.
+`adapters/` holds one adapter per upstream shape, each an async generator typed as a `FeedAdapter<Opts>` from `ingest/types.ts`. It must yield pages newest first, or ingest stops early; an upstream without pages yields once. A new upstream shape gets a new adapter, registered in `adapters/index.ts`.
 
 The `posts` table is in `src/infra/db/schema.ts` (Drizzle over Neon). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate`. Delete a removed feed's rows first (Postgres can't drop an enum value in use), and hand-edit a rename into `ALTER TYPE feed_slug RENAME VALUE`.
 

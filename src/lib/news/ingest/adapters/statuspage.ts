@@ -22,17 +22,16 @@ const endpoints = [
 	},
 ] as const;
 
-export const statuspageAdapter: FeedAdapter<StatuspageAdapterOpts> = async (
-	opts,
-) => {
-	const results = await Promise.all(
-		endpoints.map((endpoint) => fetchEndpoint(endpoint, opts)),
-	);
+export const statuspageAdapter: FeedAdapter<StatuspageAdapterOpts> =
+	async function* (opts) {
+		const results = await Promise.all(
+			endpoints.map((endpoint) => fetchEndpoint(endpoint, opts)),
+		);
 
-	// an incident and a maintenance are distinct objects with distinct ids, so
-	// the two responses can't overlap and the union needs no deduping
-	return results.flat();
-};
+		// an incident and a maintenance are distinct objects with distinct ids, so
+		// the two responses can't overlap and the union needs no deduping
+		yield results.flat();
+	};
 
 /** retrieve and map one of the history endpoints */
 async function fetchEndpoint(

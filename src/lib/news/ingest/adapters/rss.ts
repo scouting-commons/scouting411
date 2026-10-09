@@ -1,7 +1,7 @@
 import type { FeedAdapter, PostData } from "@/lib/news/ingest/types";
 import { parseRssFeed } from "feedsmith";
 
-export const rssAdapter: FeedAdapter<RssAdapterOpts> = async (opts) => {
+export const rssAdapter: FeedAdapter<RssAdapterOpts> = async function* (opts) {
 	console.log(`fetching rss feed ${opts.feedUrl}`);
 
 	const response = await fetch(opts.feedUrl);
@@ -48,7 +48,7 @@ export const rssAdapter: FeedAdapter<RssAdapterOpts> = async (opts) => {
 
 	console.log(`fetched ${postData.length} posts from rss feed ${opts.feedUrl}`);
 
-	return postData;
+	yield postData;
 };
 
 type RssAdapterOpts = {
