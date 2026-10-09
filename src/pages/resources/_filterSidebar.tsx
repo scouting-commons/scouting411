@@ -3,8 +3,8 @@ import { SidebarContent } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { FilterSidebarItem } from "@/components/react/filterSidebarItem";
 import { tags } from "@/lib/tags/tag";
+import { resourceTypes } from "@/lib/resources/resourceTypes";
 import type { QueryResourcesInput } from "@/lib/resources/types";
-import type { TagSlug } from "@/lib/tags/types";
 
 /** holds the sparse query, so the url records only what the user touched */
 export function FilterSidebar({
@@ -14,72 +14,98 @@ export function FilterSidebar({
 	query: QueryResourcesInput;
 	setQuery: React.Dispatch<React.SetStateAction<QueryResourcesInput>>;
 }) {
-	/** only explicitly selected tags are checked. none checked means every resource */
-	const selected = query.tags ?? [];
-
-	/** keep the query sparse: no selection is the default */
-	const setTags = (next: TagSlug[]) =>
-		setQuery((query) => ({ ...query, tags: next.length ? next : undefined }));
-
 	return (
 		<SidebarContent className="divide-sidebar-border gap-0 divide-y">
-			<FilterSidebarItem
-				label={`Tags (${selected.length ? `${selected.length}/${tags.length}` : "all"})`}
-				accessory={
-					selected.length > 0 && (
+			<CheckboxFilter
+				label="Types"
+				options={resourceTypes}
+				selected={query.types ?? []}
+				setSelected={(types) => setQuery((query) => ({ ...query, types }))}
+			/>
+			<CheckboxFilter
+				label="Tags"
+				options={tags}
+				selected={query.tags ?? []}
+				setSelected={(tags) => setQuery((query) => ({ ...query, tags }))}
+			/>
+		</SidebarContent>
+	);
+}
+
+/**
+ * a checklist over a fixed set of options. none checked means no filter, which
+ * is passed up as undefined to keep the query sparse
+ */
+function CheckboxFilter<Slug extends string>({
+	label,
+	options,
+	selected,
+	setSelected,
+}: {
+	label: string;
+	options: readonly { slug: Slug; name: string; description: string }[];
+	selected: Slug[];
+	setSelected: (next: Slug[] | undefined) => void;
+}) {
+	const set = (next: Slug[]) => setSelected(next.length ? next : undefined);
+
+	return (
+		<FilterSidebarItem
+			label={`${label} (${selected.length ? `${selected.length}/${options.length}` : "all"})`}
+			accessory={
+				selected.length > 0 && (
+					<Button
+						variant="ghost"
+						size="xs"
+						className="text-primary"
+						onClick={() => set([])}
+					>
+						Clear
+					</Button>
+				)
+			}
+		>
+			<ul className="-mx-2 flex flex-col">
+				{options.map((option) => (
+					<li
+						key={option.slug}
+						className="group/option hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-2 py-1"
+					>
+						<Checkbox
+							id={`${label}-${option.slug}`}
+							checked={selected.includes(option.slug)}
+							onCheckedChange={(checked) =>
+								/** rebuild from the canonical list so the order stays stable */
+								set(
+									options
+										.filter((candidate) =>
+											candidate.slug === option.slug
+												? checked
+												: selected.includes(candidate.slug),
+										)
+										.map((candidate) => candidate.slug),
+								)
+							}
+						/>
+						<label
+							htmlFor={`${label}-${option.slug}`}
+							className="min-w-0 flex-1 cursor-pointer truncate py-0.5 text-sm"
+							title={option.description}
+						>
+							{option.name}
+						</label>
 						<Button
 							variant="ghost"
 							size="xs"
-							className="text-primary"
-							onClick={() => setTags([])}
+							className="text-primary opacity-0 group-hover/option:opacity-100 focus-visible:opacity-100"
+							aria-label={`Show only ${option.name}`}
+							onClick={() => set([option.slug])}
 						>
-							Clear
+							Only
 						</Button>
-					)
-				}
-			>
-				<ul className="-mx-2 flex flex-col">
-					{tags.map((tag) => (
-						<li
-							key={tag.slug}
-							className="group/tag hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-2 py-1"
-						>
-							<Checkbox
-								id={`tag-${tag.slug}`}
-								checked={selected.includes(tag.slug)}
-								onCheckedChange={(checked) =>
-									/** rebuild from the canonical tag list so the order stays stable */
-									setTags(
-										tags
-											.filter((candidate) =>
-												candidate.slug === tag.slug
-													? checked
-													: selected.includes(candidate.slug),
-											)
-											.map((candidate) => candidate.slug),
-									)
-								}
-							/>
-							<label
-								htmlFor={`tag-${tag.slug}`}
-								className="min-w-0 flex-1 cursor-pointer truncate py-0.5 text-sm"
-								title={tag.description}
-							>
-								{tag.name}
-							</label>
-							<Button
-								variant="ghost"
-								size="xs"
-								className="text-primary opacity-0 group-hover/tag:opacity-100 focus-visible:opacity-100"
-								aria-label={`Show only ${tag.name}`}
-								onClick={() => setTags([tag.slug])}
-							>
-								Only
-							</Button>
-						</li>
-					))}
-				</ul>
-			</FilterSidebarItem>
-		</SidebarContent>
+					</li>
+				))}
+			</ul>
+		</FilterSidebarItem>
 	);
 }

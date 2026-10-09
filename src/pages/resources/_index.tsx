@@ -45,7 +45,7 @@ export function Page({ initialQuery }: { initialQuery: QueryResourcesInput }) {
 							No resources found matching your filters.
 						</div>
 						<div className="text-muted-foreground text-sm">
-							Try selecting different tags.
+							Try selecting different filters.
 						</div>
 					</div>
 				) : (

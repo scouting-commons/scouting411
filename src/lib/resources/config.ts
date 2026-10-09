@@ -1,6 +1,5 @@
 import type { Resource } from "@/lib/resources/types";
 
-// todo add tag for the type of resource, separate from the topic tags
 // eventually this could be fully searchable and filterable in the same way the feeds are
 
 export const resources: Resource[] = [

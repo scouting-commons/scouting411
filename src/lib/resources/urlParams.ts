@@ -4,6 +4,7 @@ import {
 	queryResourcesInputSchema,
 } from "@/lib/resources/types";
 import { tagSlugSchema } from "@/lib/tags/types";
+import { resourceTypeSlugSchema } from "@/lib/resources/resourceTypes";
 
 export const queryResourcesUrlParams = {
 	encode,
@@ -12,12 +13,15 @@ export const queryResourcesUrlParams = {
 
 /**
  * the same options as the posts query, for the same reasons: see the header
- * comment in `@/lib/news/query/urlParams`. arrayLimit is sized to the tag list
+ * comment in `@/lib/news/query/urlParams`. arrayLimit is sized to the longest list
  */
 const qsOpts = {
 	allowDots: true,
 	arrayFormat: "brackets",
-	arrayLimit: tagSlugSchema.options.length,
+	arrayLimit: Math.max(
+		tagSlugSchema.options.length,
+		resourceTypeSlugSchema.options.length,
+	),
 } as const;
 
 /** encode a sparse query into a URLSearchParams query */

@@ -2,12 +2,18 @@ import { TagIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Resource } from "@/lib/resources/types";
 import { getTagBySlug } from "@/lib/tags/tag";
+import { getResourceTypeBySlug } from "@/lib/resources/resourceTypes";
 import { cn } from "@/util/cn";
 
 export function Resource({ resource }: { resource: Resource }) {
 	return (
 		<div className="flex flex-col justify-between gap-3 rounded-lg border p-6 md:flex-row">
 			<div className="flex flex-col gap-3">
+				{resource.type && (
+					<p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+						{getResourceTypeBySlug(resource.type).name}
+					</p>
+				)}
 				<a
 					href={resource.url}
 					rel="noopener noreferrer"
