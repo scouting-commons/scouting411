@@ -55,13 +55,13 @@ export function NavGroup({
 			<SidebarGroup className="gap-1 p-0 px-3">
 				<SidebarGroupLabel
 					render={<CollapsibleTrigger />}
-					className={`${labelClassName} group/trigger hover:text-sidebar-foreground flex w-full cursor-pointer items-center justify-start gap-2 pr-3`}
+					className={`${labelClassName} group/trigger hover:text-sidebar-foreground flex w-full cursor-pointer items-center justify-start gap-1.5 pr-3`}
 				>
+					{label}
 					<Icon
 						icon={ChevronRightIcon}
 						className="transition-transform duration-200 group-data-panel-open/trigger:rotate-90"
 					/>
-					{label}
 				</SidebarGroupLabel>
 				<CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-ending-style:h-0 data-starting-style:h-0">
 					<SidebarGroupContent>{menu}</SidebarGroupContent>

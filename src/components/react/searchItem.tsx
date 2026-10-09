@@ -1,10 +1,5 @@
 import type { ReactNode } from "react";
-import {
-	CompassIcon,
-	ExternalLinkIcon,
-	RssIcon,
-	SquareIcon,
-} from "lucide-react";
+import { CompassIcon, ExternalLinkIcon, RssIcon, TagIcon } from "lucide-react";
 import type { SearchItem } from "@/lib/search/types";
 import { cn } from "@/util/cn";
 import { Icon } from "@/components/react/icon";
@@ -29,7 +24,7 @@ export const searchItemTypes: Record<
 	hub: {
 		heading: "Hubs",
 		label: "Hub",
-		icon: <Icon icon={SquareIcon} className="fill-current" />,
+		icon: <Icon icon={TagIcon} />,
 	},
 	feed: { heading: "Feeds", label: "Feed", icon: <Icon icon={RssIcon} /> },
 	resource: {

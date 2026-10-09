@@ -16,7 +16,7 @@ export function NavLink({
 	newTab?: boolean;
 	currentUrl: URL;
 	icon: LucideIcon;
-	/** the icon's color and fill, muted and unfilled if unset */
+	/** the icon's color, muted if unset */
 	color?: string;
 }) {
 	// subpages keep their parent link active
@@ -41,7 +41,6 @@ export function NavLink({
 							icon={icon}
 							className={cn(!color && "text-sidebar-foreground/70")}
 							style={{ color }}
-							fill={color ? "currentColor" : "none"}
 						/>
 						{label}
 					</div>

@@ -6,7 +6,7 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 
 import { feeds } from "./src/lib/news/feeds/feed";
-import { hubs } from "./src/lib/hubs/hub";
+import { tags } from "./src/lib/tags/tag";
 
 const site = "https://scouting411.org";
 
@@ -24,7 +24,7 @@ export default defineConfig({
 			// SSR routes can't be discovered by the integration, so list them here
 			customPages: [
 				...feeds.map((feed) => feed.links.overview),
-				...hubs.map((hub) => hub.links.page),
+				...tags.map((tag) => tag.links.page),
 			].map((path) => new URL(path, site).href),
 		}),
 		react(),

@@ -20,13 +20,13 @@ import {
 	MedalIcon,
 	CompassIcon,
 	RibbonIcon,
-	SquareIcon,
+	TagIcon,
 } from "lucide-react";
 import { DarkModeControl } from "@/components/react/darkModeControl";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { CommandPaletteTrigger } from "@/components/react/commandPalette";
-import { hubs } from "@/lib/hubs/hub";
+import { tags } from "@/lib/tags/tag";
 
 export function AppSidebar({ url }: { url: URL }) {
 	return (
@@ -142,15 +142,15 @@ export function AppSidebar({ url }: { url: URL }) {
 							/>
 						)}
 					</NavGroup>
-					<NavGroup label="hubs">
-						{hubs.map((hub) => (
+					<NavGroup label="hubs" collapsible defaultOpen={false}>
+						{tags.map((tag) => (
 							<NavLink
-								key={hub.slug}
-								href={hub.links.page}
-								label={hub.name}
+								key={tag.slug}
+								href={tag.links.page}
+								label={tag.name}
 								currentUrl={url}
-								icon={SquareIcon}
-								color={hub.color}
+								icon={TagIcon}
+								{...(tag.color && { color: tag.color })}
 							/>
 						))}
 					</NavGroup>

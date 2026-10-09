@@ -1,7 +1,6 @@
 import { feeds } from "@/lib/news/feeds/feed";
-import { hubs } from "@/lib/hubs/hub";
 import { queryResources } from "@/lib/resources/query";
-import { getTagBySlug } from "@/lib/tags/tag";
+import { getTagBySlug, tags } from "@/lib/tags/tag";
 import { listRanks } from "@/lib/advancement/ranks/query";
 import { listMeritBadges } from "@/lib/advancement/meritBadges/query";
 import { listAdventures } from "@/lib/advancement/adventures/query";
@@ -48,15 +47,15 @@ const sources: (() => SearchItem[] | Promise<SearchItem[]>)[] = [
 			external: false,
 		})),
 	() =>
-		hubs.map((hub) => ({
-			id: hub.links.page,
+		tags.map((tag) => ({
+			id: tag.slug,
 			type: "hub",
-			name: hub.name,
-			keywords: [`${hub.name} Hub`],
-			description: hub.description,
-			url: hub.links.page,
+			name: tag.name + " Hub",
+			keywords: [`${tag.name} Hub`],
+			description: tag.description,
+			url: tag.links.page,
 			external: false,
-			color: hub.color,
+			color: tag.color,
 		})),
 	() =>
 		feeds.map((feed) => ({

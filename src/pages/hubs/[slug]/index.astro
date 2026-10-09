@@ -1,7 +1,7 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import { PostComponent } from "@/components/react/post";
-import { getHubBySlug } from "@/lib/hubs/hub";
+import { tags } from "@/lib/tags/tag";
 import { rpc } from "@/rpc/client";
 import { ArrowRightIcon } from "lucide-react";
 import { Icon } from "@/components/react/icon";
@@ -9,23 +9,30 @@ import { Icon } from "@/components/react/icon";
 export const prerender = false;
 
 const { slug } = Astro.params;
-const hub = slug ? getHubBySlug(slug) : undefined;
+const tag = tags.find((tag) => tag.slug === slug);
 
-if (!hub) {
+if (!tag) {
 	return new Response(null, { status: 404 });
 }
 
-const { posts, pagination } = await rpc.news.posts.query({
-	feeds: hub.newsSources,
-	paginate: {
-		maxPageSize: 8,
-		page: 1,
-	},
-});
+// an empty feeds query means every feed, so a tag without sources shows no posts
+const { posts, pagination } = tag.newsSources.length
+	? await rpc.news.posts.query({
+			feeds: tag.newsSources,
+			paginate: {
+				maxPageSize: 8,
+				page: 1,
+			},
+		})
+	: { posts: [], pagination: undefined };
 
 const [featuredPost, ...recentPosts] = posts;
 
-const resources = await rpc.resources.query({ tags: [hub.tag] });
+const resources = await rpc.resources.query({ tags: [tag.slug] });
+
+/** the tag's color mixed toward transparent. tags without a color get a neutral gray */
+const tint = (percent: number) =>
+	`color-mix(in oklab, ${tag.color ?? "var(--muted-foreground)"} ${percent}%, transparent)`;
 
 const formatDate = (date: Date) =>
 	date.toLocaleDateString("en-US", {
@@ -35,18 +42,18 @@ const formatDate = (date: Date) =>
 	});
 ---
 
-<Layout title={hub.name}>
+<Layout title={tag.name}>
 	<div
 		class="px-8 py-12 lg:pt-16 lg:pb-20"
 		style={{
-			backgroundColor: `color-mix(in oklab, ${hub.color} 20%, transparent)`,
+			backgroundColor: tint(20),
 		}}
 	>
 		<div class="mx-auto flex max-w-6xl flex-col gap-3">
 			<h1 class="font-serif text-4xl font-bold wrap-anywhere hyphens-auto">
-				{hub.name} Hub
+				{tag.name} Hub
 			</h1>
-			<p class="text-muted-foreground max-w-2xl">{hub.description}</p>
+			<p class="text-muted-foreground max-w-2xl">{tag.description}</p>
 		</div>
 	</div>
 
@@ -54,21 +61,23 @@ const formatDate = (date: Date) =>
 		<div class="flex min-w-0 flex-col gap-5">
 			<div class="flex items-center justify-between gap-4 border-b pb-2">
 				<h2 class="font-serif text-xl font-bold">Latest news</h2>
-				<a
-					href={hub.links.browsePosts}
-					class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
-				>
-					All {Intl.NumberFormat().format(pagination.totalItems)} in Browse
-					<Icon icon={ArrowRightIcon} />
-				</a>
+				{tag.links.browsePosts && pagination && (
+					<a
+						href={tag.links.browsePosts}
+						class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
+					>
+						All {Intl.NumberFormat().format(pagination.totalItems)} in Browse
+						<Icon icon={ArrowRightIcon} />
+					</a>
+				)}
 			</div>
 
 			{featuredPost ? (
 				<div
 					class="@container mb-3 rounded-xl border p-5 shadow-sm @xl:p-7"
 					style={{
-						backgroundColor: `color-mix(in oklab, ${hub.color} 8%, transparent)`,
-						borderColor: `color-mix(in oklab, ${hub.color} 35%, transparent)`,
+						backgroundColor: tint(8),
+						borderColor: tint(35),
 					}}
 				>
 					<div class="flex flex-col gap-5 @xl:flex-row @xl:items-center @xl:gap-8">
@@ -120,7 +129,7 @@ const formatDate = (date: Date) =>
 					<h2 class="font-serif text-xl font-bold">Resources</h2>
 					{resources.length > 0 && (
 						<a
-							href={hub.links.browseResources}
+							href={tag.links.browseResources}
 							class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"
 						>
 							All {resources.length}
