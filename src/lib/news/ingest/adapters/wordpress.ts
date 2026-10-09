@@ -25,36 +25,29 @@ type WordpressAdapterOpts = {
 /** the number of milliseconds to wait between requests */
 const requestInterval = 500;
 
-export function WordpressAdapter(opts: WordpressAdapterOpts): FeedAdapter {
-	const execute = async () => {
-		const firstPage = await fetchPage(1, opts);
+export const wordpressAdapter: FeedAdapter<WordpressAdapterOpts> = async (
+	opts,
+) => {
+	const firstPage = await fetchPage(1, opts);
 
-		const remainingPages = Array.from(
-			{ length: firstPage.totalPages - 1 },
-			(_, i) => i + 2,
-		);
+	const remainingPages = Array.from(
+		{ length: firstPage.totalPages - 1 },
+		(_, i) => i + 2,
+	);
 
-		const functions = remainingPages.map(
-			(page) => async () => (await fetchPage(page, opts)).posts,
-		);
+	const functions = remainingPages.map(
+		(page) => async () => (await fetchPage(page, opts)).posts,
+	);
 
-		const remainingPagesPosts = await Promise.all(
-			functions.map(async (fn, i) => {
-				await sleep(requestInterval * i);
-				return fn();
-			}),
-		);
+	const remainingPagesPosts = await Promise.all(
+		functions.map(async (fn, i) => {
+			await sleep(requestInterval * i);
+			return fn();
+		}),
+	);
 
-		return [firstPage.posts, ...remainingPagesPosts].flat();
-	};
-
-	return {
-		type: {
-			id: "wordpress-api",
-		},
-		execute,
-	};
-}
+	return [firstPage.posts, ...remainingPagesPosts].flat();
+};
 
 /** retrieve one page worth of objects */
 async function fetchPage(

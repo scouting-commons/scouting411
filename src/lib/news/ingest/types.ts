@@ -20,14 +20,8 @@ export type IngestError = {
 	reason: string;
 };
 
-/** the shape of an adapter function to fetch a certain type of feed */
-export type FeedAdapter = {
-	/** metadata about the feed adapter type */
-	type: {
-		/** machine id for the type of adapter (rss, wordpress-api, etc) */
-		id: string;
-	};
-
-	/** executes the fetching login and returns the post data */
-	execute: () => Promise<PostData[]>;
-};
+/**
+ * fetches one type of upstream and returns its post data. annotate each adapter
+ * with this so mistakes surface in its own file
+ */
+export type FeedAdapter<Opts = undefined> = (opts: Opts) => Promise<PostData[]>;

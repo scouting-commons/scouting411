@@ -23,24 +23,17 @@ const endpoints = [
 	},
 ] as const;
 
-export function StatuspageAdapter(opts: StatuspageAdapterOpts): FeedAdapter {
-	const execute = async () => {
-		const results = await Promise.all(
-			endpoints.map((endpoint) => fetchEndpoint(endpoint, opts)),
-		);
+export const statuspageAdapter: FeedAdapter<StatuspageAdapterOpts> = async (
+	opts,
+) => {
+	const results = await Promise.all(
+		endpoints.map((endpoint) => fetchEndpoint(endpoint, opts)),
+	);
 
-		// an incident and a maintenance are distinct objects with distinct ids, so
-		// the two responses can't overlap and the union needs no deduping
-		return results.flat();
-	};
-
-	return {
-		type: {
-			id: "atlassian-statuspage-api",
-		},
-		execute,
-	};
-}
+	// an incident and a maintenance are distinct objects with distinct ids, so
+	// the two responses can't overlap and the union needs no deduping
+	return results.flat();
+};
 
 /** retrieve and map one of the history endpoints */
 async function fetchEndpoint(

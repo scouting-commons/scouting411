@@ -21,63 +21,54 @@ const announcementsUrl =
  * announcements to those of "Information Delivery 5002", which posts the
  * recent ones.
  */
-export function MyScoutingAnnouncementsAdapter(): FeedAdapter {
-	const execute = async () => {
-		const token = await signIn();
+export const myScoutingAnnouncementsAdapter: FeedAdapter = async () => {
+	const token = await signIn();
 
-		const url = new URL(announcementsUrl);
-		url.search = new URLSearchParams({
-			communicationType: "Announcement",
-			organizationGuid: "3008EA8A-9822-454E-8F62-0DF19DF8100F",
-			everyChildOrganization: "true",
-			status: "all",
-			fromDate: "2000-01-01T00:00:00",
-			toDate: "2100-01-01T00:00:00",
-			// the whole history fits in one page (153 items as of 2026-10-02)
-			perPage: "1000",
-			page: "1",
-		}).toString();
+	const url = new URL(announcementsUrl);
+	url.search = new URLSearchParams({
+		communicationType: "Announcement",
+		organizationGuid: "3008EA8A-9822-454E-8F62-0DF19DF8100F",
+		everyChildOrganization: "true",
+		status: "all",
+		fromDate: "2000-01-01T00:00:00",
+		toDate: "2100-01-01T00:00:00",
+		// the whole history fits in one page (153 items as of 2026-10-02)
+		perPage: "1000",
+		page: "1",
+	}).toString();
 
-		console.log(`fetching my.scouting announcements from ${url}`);
+	console.log(`fetching my.scouting announcements from ${url}`);
 
-		const response = await fetch(url, {
-			headers: { Authorization: `Bearer ${token}` },
-		});
+	const response = await fetch(url, {
+		headers: { Authorization: `Bearer ${token}` },
+	});
 
-		if (response.status !== 200) {
-			throw new Error(
-				`failed to fetch posts from ${url} - status code ${response.status}`,
-			);
-		}
+	if (response.status !== 200) {
+		throw new Error(
+			`failed to fetch posts from ${url} - status code ${response.status}`,
+		);
+	}
 
-		const { events } = announcementsResponseSchema.parse(await response.json());
+	const { events } = announcementsResponseSchema.parse(await response.json());
 
-		const postData: PostData[] = events
-			.filter((event) => event.deleted === "false")
-			.map((event) => ({
-				// announcements have no page of their own, so the fragment only
-				// keeps each url unique
-				url: `https://my.scouting.org/#announcement-${event.eventGuid}`,
-				title: event.announcementTitle,
-				description: event.announcementMessage,
-				// when it went live on the homepage. upstream sends no timezone; the
-				// homepage builds its query window from the utc clock, so read it as utc
-				date: `${event.startDateTime.replace(" ", "T")}Z`,
-				thumbnail: undefined,
-			}));
+	const postData: PostData[] = events
+		.filter((event) => event.deleted === "false")
+		.map((event) => ({
+			// announcements have no page of their own, so the fragment only
+			// keeps each url unique
+			url: `https://my.scouting.org/#announcement-${event.eventGuid}`,
+			title: event.announcementTitle,
+			description: event.announcementMessage,
+			// when it went live on the homepage. upstream sends no timezone; the
+			// homepage builds its query window from the utc clock, so read it as utc
+			date: `${event.startDateTime.replace(" ", "T")}Z`,
+			thumbnail: undefined,
+		}));
 
-		console.log(`fetched ${postData.length} posts from ${url}`);
+	console.log(`fetched ${postData.length} posts from ${url}`);
 
-		return postData;
-	};
-
-	return {
-		type: {
-			id: "my-scouting-announcements",
-		},
-		execute,
-	};
-}
+	return postData;
+};
 
 /** sign in to my.scouting and return a bearer token for api.scouting.org */
 async function signIn() {

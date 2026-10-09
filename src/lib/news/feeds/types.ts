@@ -20,7 +20,7 @@ type Adapters = typeof adapters;
  * stays safe to bundle into islands while the adapters stay server only
  */
 export type AdapterConfig = {
-	[K in keyof Adapters]: Parameters<Adapters[K]> extends []
+	[K in keyof Adapters]: Parameters<Adapters[K]>[0] extends undefined
 		? { type: K }
 		: { type: K; opts: Parameters<Adapters[K]>[0] };
 }[keyof Adapters];

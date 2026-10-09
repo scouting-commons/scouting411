@@ -21,40 +21,31 @@ const requestInterval = 500;
  * as the bootstrap cards the oa theme renders: a linked `h4` title, a teaser
  * `p`, a `time[datetime]` and an optional image.
  */
-export function OaNewsAdapter(): FeedAdapter {
-	const execute = async () => {
-		const firstPage = await fetchPage(0);
+export const oaNewsAdapter: FeedAdapter = async () => {
+	const firstPage = await fetchPage(0);
 
-		const remainingPages = Array.from(
-			{ length: firstPage.lastPage },
-			(_, i) => i + 1,
-		);
+	const remainingPages = Array.from(
+		{ length: firstPage.lastPage },
+		(_, i) => i + 1,
+	);
 
-		const remainingPagesPosts = await Promise.all(
-			remainingPages.map(async (page, i) => {
-				await sleep(requestInterval * i);
-				return (await fetchPage(page)).posts;
-			}),
-		);
+	const remainingPagesPosts = await Promise.all(
+		remainingPages.map(async (page, i) => {
+			await sleep(requestInterval * i);
+			return (await fetchPage(page)).posts;
+		}),
+	);
 
-		const posts = [firstPage.posts, ...remainingPagesPosts].flat();
+	const posts = [firstPage.posts, ...remainingPagesPosts].flat();
 
-		// a post published mid-crawl shifts every row down one, so the row at
-		// a page boundary can be read twice
-		const unique = [...new Map(posts.map((post) => [post.url, post])).values()];
+	// a post published mid-crawl shifts every row down one, so the row at
+	// a page boundary can be read twice
+	const unique = [...new Map(posts.map((post) => [post.url, post])).values()];
 
-		console.log(`fetched ${unique.length} posts from ${newsUrl}`);
+	console.log(`fetched ${unique.length} posts from ${newsUrl}`);
 
-		return unique;
-	};
-
-	return {
-		type: {
-			id: "oa-news",
-		},
-		execute,
-	};
-}
+	return unique;
+};
 
 /** retrieve and parse one page of the listing */
 async function fetchPage(page: number) {
