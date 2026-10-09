@@ -1,5 +1,5 @@
 import type { FeedConfigEntry, Feed } from "@/lib/news/feeds/types";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { feedConfigs } from "@/lib/news/feeds/config";
 import { type FeedSlug, feedSlugSchema } from "@/lib/news/feeds/types";
 
@@ -17,7 +17,7 @@ function hydrateFeed(opts: FeedConfigEntry): Feed {
 		coverImageSrc: opts.coverImageSrc,
 		links: {
 			overview: `/news/sources/${opts.slug}`,
-			browsePosts: `/news/browse?${postsQueryParamsEncoder.encode({
+			browsePosts: `/news/browse?${queryPostsUrlParams.encode({
 				feeds: [opts.slug],
 			})}`,
 			rss: `/feeds/${opts.slug}/rss`,

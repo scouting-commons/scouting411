@@ -1,6 +1,5 @@
 import { CardFeed } from "@/components/react/cardFeed";
 import { PostComponent } from "@/components/react/post";
-import type { Post } from "@/lib/news/post";
 import type { QueryInput } from "@/lib/news/query/types";
 import {
 	SecondarySidebar,
@@ -11,21 +10,21 @@ import { safe } from "@orpc/client";
 import { rpc } from "@/rpc/client";
 import { FilterSidebar } from "@/pages/news/browse/_filterSidebar";
 import { PaginationControl } from "@/components/react/paginate";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
-import type { PaginatedResults } from "@/util/paginateArray";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
+import type { PaginatedResults } from "@/lib/news/query/types";
 
 export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 	const [query, setQuery] = useState(initialQuery);
-	const [results, setResults] = useState<PaginatedResults<Post> | undefined>(
+	const [results, setResults] = useState<PaginatedResults | undefined>(
 		undefined,
 	);
 	const contentRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		/**
-		 * a narrower query resolves faster than a broader one (one database read per
-		 * selected feed), so without this an in-flight broad query can land after a
-		 * narrow one and overwrite it. only the latest query may set posts.
+		 * queries resolve out of order (a narrow one can beat a broad one), so
+		 * without this an in-flight older query can land after a newer one and
+		 * overwrite it. only the latest query may set posts.
 		 */
 		let stale = false;
 
@@ -121,7 +120,7 @@ export function Page({ initialQuery }: { initialQuery: QueryInput }) {
 }
 
 function updateUrlQuery(query: QueryInput) {
-	const queryString = postsQueryParamsEncoder.encode(query);
+	const queryString = queryPostsUrlParams.encode(query);
 
 	const url = new URL(document.location.href);
 	url.search = queryString.toString();

@@ -1,13 +1,13 @@
 import { hubsConfig } from "@/lib/hubs/config";
 import type { Hub } from "@/lib/hubs/types";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 
 /** the hydrated list of all hubs */
 export const hubs: Hub[] = hubsConfig.map((config) => ({
 	...config,
 	links: {
 		page: `/hubs/${config.slug}`,
-		browsePosts: `/news/browse?${postsQueryParamsEncoder.encode({
+		browsePosts: `/news/browse?${queryPostsUrlParams.encode({
 			feeds: config.newsSources,
 		})}`,
 	},

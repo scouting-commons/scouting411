@@ -1,6 +1,6 @@
 import { ExternalLinkIcon, NewspaperIcon, SearchIcon } from "lucide-react";
 import { SearchForm } from "@/components/react/searchForm";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import relativeDate from "tiny-relative-date";
 import { cn } from "@/util/cn";
 import {
@@ -115,7 +115,7 @@ function searchHref(query: string, tab: SearchTab) {
 
 /** the newsfeed filtered to the query, for news posts past the ones shown here */
 function newsfeedHref(query: string) {
-	return `/news/browse?${postsQueryParamsEncoder.encode({
+	return `/news/browse?${queryPostsUrlParams.encode({
 		filter: { keyword: query },
 	})}`;
 }

@@ -19,10 +19,9 @@ import { FilterSidebarItem } from "@/components/react/filterSidebarItem";
 import { feeds } from "@/lib/news/feeds/feed";
 import { type QueryInput, queryInputSchema } from "@/lib/news/query/types";
 import { type ResolvedQuery, resolveQuery } from "@/lib/news/query/resolve";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { useForm } from "@tanstack/react-form";
-import type { PaginatedResults } from "@/util/paginateArray";
-import type { Post } from "@/lib/news/post";
+import type { PaginatedResults } from "@/lib/news/query/types";
 import {
 	SidebarHeader,
 	SidebarContent,
@@ -56,7 +55,7 @@ export function FilterSidebar({
 }: {
 	query: QueryInput;
 	setQuery: React.Dispatch<React.SetStateAction<QueryInput>>;
-	results: PaginatedResults<Post> | undefined;
+	results: PaginatedResults | undefined;
 }) {
 	const { sort, paginate } = resolveQuery(query);
 
@@ -87,7 +86,7 @@ export function FilterSidebar({
 		},
 	});
 
-	const isFiltered = postsQueryParamsEncoder.encode(query).toString() !== "";
+	const isFiltered = queryPostsUrlParams.encode(query).toString() !== "";
 
 	return (
 		<>

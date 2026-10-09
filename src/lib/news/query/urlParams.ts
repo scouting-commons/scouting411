@@ -2,7 +2,7 @@ import { stringify, parse } from "qs";
 import { type QueryInput, queryInputSchema } from "@/lib/news/query/types";
 import { feedSlugs } from "@/lib/news/feeds/types";
 
-export const postsQueryParamsEncoder = {
+export const queryPostsUrlParams = {
 	encode,
 	decode,
 };

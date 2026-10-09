@@ -1,21 +1,30 @@
 import { readPosts } from "@/lib/news/query/read";
-import { sortPosts } from "@/lib/news/query/sort";
-import { paginateArray, type PaginatedResults } from "@/util/paginateArray";
-import { filterPosts } from "@/lib/news/query/filter";
-import type { Post } from "@/lib/news/post";
-import type { QueryInput } from "@/lib/news/query/types";
+import type { PaginatedResults, QueryInput } from "@/lib/news/query/types";
 import { resolveQuery } from "@/lib/news/query/resolve";
 
-export async function queryPosts(
-	input: QueryInput,
-): Promise<PaginatedResults<Post>> {
+export async function queryPosts(input: QueryInput): Promise<PaginatedResults> {
 	const query = resolveQuery(input);
 
-	const posts = await readPosts(query.feeds);
+	const { posts, totalItems } = await readPosts(query);
 
-	const filteredPosts = filterPosts(posts, query.filter);
+	// unpaginated, every match is one page sized to fit
+	const { page, maxPageSize } =
+		query.paginate === false
+			? { page: 1, maxPageSize: Math.max(totalItems, 1) }
+			: query.paginate;
 
-	const sortedPosts = sortPosts(filteredPosts, query.sort);
+	const firstItemIndex = (page - 1) * maxPageSize;
 
-	return paginateArray(sortedPosts, query.paginate);
+	return {
+		posts,
+		pagination: {
+			page,
+			maxPageSize,
+			pageSize: posts.length,
+			firstItemIndex,
+			lastItemIndex: Math.min(firstItemIndex + maxPageSize, totalItems) - 1,
+			totalItems,
+			totalPages: Math.ceil(totalItems / maxPageSize),
+		},
+	};
 }

@@ -1,13 +1,13 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import { Page } from "@/pages/news/browse/_index";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 
 export const prerender = false;
 
 const { searchParams } = Astro.url;
 
-const { error, data: query } = postsQueryParamsEncoder.decode(searchParams);
+const { error, data: query } = queryPostsUrlParams.decode(searchParams);
 
 if (error) {
 	return new Response(JSON.stringify(error.issues), {

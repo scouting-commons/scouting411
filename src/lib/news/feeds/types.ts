@@ -1,4 +1,3 @@
-import type { UrlShaped } from "@/util/utilTypes";
 import type { FeedAdapter } from "@/lib/news/ingest/types";
 import z from "zod";
 
@@ -10,7 +9,7 @@ export type FeedConfig = {
 	description: string;
 	defaultVisible: boolean;
 	coverImageSrc: string;
-	homepageUrl: UrlShaped;
+	homepageUrl: string;
 	adapter: FeedAdapter;
 };
 

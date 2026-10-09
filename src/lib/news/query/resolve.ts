@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { feedSlugs } from "@/lib/news/feeds/types";
-import { type QueryInput, queryInputSchema } from "@/lib/news/query/types";
-import { filterOptsSchema } from "@/lib/news/query/filter";
-import { sortOptsSchema } from "@/lib/news/query/sort";
-import { paginateOptsSchema } from "@/util/paginateArray";
+import {
+	type QueryInput,
+	filterOptsSchema,
+	paginateOptsSchema,
+	queryInputSchema,
+	sortOptsSchema,
+} from "@/lib/news/query/types";
 
 /**
  * the input schema with a default for everything the caller can leave out.

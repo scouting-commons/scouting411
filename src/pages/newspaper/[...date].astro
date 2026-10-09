@@ -1,7 +1,7 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
-import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
+import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { rpc } from "@/rpc/client";
 import { compileIssue } from "@/lib/newspaper/compile";
 import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
@@ -31,7 +31,7 @@ const { posts } = await rpc.news.posts.query({ ...query, paginate: false });
 const issue = compileIssue(date, posts);
 const links = issueLinks(date);
 
-const browseHref = `/news/browse?${postsQueryParamsEncoder.encode(query)}`;
+const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 ---
 
 <Layout title="This Week in Scouting">
