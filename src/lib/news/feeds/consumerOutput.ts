@@ -3,7 +3,7 @@ import type { Feed } from "@/lib/news/feeds/types";
 import {
 	getAggregatedFeedMetrics,
 	getFeedMetrics,
-} from "@/lib/news/metrics/feedMetrics";
+} from "@/lib/news/feeds/metrics";
 import { queryPosts } from "@/lib/news/query/query";
 
 const site = import.meta.env.SITE;
