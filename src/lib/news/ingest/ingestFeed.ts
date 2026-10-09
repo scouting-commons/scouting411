@@ -1,7 +1,7 @@
 import type { FeedSlug } from "@/lib/news/feeds/types";
 import { feedConfigs } from "@/lib/news/feeds/config";
 import type { PostData } from "@/lib/news/ingest/types";
-import { normalizePostData } from "@/lib/news/ingest/upstream/normalize";
+import { normalizePostData } from "@/lib/news/ingest/normalize";
 
 /** fetch and normalize one feed's post data. throws if the adapter fails or returns no posts */
 export async function ingestFeed(slug: FeedSlug): Promise<PostData[]> {

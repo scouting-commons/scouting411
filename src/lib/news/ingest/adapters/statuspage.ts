@@ -1,4 +1,4 @@
-import type { FeedAdapter } from "@/lib/news/ingest/upstream/types";
+import type { FeedAdapter } from "@/lib/news/ingest/types";
 import type { PostData } from "@/lib/news/ingest/types";
 import { z } from "zod";
 

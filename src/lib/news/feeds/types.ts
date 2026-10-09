@@ -1,5 +1,5 @@
 import type { UrlShaped } from "@/util/utilTypes";
-import type { FeedAdapter } from "@/lib/news/ingest/upstream/types";
+import type { FeedAdapter } from "@/lib/news/ingest/types";
 import z from "zod";
 
 import { feedConfigs } from "@/lib/news/feeds/config";

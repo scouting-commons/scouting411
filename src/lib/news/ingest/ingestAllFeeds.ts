@@ -1,6 +1,6 @@
 import { feedConfigs } from "@/lib/news/feeds/config";
 import { insertPosts } from "@/lib/news/ingest/store";
-import { ingestFeed } from "@/lib/news/ingest/upstream/ingestFeed";
+import { ingestFeed } from "@/lib/news/ingest/ingestFeed";
 import type { IngestError } from "@/lib/news/ingest/types";
 
 /** fetches the upstream post data for all feeds and stores any new posts */
