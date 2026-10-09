@@ -1,7 +1,9 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
-import { editionsOf, leadPost } from "@/lib/newspaper/edition";
+import { getNewspaperArchive } from "@/lib/newspaper/archive";
+import { issueLinks } from "@/lib/newspaper/schedule";
+import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
 import { rpc } from "@/rpc/client";
 
 export const prerender = false;
@@ -11,16 +13,7 @@ const { posts } = await rpc.news.posts.query({
 	paginate: false,
 });
 
-const editions = editionsOf(posts).map((edition) => ({
-	...edition,
-	lead: leadPost(edition.posts)!,
-	sourceCount: new Set(edition.posts.map((post) => post.feed.slug)).size,
-}));
-
-const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
-	date.toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
-const shortDate = (date: Date) =>
-	formatDate(date, { month: "long", day: "numeric" });
+const issues = getNewspaperArchive(posts);
 ---
 
 <Layout title="This Week in Scouting: Archive">
@@ -37,43 +30,44 @@ const shortDate = (date: Date) =>
 			</h1>
 			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-b py-2 text-xs tracking-widest uppercase">
 				<span>Archive</span>
-				<span>{editions.length} issues</span>
+				<span>{issues.length} issues</span>
 			</div>
 		</header>
 
 		<div class="flex flex-col">
-			{editions.map((edition) => (
+			{issues.map((issue) => (
 				<a
-					href={edition.href}
+					href={issueLinks(issue.date).self}
 					class="group border-foreground/40 grid gap-4 border-t py-6 md:grid-cols-[12rem_1fr]"
 				>
 					<div class="flex flex-col">
 						<span class="font-serif text-xl font-bold">
-							{formatDate(edition.date, { dateStyle: "long" })}
+							{formatDate(issue.date, { dateStyle: "long" })}
 						</span>
 						<span class="text-muted-foreground text-xs tracking-widest uppercase">
-							{shortDate(edition.start)} - {shortDate(edition.end)}
+							{formatWeek(issue)}
 						</span>
 					</div>
 					<div class="flex gap-6">
 						<div class="flex min-w-0 flex-1 flex-col gap-1">
-							<span class="text-primary text-xs font-bold tracking-widest uppercase">
-								Top story · {edition.lead.feed.name}
-							</span>
-							<span class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto group-hover:underline">
-								{edition.lead.title}
-							</span>
+							{issue.lead && (
+								<>
+									<span class="text-primary text-xs font-bold tracking-widest uppercase">
+										Top story · {issue.lead.feed.name}
+									</span>
+									<span class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto group-hover:underline">
+										{issue.lead.title}
+									</span>
+								</>
+							)}
 							<span class="text-muted-foreground text-sm">
-								{edition.posts.length}{" "}
-								{edition.posts.length === 1 ? "story" : "stories"} from{" "}
-								{edition.sourceCount}{" "}
-								{edition.sourceCount === 1 ? "source" : "sources"}
+								{formatCounts(issue)}
 							</span>
 						</div>
-						{edition.lead.thumbnail && (
+						{issue.lead?.thumbnail && (
 							<img
 								class="hidden aspect-[8/5] w-28 shrink-0 object-cover sm:block"
-								src={edition.lead.thumbnail}
+								src={issue.lead.thumbnail}
 								alt=""
 							/>
 						)}

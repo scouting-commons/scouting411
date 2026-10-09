@@ -1,0 +1,24 @@
+import type { Post } from "@/lib/news/feeds/post";
+import type { IsoDate } from "@/lib/newspaper/dates";
+
+type IssueDay = {
+	date: IsoDate;
+	posts: Post[];
+};
+
+/**
+ * one week's newspaper, compiled once its week is over. it comes out on a
+ * sunday and covers the sunday-to-saturday week before it.
+ */
+export type Issue = {
+	/** the sunday it came out, which identifies it */
+	date: IsoDate;
+	/** the days it covers, shaped as a news query filter */
+	week: { from: IsoDate; to: IsoDate };
+	/** the newest story with its own photo, or else the newest story */
+	lead: Post | undefined;
+	/** the rest of the stories, by the day they were posted, newest first */
+	days: IssueDay[];
+	storyCount: number;
+	sourceCount: number;
+};

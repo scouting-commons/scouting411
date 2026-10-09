@@ -3,46 +3,42 @@ import Layout from "@/components/layout/Layout.astro";
 import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
 import { postsQueryParamsEncoder } from "@/lib/news/query/queryParams";
 import { rpc } from "@/rpc/client";
-import { getEdition, leadPost } from "@/lib/newspaper/edition";
+import { compileIssue } from "@/lib/newspaper/compile";
+import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
+import {
+	findIssueDate,
+	issueLinks,
+	latestIssueDate,
+	weekOf,
+} from "@/lib/newspaper/schedule";
 import { ArrowLeftIcon, ArrowRightIcon, PrinterIcon } from "lucide-react";
 import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
 
-const edition = getEdition(Astro.params.date);
+const date =
+	Astro.params.date === undefined
+		? latestIssueDate()
+		: findIssueDate(Astro.params.date);
 
-if (!edition) {
+if (!date) {
 	return new Response(null, { status: 404 });
 }
 
-const { date, start, end, filter } = edition;
-const query = { feeds: defaultVisibleFeedSlugs, filter };
-
+// compiled on request until issues are compiled ahead of time
+const query = { feeds: defaultVisibleFeedSlugs, filter: weekOf(date) };
 const { posts } = await rpc.news.posts.query({ ...query, paginate: false });
+const issue = compileIssue(date, posts);
+const links = issueLinks(date);
 
-// the lead runs on top, the rest under the day they were posted, newest first
-const lead = leadPost(posts);
-const days = [
-	...Map.groupBy(
-		posts.filter((post) => post !== lead),
-		(post) => post.date.toISOString().slice(0, 10),
-	).values(),
-].map((dayPosts) => ({ date: dayPosts[0]!.date, posts: dayPosts }));
-
-const sourceCount = new Set(posts.map((post) => post.feed.slug)).size;
 const browseHref = `/news/browse?${postsQueryParamsEncoder.encode(query)}`;
-
-const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
-	date.toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
-const shortDate = (date: Date) =>
-	formatDate(date, { month: "long", day: "numeric" });
 ---
 
 <Layout title="This Week in Scouting">
 	<div class="mx-auto flex w-full max-w-6xl flex-col gap-10 p-4 md:p-8">
 		<header class="flex flex-col">
 			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-t border-b-4 border-double py-2 text-xs tracking-widest uppercase">
-				<span>{formatDate(date, { dateStyle: "full" })}</span>
+				<span>{formatDate(issue.date, { dateStyle: "full" })}</span>
 				<div class="flex gap-4">
 					<button
 						type="button"
@@ -65,59 +61,55 @@ const shortDate = (date: Date) =>
 				This Week in Scouting
 			</h1>
 			<div class="text-muted-foreground flex flex-wrap justify-between gap-x-4 border-b py-2 text-xs tracking-widest uppercase">
-				<span>
-					{shortDate(start)} - {shortDate(end)}
-				</span>
-				<span>
-					{posts.length} stories from {sourceCount} sources
-				</span>
+				<span>{formatWeek(issue)}</span>
+				<span>{formatCounts(issue)}</span>
 			</div>
 		</header>
 
-		{lead === undefined ? (
+		{issue.lead === undefined ? (
 			<p class="text-muted-foreground text-center font-serif italic">
 				Nothing was posted this week.
 			</p>
 		) : (
 			<>
 				<article class="grid items-center gap-6 md:grid-cols-2">
-					{lead.thumbnail && (
+					{issue.lead.thumbnail && (
 						<img
 							class="aspect-video w-full object-cover"
-							src={lead.thumbnail}
+							src={issue.lead.thumbnail}
 							alt=""
 						/>
 					)}
 					<div
 						class:list={[
 							"flex flex-col gap-3",
-							!lead.thumbnail && "md:col-span-2",
+							!issue.lead.thumbnail && "md:col-span-2",
 						]}
 					>
 						<span class="text-primary text-xs font-bold tracking-widest uppercase">
 							Top story ·{" "}
-							<a href={lead.feed.links.overview} class="hover:underline">
-								{lead.feed.name}
+							<a href={issue.lead.feed.links.overview} class="hover:underline">
+								{issue.lead.feed.name}
 							</a>
 						</span>
 						<a
-							href={lead.url}
+							href={issue.lead.url}
 							rel="noopener noreferrer"
 							target="_blank"
 							class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline"
 						>
-							{lead.title}
+							{issue.lead.title}
 						</a>
-						{lead.description && (
+						{issue.lead.description && (
 							<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
-								{lead.description}
+								{issue.lead.description}
 							</p>
 						)}
 					</div>
 				</article>
 
 				<div class="flex flex-col">
-					{days.map((day) => (
+					{issue.days.map((day) => (
 						<section class="border-foreground/40 grid gap-4 border-t py-6 md:grid-cols-[9rem_1fr]">
 							<h2 class="flex items-baseline gap-2 md:flex-col md:gap-0">
 								<span class="font-serif text-xl font-bold">
@@ -170,7 +162,7 @@ const shortDate = (date: Date) =>
 
 		<nav class="grid grid-cols-3 items-center gap-4 text-sm font-medium print:hidden">
 			<a
-				href={edition.previousHref}
+				href={links.previous}
 				class="text-primary flex items-center gap-2 hover:underline"
 			>
 				<Icon icon={ArrowLeftIcon} small />
@@ -179,9 +171,9 @@ const shortDate = (date: Date) =>
 			<a href={browseHref} class="text-primary text-center hover:underline">
 				Browse this edition's news
 			</a>
-			{edition.nextHref && (
+			{links.next && (
 				<a
-					href={edition.nextHref}
+					href={links.next}
 					class="text-primary flex items-center justify-end gap-2 hover:underline"
 				>
 					Next issue

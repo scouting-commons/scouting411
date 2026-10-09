@@ -60,8 +60,7 @@ export function Page() {
 					Official Scouting America news and resources are scattered across
 					dozens of blogs, podcasts, newsrooms, websites, and PDF libraries.
 					Scouting411 gathers it all into one place and serves it up in every
-					format you want: a newsletter, a search engine, an AI plugin, and
-					more.
+					format you want: a newspaper, a search engine, an AI plugin, and more.
 				</p>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
