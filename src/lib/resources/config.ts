@@ -396,6 +396,14 @@ export const resources: Resource[] = [
 		tags: ["order-of-the-arrow"],
 	},
 	{
+		url: "https://directory.scouting.org/",
+		title: "Scouting Alumni Directory",
+		type: "tool",
+		description:
+			"The directory for finding and connecting with Scouting alumni",
+		tags: ["alumni"],
+	},
+	{
 		url: "https://status.scouting.org/",
 		title: "System Status",
 		type: "tool",
