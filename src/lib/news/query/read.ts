@@ -1,6 +1,6 @@
 import { inArray } from "drizzle-orm";
-import { db } from "@/server/db/client";
-import { posts } from "@/server/db/schema";
+import { db } from "@/infra/db/client";
+import { posts } from "@/infra/db/schema";
 import type { FeedSlug } from "@/lib/news/feeds/types";
 import { feeds } from "@/lib/news/feeds/feed";
 import type { Post } from "@/lib/news/post";

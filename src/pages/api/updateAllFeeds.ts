@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { ingestAllFeeds } from "@/lib/news/ingest/ingestAllFeeds";
 import { CRON_SECRET } from "astro:env/server";
-import { sendDevDebugEmail } from "@/server/email/templates/devDebug";
+import { sendDevDebugEmail } from "@/infra/email/templates/devDebug";
 
 export const prerender = false;
 

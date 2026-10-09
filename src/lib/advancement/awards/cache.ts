@@ -1,4 +1,4 @@
-import { redis } from "@/server/redis";
+import { redis } from "@/infra/redis";
 import type { Award, AwardDetail } from "@/lib/advancement/awards/types";
 
 /**

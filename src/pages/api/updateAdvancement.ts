@@ -4,7 +4,7 @@ import { ingestRanks } from "@/lib/advancement/ranks/ingest";
 import { ingestAdventures } from "@/lib/advancement/adventures/ingest";
 import { ingestAwards } from "@/lib/advancement/awards/ingest";
 import { CRON_SECRET } from "astro:env/server";
-import { sendDevDebugEmail } from "@/server/email/templates/devDebug";
+import { sendDevDebugEmail } from "@/infra/email/templates/devDebug";
 
 export const prerender = false;
 
