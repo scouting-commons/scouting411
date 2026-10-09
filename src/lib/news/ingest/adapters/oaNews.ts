@@ -1,5 +1,4 @@
-import type { FeedAdapter } from "@/lib/news/ingest/types";
-import type { PostData } from "@/lib/news/ingest/types";
+import type { FeedAdapter, PostData } from "@/lib/news/ingest/types";
 import { parse, type HTMLElement } from "node-html-parser";
 import { sleep } from "@/util/sleep";
 
