@@ -40,8 +40,6 @@ async function fetchEndpoint(
 ) {
 	const url = new URL(path, baseUrl).toString();
 
-	console.log(`fetching statuspage history from ${url}`);
-
 	const response = await fetch(url);
 
 	if (response.status !== 200) {
@@ -64,8 +62,6 @@ async function fetchEndpoint(
 		// status pages have no post imagery
 		thumbnail: undefined,
 	}));
-
-	console.log(`fetched ${postData.length} posts from ${url}`);
 
 	return postData;
 }

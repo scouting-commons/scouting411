@@ -36,8 +36,6 @@ export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
 		page: "1",
 	}).toString();
 
-	console.log(`fetching my.scouting announcements from ${url}`);
-
 	const response = await fetch(url, {
 		headers: { Authorization: `Bearer ${token}` },
 	});
@@ -63,8 +61,6 @@ export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
 			date: `${event.startDateTime.replace(" ", "T")}Z`,
 			thumbnail: undefined,
 		}));
-
-	console.log(`fetched ${postData.length} posts from ${url}`);
 
 	yield postData;
 };

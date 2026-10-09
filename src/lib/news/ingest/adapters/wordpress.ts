@@ -46,8 +46,6 @@ async function fetchPage(
 		categoryExcludeFilter,
 	}: WordpressAdapterOpts,
 ) {
-	console.log(`fetch page ${page} from ${baseUrl}`);
-
 	const params = new URLSearchParams({
 		page: String(page),
 		per_page: "100",

@@ -34,8 +34,6 @@ async function fetchPage(page: number) {
 	const url = new URL(newsUrl);
 	url.searchParams.set("page", String(page));
 
-	console.log(`fetch page ${page} from ${newsUrl}`);
-
 	const response = await fetch(url);
 
 	if (response.status !== 200) {

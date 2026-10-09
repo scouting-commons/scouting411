@@ -2,8 +2,6 @@ import type { FeedAdapter, PostData } from "@/lib/news/ingest/types";
 import { parseRssFeed } from "feedsmith";
 
 export const rssAdapter: FeedAdapter<RssAdapterOpts> = async function* (opts) {
-	console.log(`fetching rss feed ${opts.feedUrl}`);
-
 	const response = await fetch(opts.feedUrl);
 
 	if (response.status !== 200) {
@@ -45,8 +43,6 @@ export const rssAdapter: FeedAdapter<RssAdapterOpts> = async function* (opts) {
 			thumbnail: item.itunes?.image,
 		};
 	});
-
-	console.log(`fetched ${postData.length} posts from rss feed ${opts.feedUrl}`);
 
 	yield postData;
 };
