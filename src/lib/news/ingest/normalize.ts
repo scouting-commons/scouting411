@@ -52,4 +52,5 @@ const postDataSchema = z.object({
 	description: text.optional().transform(blankToUndefined),
 	date: instant,
 	thumbnail: webUrl.optional().catch(undefined).transform(blankToUndefined),
+	audio: webUrl.optional().catch(undefined).transform(blankToUndefined),
 }) satisfies z.ZodType<PostData>;

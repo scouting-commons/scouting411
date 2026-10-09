@@ -30,6 +30,7 @@ export const podcastArchiveAdapter: FeedAdapter<PodcastArchiveAdapterOpts> =
 				title: item.title.rendered,
 				url,
 				thumbnail: undefined,
+				audio: url,
 			};
 		});
 

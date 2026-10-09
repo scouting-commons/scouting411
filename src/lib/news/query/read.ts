@@ -97,5 +97,6 @@ function hydratePost(row: typeof posts.$inferSelect): Post {
 		date: row.publishedAt,
 		feed: feedsBySlug.get(row.feedSlug)!,
 		thumbnail: row.thumbnail,
+		audio: row.audio,
 	};
 }

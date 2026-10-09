@@ -8,4 +8,6 @@ export type Post = {
 	date: Date;
 	feed: Feed;
 	thumbnail: string | null;
+	/** external audio file url, for a podcast episode */
+	audio: string | null;
 };

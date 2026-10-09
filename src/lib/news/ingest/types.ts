@@ -12,6 +12,8 @@ export type PostData = {
 	date: string;
 	/** external image url to use as a thumbnail */
 	thumbnail: string | undefined;
+	/** external audio file url, for a podcast episode */
+	audio?: string | undefined;
 };
 
 /** an error that occurred during the upstream ingestion process */

@@ -25,6 +25,8 @@ export const posts = pgTable(
 		description: text(),
 		/** external image url to use as a thumbnail */
 		thumbnail: text(),
+		/** external audio file url, for a podcast episode */
+		audio: text(),
 		/** when upstream says the post was published */
 		publishedAt: timestamp({ withTimezone: true }).notNull(),
 		/** when ingest first saw the post / when this database row was created */

@@ -34,6 +34,7 @@ export async function insertPosts({
 				title: post.title,
 				description: post.description,
 				thumbnail: post.thumbnail,
+				audio: post.audio,
 				publishedAt: new Date(post.date),
 			})),
 		)

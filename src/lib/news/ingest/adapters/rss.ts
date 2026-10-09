@@ -41,6 +41,9 @@ export const rssAdapter: FeedAdapter<RssAdapterOpts> = async function* (opts) {
 			description: item.description,
 			date: item.pubDate,
 			thumbnail: item.itunes?.image,
+			audio: item.enclosures?.find((enclosure) =>
+				enclosure.type?.startsWith("audio/"),
+			)?.url,
 		};
 	});
 
