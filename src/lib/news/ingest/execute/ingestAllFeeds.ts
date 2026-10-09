@@ -5,19 +5,27 @@ import type { IngestError } from "@/lib/news/ingest/types";
 
 /** fetches the upstream post data for all feeds and stores any new posts */
 export async function ingestAllFeeds() {
-	const errors: IngestError[] = [];
+	const results = await Promise.allSettled(
+		feedConfigs.map(async (feed) =>
+			insertPosts({
+				feedSlug: feed.slug,
+				postData: await ingestFeed(feed.slug),
+			}),
+		),
+	);
 
-	await Promise.all(
-		feedConfigs.map(async (feed) => {
-			const { data, error } = await ingestFeed(feed.slug);
-
-			if (error) {
-				errors.push(error);
-				return;
-			}
-
-			await insertPosts({ feedSlug: feed.slug, postData: data });
-		}),
+	const errors: IngestError[] = results.flatMap((result, i) =>
+		result.status === "rejected"
+			? [
+					{
+						feed: feedConfigs[i]!.slug,
+						reason:
+							result.reason instanceof Error
+								? result.reason.message
+								: String(result.reason),
+					},
+				]
+			: [],
 	);
 
 	return {
