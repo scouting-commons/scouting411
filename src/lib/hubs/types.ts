@@ -6,12 +6,13 @@ export type HubConfig = {
 	name: string;
 	description: string;
 	color: string;
-	newsSources: FeedSlug[];
-	/** the hub lists the resources with this tag */
-	resourceTag: TagSlug;
+	/** the hub lists the posts from this tag's news sources and the resources with this tag */
+	tag: TagSlug;
 };
 
 export type Hub = HubConfig & {
+	/** the tag's news sources */
+	newsSources: FeedSlug[];
 	links: {
 		page: string;
 		browsePosts: string;

@@ -25,7 +25,7 @@ const { posts, pagination } = await rpc.news.posts.query({
 
 const [featuredPost, ...recentPosts] = posts;
 
-const resources = await rpc.resources.query({ tags: [hub.resourceTag] });
+const resources = await rpc.resources.query({ tags: [hub.tag] });
 
 const formatDate = (date: Date) =>
 	date.toLocaleDateString("en-US", {
