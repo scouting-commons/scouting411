@@ -451,7 +451,8 @@ export const feedConfigs = [
 			"The OA LodgeMaster Support Center blog. Contains changelog and news about the LodgeMaster program.",
 		coverImageSrc:
 			"https://confluence.oa-scouting.org/download/attachments/655365/OALMLC",
-		homepageUrl: "https://status.oa-scouting.org/",
+		homepageUrl:
+			"https://confluence.oa-scouting.org/pages/viewrecentblogposts.action?key=OALMLC",
 		adapter: {
 			type: "rss",
 			opts: {
