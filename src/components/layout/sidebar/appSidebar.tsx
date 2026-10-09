@@ -99,7 +99,7 @@ export function AppSidebar({ url }: { url: URL }) {
 						{import.meta.env.DEV && (
 							<NavLink
 								href="/api/updateAllFeeds"
-								label="Ingest news"
+								label="Ingest posts"
 								currentUrl={url}
 								icon={RefreshCwIcon}
 								newTab
