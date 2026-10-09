@@ -1,6 +1,6 @@
-import type { PostData } from "@/lib/news/ingest/types";
+import type { Post } from "@/lib/news/feeds/post";
 /** the fields of a post that content quality is measured against */
-type QualityInput = Pick<PostData, "description" | "thumbnail">;
+type QualityInput = Pick<Post, "description" | "thumbnail">;
 
 /** metrics and content quality measurements for a set of posts */
 export type FeedMetrics = {
@@ -33,7 +33,7 @@ export type FeedMetrics = {
 
 /** whether a post's description holds anything once whitespace is discounted */
 function hasDescription(post: QualityInput) {
-	return post.description !== undefined && post.description.trim() !== "";
+	return post.description !== null && post.description.trim() !== "";
 }
 
 /** the raw tallies every metric is derived from */
@@ -78,7 +78,7 @@ function buildMetrics(counts: MetricCounts): FeedMetrics {
 export function getFeedMetrics(posts: QualityInput[]): FeedMetrics {
 	const thumbnails = posts
 		.map((post) => post.thumbnail)
-		.filter((thumbnail) => thumbnail !== undefined);
+		.filter((thumbnail) => thumbnail !== null);
 
 	return buildMetrics({
 		posts: posts.length,

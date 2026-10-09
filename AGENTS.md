@@ -33,7 +33,7 @@ One adapter per upstream type in `upstream/adapters/` (`rss.ts` via feedsmith, `
 
 ### Store: `src/lib/news/db/`
 
-`ops.ts` is the whole surface of the `posts` table. `insertPosts` appends with `onConflictDoNothing`, so a post already stored (same feed and url) is skipped and the table keeps every post ever seen, including ones that have dropped off upstream. `fetch.ts` reads the rows for each selected feed and hydrates `PostData` into `Post` with its `Feed` attached. Route new post access through the query layer rather than calling `fetch.ts` directly.
+`ops.ts` is the whole surface of the `posts` table. `insertPosts` appends with `onConflictDoNothing`, so a post already stored (same feed and url) is skipped and the table keeps every post ever seen, including ones that have dropped off upstream. `readPosts` reads every selected feed in one query and hydrates each row into a `Post` with its `Feed` attached. Route new post access through the query layer rather than calling `readPosts` directly.
 
 The table lives in `src/lib/db/schema.ts` (Drizzle over Neon Postgres, snake_case columns). Its `feed_slug` column is a Postgres enum built from the feed config, so adding, renaming, or removing a feed needs a migration: `pnpm db generate`, then `pnpm db migrate` (drizzle-kit loads `.env` itself). Postgres can't drop an enum value in use, so delete a removed feed's rows first, and hand-edit a rename to `ALTER TYPE feed_slug RENAME VALUE`.
 
