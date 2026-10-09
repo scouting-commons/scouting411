@@ -1,12 +1,5 @@
 import type { FeedConfig } from "@/lib/news/feeds/types";
 
-import { RssAdapter } from "@/lib/news/ingest/adapters/rss";
-import { WordpressAdapter } from "@/lib/news/ingest/adapters/wordpress";
-import { PodcastArchiveAdapter } from "@/lib/news/ingest/adapters/podcast-archive";
-import { StatuspageAdapter } from "@/lib/news/ingest/adapters/statuspage";
-import { OaNewsAdapter } from "@/lib/news/ingest/adapters/oaNews";
-import { MyScoutingAnnouncementsAdapter } from "@/lib/news/ingest/adapters/myScoutingAnnouncements";
-
 export const feedConfigs = [
 	{
 		name: "Scouting America News",
@@ -17,20 +10,23 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2026/01/BSA-logo.png",
 		homepageUrl: "https://www.scouting.org",
-		adapter: WordpressAdapter({
-			baseUrl: "https://www.scouting.org",
-			// a catchall for everything that does not belong to another feed here
-			categoryExcludeFilter: [
-				10763, // international adventure - has its own feed
-				15052, // sea scouts program updates - has its own feed
-				15053, // cub scouts program updates - has its own feed
-				15054, // scouts bsa program updates - has its own feed
-				15546, // cub features - not articles, 301 to a landing page
-				15552, // venturing features - not articles, 301 to a landing page
-				15558, // scouts bsa features - not articles, 301 to a landing page
-				15738, // outdoor locations - not articles, 301 to a landing page
-			],
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://www.scouting.org",
+				// a catchall for everything that does not belong to another feed here
+				categoryExcludeFilter: [
+					10763, // international adventure - has its own feed
+					15052, // sea scouts program updates - has its own feed
+					15053, // cub scouts program updates - has its own feed
+					15054, // scouts bsa program updates - has its own feed
+					15546, // cub features - not articles, 301 to a landing page
+					15552, // venturing features - not articles, 301 to a landing page
+					15558, // scouts bsa features - not articles, 301 to a landing page
+					15738, // outdoor locations - not articles, 301 to a landing page
+				],
+			},
+		},
 	},
 	{
 		name: "International Adventure",
@@ -42,10 +38,13 @@ export const feedConfigs = [
 			"https://www.scouting.org/wp-content/uploads/2021/10/IC-Cover_Dark-scaled.jpg",
 		homepageUrl:
 			"https://www.scouting.org/international/international-adventure/",
-		adapter: WordpressAdapter({
-			baseUrl: "https://www.scouting.org",
-			categoryFilter: 10763,
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://www.scouting.org",
+				categoryFilter: 10763,
+			},
+		},
 	},
 	{
 		name: "Scouts BSA Program Updates",
@@ -57,10 +56,13 @@ export const feedConfigs = [
 			"https://goldengatescouting.org/wp-content/uploads/2025/01/Scouts-BSA-Logo.png",
 		homepageUrl:
 			"https://www.scouting.org/topics/program-updates/program-updates-scouts-bsa",
-		adapter: WordpressAdapter({
-			baseUrl: "https://www.scouting.org",
-			categoryFilter: 15054,
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://www.scouting.org",
+				categoryFilter: 15054,
+			},
+		},
 	},
 	{
 		name: "Sea Scouts Program Updates",
@@ -72,10 +74,13 @@ export const feedConfigs = [
 			"https://www.scouting.org/wp-content/uploads/2023/05/SeaScouts_Logo.png",
 		homepageUrl:
 			"https://www.scouting.org/topics/program-updates/program-updates-sea-scouts",
-		adapter: WordpressAdapter({
-			baseUrl: "https://www.scouting.org",
-			categoryFilter: 15052,
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://www.scouting.org",
+				categoryFilter: 15052,
+			},
+		},
 	},
 	{
 		name: "Cub Scouts Program Updates",
@@ -87,10 +92,13 @@ export const feedConfigs = [
 			"https://www.scouting.org/wp-content/uploads/2026/02/cubscouts.png",
 		homepageUrl:
 			"https://www.scouting.org/topics/program-updates/program-updates-cub-scouts",
-		adapter: WordpressAdapter({
-			baseUrl: "https://www.scouting.org",
-			categoryFilter: 15053,
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://www.scouting.org",
+				categoryFilter: 15053,
+			},
+		},
 	},
 
 	{
@@ -101,9 +109,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://i0.wp.com/onscouting.org/wp-content/uploads/2022/01/cubchat-1280x720-1.png",
 		homepageUrl: "https://onscouting.org/cubchatlive/",
-		adapter: RssAdapter({
-			feedUrl: "https://anchor.fm/s/10fd33ec4/podcast/rss",
-		}),
+		adapter: {
+			type: "rss",
+			opts: {
+				feedUrl: "https://anchor.fm/s/10fd33ec4/podcast/rss",
+			},
+		},
 	},
 	// todo it says this is "on hiatus". could not locate an rss feed other than via youtube
 	// {
@@ -111,9 +122,12 @@ export const feedConfigs = [
 	// 	slug: "trooptalk",
 	// 	description: "The official video podcast of the Scouts BSA program.",
 	// 	homepageUrl: "https://onscouting.org/trooptalklive/",
-	// 	adapter: RssAdapter({
-	// 		feedUrl: "",
-	// 	}),
+	// 	adapter: {
+	// 		type: "rss",
+	// 		opts: {
+	// 			feedUrl: "",
+	// 		},
+	// 	},
 	// },
 
 	{
@@ -125,9 +139,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://onscouting.org/wp-content/uploads/2026/04/1200x901_OnScouting.jpg",
 		homepageUrl: "https://onscouting.org",
-		adapter: WordpressAdapter({
-			baseUrl: "https://onscouting.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://onscouting.org",
+			},
+		},
 	},
 	{
 		name: "Trail to Adventure",
@@ -138,10 +155,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/elementor/thumbs/Frame-61@3x-1-qjjk7hopsugwy0tp9t0d62i0mwna5lp6q75bq9k9ge.png",
 		homepageUrl: "https://www.scouting.org/outdoor-programs/trail-to-adventure",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scouting.org",
-			type: "tta-post",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scouting.org",
+				type: "tta-post",
+			},
+		},
 	},
 	{
 		name: "Executive Communications",
@@ -152,10 +172,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2026/01/BSA-logo.png",
 		homepageUrl: "https://www.scouting.org/about/executive-communications/",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scouting.org",
-			type: "ec-post",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scouting.org",
+				type: "ec-post",
+			},
+		},
 	},
 	{
 		name: "Scouting Alumni",
@@ -166,9 +189,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutingalumni.org/wp-content/uploads/2024/03/Scouting-America-Scouting-Alumni-Logo_4c-1024x236.png",
 		homepageUrl: "https://scoutingalumni.org/news",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingalumni.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingalumni.org",
+			},
+		},
 	},
 	{
 		name: "Scouting Alumni - Ask the Chair",
@@ -179,10 +205,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutingalumni.org/wp-content/uploads/2024/03/Scouting-America-Scouting-Alumni-Logo_4c-1024x236.png",
 		homepageUrl: "https://scoutingalumni.org/resources/ask-the-chair/",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingalumni.org",
-			type: "ask_the_chair",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingalumni.org",
+				type: "ask_the_chair",
+			},
+		},
 	},
 	{
 		name: "Scouting Alumni - Alumni Highlights",
@@ -193,10 +222,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutingalumni.org/wp-content/uploads/2024/03/Scouting-America-Scouting-Alumni-Logo_4c-1024x236.png",
 		homepageUrl: "https://scoutingalumni.org/",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingalumni.org",
-			type: "alumni-highlight",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingalumni.org",
+				type: "alumni-highlight",
+			},
+		},
 	},
 	{
 		name: "Scout Life",
@@ -206,9 +238,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutlife.org/wp-content/uploads/2026/06/SL-logo_white_340x72.png",
 		homepageUrl: "https://scoutlife.org",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutlife.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutlife.org",
+			},
+		},
 	},
 
 	// https://www.podchaser.com/podcasts/scoutcast-31182
@@ -220,9 +255,12 @@ export const feedConfigs = [
 		homepageUrl: "https://podcast.scouting.org/category/scoutcast",
 		coverImageSrc:
 			"https://cachedimages.podchaser.com/512x512/aHR0cHM6Ly9wb2RjYXN0LnNjb3V0aW5nLm9yZy9zY291dGNhc3QtbG9nby0xNTAweDE1MDAuanBn/aHR0cHM6Ly93d3cucG9kY2hhc2VyLmNvbS9pbWFnZXMvbWlzc2luZy1pbWFnZS5wbmc%3D",
-		adapter: PodcastArchiveAdapter({
-			categoryId: 2,
-		}),
+		adapter: {
+			type: "podcast-archive",
+			opts: {
+				categoryId: 2,
+			},
+		},
 	},
 
 	// https://www.podchaser.com/podcasts/cubcast-3834
@@ -234,9 +272,12 @@ export const feedConfigs = [
 		homepageUrl: "https://podcast.scouting.org/category/cubcast",
 		coverImageSrc:
 			"https://cachedimages.podchaser.com/512x512/aHR0cHM6Ly9wb2RjYXN0LnNjb3V0aW5nLm9yZy9jdWJjYXN0LWxvZ28tMTUwMHgxNTAwLmpwZw%3D%3D/aHR0cHM6Ly93d3cucG9kY2hhc2VyLmNvbS9pbWFnZXMvbWlzc2luZy1pbWFnZS5wbmc%3D",
-		adapter: PodcastArchiveAdapter({
-			categoryId: 3,
-		}),
+		adapter: {
+			type: "podcast-archive",
+			opts: {
+				categoryId: 3,
+			},
+		},
 	},
 
 	// todo it looks like this is about to be shut down. I downloaded the rss and and all the episodes. set up an archived version later
@@ -249,9 +290,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://storage.buzzsprout.com/ht40z07k1bkolyeg988x8e6izud9?.jpg",
 		homepageUrl: "https://seascout.org/the-lookout-sea-scout-podcast-network/",
-		adapter: RssAdapter({
-			feedUrl: "https://feeds.buzzsprout.com/983503.rss",
-		}),
+		adapter: {
+			type: "rss",
+			opts: {
+				feedUrl: "https://feeds.buzzsprout.com/983503.rss",
+			},
+		},
 	},
 
 	{
@@ -263,10 +307,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutingwire.org/wp-content/themes/scoutwire/img/scouting-wire-logo.png",
 		homepageUrl: "https://scoutingwire.org",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingwire.org",
-			//todo split by categories / tags?
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingwire.org",
+				//todo split by categories / tags?
+			},
+		},
 	},
 	{
 		name: "Scouting Newsroom",
@@ -277,10 +324,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scoutingnewsroom.org/wp-content/uploads/2026/07/cropped-bsa-original-270x270.webp",
 		homepageUrl: "https://scoutingnewsroom.org",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingnewsroom.org",
-			type: "press-releases",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingnewsroom.org",
+				type: "press-releases",
+			},
+		},
 	},
 	{
 		name: "Abilities Digest",
@@ -294,10 +344,13 @@ export const feedConfigs = [
 		// ablescouts.org is wordpress.com-hosted, so /wp-json is 404 on its own
 		// domain - the same wp/v2 routes are served through the public proxy
 		// instead, which exposes the regular wordpress api
-		adapter: WordpressAdapter({
-			baseUrl: "https://public-api.wordpress.com",
-			apiPath: "/wp/v2/sites/ablescouts.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://public-api.wordpress.com",
+				apiPath: "/wp/v2/sites/ablescouts.org",
+			},
+		},
 	},
 	{
 		name: "Summit Blog",
@@ -307,9 +360,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.summitbsa.org/wp-content/uploads/2018/01/cropped-SBR-BlackBearPaw_Combo_-Logo-1-1-192x192.png",
 		homepageUrl: "https://www.summitbsa.org/blog",
-		adapter: WordpressAdapter({
-			baseUrl: "https://summitbsa.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://summitbsa.org",
+			},
+		},
 	},
 	{
 		name: "NESA News and Articles",
@@ -320,9 +376,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://nesa.org/wp-content/uploads/2023/01/NESA-Logo-4k-300x300-1.png",
 		homepageUrl: "https://nesa.org/news",
-		adapter: WordpressAdapter({
-			baseUrl: "https://nesa.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://nesa.org",
+			},
+		},
 	},
 	{
 		name: "NESA Events",
@@ -333,10 +392,13 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://nesa.org/wp-content/uploads/2023/01/NESA-Logo-4k-300x300-1.png",
 		homepageUrl: "https://nesa.org/news",
-		adapter: WordpressAdapter({
-			baseUrl: "https://nesa.org",
-			type: "events",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://nesa.org",
+				type: "events",
+			},
+		},
 	},
 	{
 		name: "Scouting America Foundation",
@@ -347,9 +409,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://scoutingamericafoundation.org/wp-content/uploads/2026/06/Fleur-de-lis-2024-logo-4c-BC-906x1024.webp",
 		homepageUrl: "https://scoutingamericafoundation.org/foundation-news",
-		adapter: WordpressAdapter({
-			baseUrl: "https://scoutingamericafoundation.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingamericafoundation.org",
+			},
+		},
 	},
 	{
 		name: "OA News",
@@ -360,7 +425,7 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://confluence.oa-scouting.org/download/attachments/655365/OALMLC",
 		homepageUrl: "https://oa-scouting.org/news",
-		adapter: OaNewsAdapter(),
+		adapter: { type: "oa-news" },
 	},
 	{
 		name: "OA System Maintenance",
@@ -371,9 +436,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://confluence.oa-scouting.org/download/attachments/655365/OALMLC",
 		homepageUrl: "https://status.oa-scouting.org/",
-		adapter: StatuspageAdapter({
-			baseUrl: "https://status.oa-scouting.org",
-		}),
+		adapter: {
+			type: "atlassian-statuspage-api",
+			opts: {
+				baseUrl: "https://status.oa-scouting.org",
+			},
+		},
 	},
 	{
 		name: "OA LodgeMaster Blog",
@@ -384,11 +452,14 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://confluence.oa-scouting.org/download/attachments/655365/OALMLC",
 		homepageUrl: "https://status.oa-scouting.org/",
-		adapter: RssAdapter({
-			feedUrl:
-				"https://confluence.oa-scouting.org/spaces/createrssfeed.action?types=blogpost&spaces=OALMLC&sort=created&maxResults=1000&timeSpan=3650&showContent=true&publicFeed=true&rssType=rss2&title=OA+LodgeMaster+Support+Center+Blog",
-			// atom feed also available
-		}),
+		adapter: {
+			type: "rss",
+			opts: {
+				feedUrl:
+					"https://confluence.oa-scouting.org/spaces/createrssfeed.action?types=blogpost&spaces=OALMLC&sort=created&maxResults=1000&timeSpan=3650&showContent=true&publicFeed=true&rssType=rss2&title=OA+LodgeMaster+Support+Center+Blog",
+				// atom feed also available
+			},
+		},
 	},
 	{
 		name: "Sea Scouts News",
@@ -398,9 +469,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2023/05/SeaScouts_Logo.png",
 		homepageUrl: "https://seascout.org/latest-news",
-		adapter: WordpressAdapter({
-			baseUrl: "https://seascout.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://seascout.org",
+			},
+		},
 	},
 	{
 		name: "Troop Leader Resource Updates",
@@ -410,9 +484,12 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2025/05/Scouting-America-Prepared-For-Life-Logo-stacked-4c-BC.png",
 		homepageUrl: "https://troopleader.scouting.org/updates-blog",
-		adapter: WordpressAdapter({
-			baseUrl: "https://troopleader.scouting.org",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://troopleader.scouting.org",
+			},
+		},
 	},
 	{
 		name: "Duty to God BSA",
@@ -423,15 +500,18 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://dutytogodbsa.org/wp-content/uploads/2019/02/duty-to-god-coin.png",
 		homepageUrl: "https://dutytogodbsa.org/blog-2/",
-		adapter: WordpressAdapter({
-			baseUrl: "https://dutytogodbsa.org",
-			// posts live in the jetpack portfolio custom post type, not "posts" -
-			// the regular posts endpoint and the site's advertised rss feed are both
-			// empty. https://dutytogodbsa.org/portfolio/feed/ carries the same
-			// content, but only 10 items per page (?paged=n for the rest), so the
-			// api is preferable - it returns all of them in one request.
-			type: "jetpack-portfolio",
-		}),
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://dutytogodbsa.org",
+				// posts live in the jetpack portfolio custom post type, not "posts" -
+				// the regular posts endpoint and the site's advertised rss feed are both
+				// empty. https://dutytogodbsa.org/portfolio/feed/ carries the same
+				// content, but only 10 items per page (?paged=n for the rest), so the
+				// api is preferable - it returns all of them in one request.
+				type: "jetpack-portfolio",
+			},
+		},
 	},
 	{
 		name: "my.Scouting Announcements",
@@ -441,6 +521,6 @@ export const feedConfigs = [
 		coverImageSrc:
 			"https://www.scouting.org/wp-content/uploads/2026/01/BSA-logo.png",
 		homepageUrl: "https://my.scouting.org",
-		adapter: MyScoutingAnnouncementsAdapter(),
+		adapter: { type: "my-scouting-announcements" },
 	},
 ] as const satisfies FeedConfig[];

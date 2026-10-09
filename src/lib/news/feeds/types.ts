@@ -1,4 +1,4 @@
-import type { FeedAdapter } from "@/lib/news/ingest/types";
+import type { adapters } from "@/lib/news/ingest/adapters";
 import z from "zod";
 
 import { feedConfigs } from "@/lib/news/feeds/config";
@@ -10,8 +10,20 @@ export type FeedConfig = {
 	defaultVisible: boolean;
 	coverImageSrc: string;
 	homepageUrl: string;
-	adapter: FeedAdapter;
+	adapter: AdapterConfig;
 };
+
+type Adapters = typeof adapters;
+
+/**
+ * which adapter ingests a feed, and its options. plain data, so the config
+ * stays safe to bundle into islands while the adapters stay server only
+ */
+export type AdapterConfig = {
+	[K in keyof Adapters]: Parameters<Adapters[K]> extends []
+		? { type: K }
+		: { type: K; opts: Parameters<Adapters[K]>[0] };
+}[keyof Adapters];
 
 export type FeedConfigEntry = (typeof feedConfigs)[number];
 
@@ -40,5 +52,6 @@ export type Feed = {
 		/** upstream's html homepage */
 		homepage: string;
 	};
-	type: FeedAdapter["type"];
+	/** slug of the adapter that ingests this feed */
+	adapter: AdapterConfig["type"];
 };

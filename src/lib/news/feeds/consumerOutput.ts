@@ -41,7 +41,7 @@ export async function getFeedConsumerOutput() {
 				slug: feed.slug,
 				description: feed.description,
 				coverImageSrc: feed.coverImageSrc,
-				type: feed.type,
+				adapter: feed.adapter,
 				links: absolutizeLinks(feed.links),
 				metrics: getFeedMetrics(posts),
 			};

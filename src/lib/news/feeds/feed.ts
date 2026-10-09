@@ -24,7 +24,7 @@ function hydrateFeed(opts: FeedConfigEntry): Feed {
 			atom: `/feeds/${opts.slug}/atom`,
 			homepage: opts.homepageUrl,
 		},
-		type: opts.adapter.type,
+		adapter: opts.adapter.type,
 	};
 }
 
