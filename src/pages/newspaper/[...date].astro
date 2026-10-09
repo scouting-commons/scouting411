@@ -4,6 +4,7 @@ import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
 import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { rpc } from "@/rpc/client";
 import { compileIssue } from "@/lib/newspaper/compile";
+import { toIsoDate } from "@/lib/newspaper/dates";
 import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
 import {
 	findIssueDate,
@@ -11,7 +12,12 @@ import {
 	latestIssueDate,
 	weekOf,
 } from "@/lib/newspaper/schedule";
-import { ArrowLeftIcon, ArrowRightIcon, PrinterIcon } from "lucide-react";
+import {
+	ArrowLeftIcon,
+	ArrowRightIcon,
+	PodcastIcon,
+	PrinterIcon,
+} from "lucide-react";
 import { Icon } from "@/components/react/icon";
 
 export const prerender = false;
@@ -66,47 +72,52 @@ const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 			</div>
 		</header>
 
-		{issue.lead === undefined ? (
+		{issue.storyCount === 0 ? (
 			<p class="text-muted-foreground text-center font-serif italic">
 				Nothing was posted this week.
 			</p>
 		) : (
 			<>
-				<article class="grid items-center gap-6 md:grid-cols-2">
-					{issue.lead.thumbnail && (
-						<img
-							class="aspect-video w-full object-cover"
-							src={issue.lead.thumbnail}
-							alt=""
-						/>
-					)}
-					<div
-						class:list={[
-							"flex flex-col gap-3",
-							!issue.lead.thumbnail && "md:col-span-2",
-						]}
-					>
-						<span class="text-primary text-xs font-bold tracking-widest uppercase">
-							Top story ·{" "}
-							<a href={issue.lead.feed.links.overview} class="hover:underline">
-								{issue.lead.feed.name}
-							</a>
-						</span>
-						<a
-							href={issue.lead.url}
-							rel="noopener noreferrer"
-							target="_blank"
-							class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline"
-						>
-							{issue.lead.title}
-						</a>
-						{issue.lead.description && (
-							<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
-								{issue.lead.description}
-							</p>
+				{issue.lead && (
+					<article class="grid items-center gap-6 md:grid-cols-2">
+						{issue.lead.thumbnail && (
+							<img
+								class="aspect-video w-full object-cover"
+								src={issue.lead.thumbnail}
+								alt=""
+							/>
 						)}
-					</div>
-				</article>
+						<div
+							class:list={[
+								"flex flex-col gap-3",
+								!issue.lead.thumbnail && "md:col-span-2",
+							]}
+						>
+							<span class="text-primary text-xs font-bold tracking-widest uppercase">
+								Top story ·{" "}
+								<a
+									href={issue.lead.feed.links.overview}
+									class="hover:underline"
+								>
+									{issue.lead.feed.name}
+								</a>
+							</span>
+							<a
+								href={issue.lead.url}
+								rel="noopener noreferrer"
+								target="_blank"
+								class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline"
+							>
+								{issue.lead.title}
+							</a>
+							{issue.lead.description && (
+								<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
+									{issue.lead.description}
+								</p>
+							)}
+						</div>
+					</article>
+				)}
 
 				<div class="flex flex-col">
 					{issue.days.map((day) => (
@@ -157,6 +168,49 @@ const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 						</section>
 					))}
 				</div>
+
+				{issue.episodes.length > 0 && (
+					<section class="border-foreground grid gap-4 border-t-4 border-double py-6 md:grid-cols-[9rem_1fr]">
+						<h2 class="flex items-center gap-2 font-serif text-xl font-bold md:items-start">
+							<Icon icon={PodcastIcon} small />
+							On Air
+						</h2>
+						<div class="grid gap-x-8 sm:grid-cols-2">
+							{issue.episodes.map((post) => (
+								<article class="flex flex-col gap-1 border-b py-3">
+									<div class="flex items-baseline justify-between gap-2 text-xs tracking-widest uppercase">
+										<a
+											href={post.feed.links.overview}
+											class="flex items-center gap-2 font-bold hover:underline"
+										>
+											<span class="bg-primary size-2 shrink-0" />
+											{post.feed.name}
+										</a>
+										<span class="text-muted-foreground shrink-0">
+											{formatDate(toIsoDate(post.date), {
+												month: "short",
+												day: "numeric",
+											})}
+										</span>
+									</div>
+									<a
+										href={post.url}
+										rel="noopener noreferrer"
+										target="_blank"
+										class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+									>
+										{post.title}
+									</a>
+									{post.description && (
+										<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
+											{post.description}
+										</p>
+									)}
+								</article>
+							))}
+						</div>
+					</section>
+				)}
 			</>
 		)}
 

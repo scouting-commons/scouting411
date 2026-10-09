@@ -15,10 +15,12 @@ export type Issue = {
 	date: IsoDate;
 	/** the days it covers, shaped as a news query filter */
 	week: { from: IsoDate; to: IsoDate };
-	/** the newest story with its own photo, or else the newest story */
+	/** the newest story with its own photo, or else the newest story. podcast episodes never lead */
 	lead: Post | undefined;
 	/** the rest of the stories, by the day they were posted, newest first */
 	days: IssueDay[];
+	/** posts from podcast feeds, kept out of the stories above, newest first */
+	episodes: Post[];
 	storyCount: number;
 	sourceCount: number;
 };

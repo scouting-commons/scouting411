@@ -5,11 +5,13 @@ import type { Issue } from "@/lib/newspaper/types";
 
 /** lays out the issue on `date` from its week's posts, newest first */
 export function compileIssue(date: IsoDate, posts: Post[]): Issue {
-	const lead = posts.find((post) => post.thumbnail) ?? posts[0];
+	const isEpisode = (post: Post) => post.feed.kind === "podcast";
+	const stories = posts.filter((post) => !isEpisode(post));
+	const lead = stories.find((post) => post.thumbnail) ?? stories[0];
 
 	const days = [
 		...Map.groupBy(
-			posts.filter((post) => post !== lead),
+			stories.filter((post) => post !== lead),
 			(post) => toIsoDate(post.date),
 		),
 	].map(([day, dayPosts]) => ({ date: day, posts: dayPosts }));
@@ -19,6 +21,7 @@ export function compileIssue(date: IsoDate, posts: Post[]): Issue {
 		week: weekOf(date),
 		lead,
 		days,
+		episodes: posts.filter(isEpisode),
 		storyCount: posts.length,
 		sourceCount: new Set(posts.map((post) => post.feed.slug)).size,
 	};
