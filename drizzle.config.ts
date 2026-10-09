@@ -4,6 +4,7 @@ import { defineConfig } from "drizzle-kit";
 // no throw here: knip loads this config in CI, where DATABASE_URL is unset
 export default defineConfig({
 	dialect: "postgresql",
+	casing: "snake_case",
 	schema: "./src/lib/db/schema.ts",
 	out: "./drizzle",
 	dbCredentials: { url: process.env["DATABASE_URL"] ?? "" },
