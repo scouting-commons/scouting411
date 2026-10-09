@@ -9,11 +9,9 @@ export function Resource({ resource }: { resource: Resource }) {
 	return (
 		<div className="flex flex-col justify-between gap-3 rounded-lg border p-6 md:flex-row">
 			<div className="flex flex-col gap-3">
-				{resource.type && (
-					<p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-						{getResourceTypeBySlug(resource.type).name}
-					</p>
-				)}
+				<p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+					{getResourceTypeBySlug(resource.type).name}
+				</p>
 				<a
 					href={resource.url}
 					rel="noopener noreferrer"

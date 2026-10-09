@@ -74,7 +74,7 @@ const sources: (() => SearchItem[] | Promise<SearchItem[]>)[] = [
 			type: "resource",
 			name: resource.title,
 			keywords: [
-				...(resource.type ? [getResourceTypeBySlug(resource.type).name] : []),
+				getResourceTypeBySlug(resource.type).name,
 				...resource.tags.map((slug) => getTagBySlug(slug).name),
 			],
 			description: resource.description,

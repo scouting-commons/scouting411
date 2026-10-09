@@ -7,8 +7,7 @@ export const resourceSchema = z.object({
 	url: z.url(),
 	title: z.string(),
 	description: z.string(),
-	// todo make required once every resource has a type
-	type: resourceTypeSlugSchema.optional(),
+	type: resourceTypeSlugSchema,
 	tags: z.array(tagSlugSchema),
 });
 

@@ -14,10 +14,6 @@ export function queryResources({
 			(resource) =>
 				tags.length === 0 || resource.tags.some((tag) => tags.includes(tag)),
 		)
-		.filter(
-			(resource) =>
-				types.length === 0 ||
-				(resource.type !== undefined && types.includes(resource.type)),
-		)
+		.filter((resource) => types.length === 0 || types.includes(resource.type))
 		.toSorted((a, b) => a.title.localeCompare(b.title));
 }
