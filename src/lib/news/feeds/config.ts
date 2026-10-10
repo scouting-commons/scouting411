@@ -257,7 +257,7 @@ export const feedConfigs = [
 		description:
 			"A defunct kid-friendly podcast from Scout Life magazine, answering questions sent in by listeners.",
 		coverImageSrc:
-			"https://d1kn0x9vzr5n76.cloudfront.net/images/ranks/neweagle200.png",
+			"https://scoutlife.org/wp-content/uploads/2019/04/podask-2.jpg",
 		homepageUrl: "https://scoutlife.org/section/podask/",
 		adapter: {
 			type: "rss",
@@ -274,7 +274,7 @@ export const feedConfigs = [
 		description:
 			"Eagle Scout service projects sent in by Scout Life readers, each a short writeup with photos.",
 		coverImageSrc:
-			"https://eagleprojects.scoutlife.org/files/2017/05/cropped-eaglebadge.png",
+			"https://d1kn0x9vzr5n76.cloudfront.net/images/ranks/neweagle200.png",
 		homepageUrl: "https://eagleprojects.scoutlife.org",
 		adapter: {
 			type: "wordpress-api",
