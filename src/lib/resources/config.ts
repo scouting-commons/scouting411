@@ -215,6 +215,14 @@ export const resources: Resource[] = [
 		description: "The latest changes to Scouting America training",
 		tags: ["training"],
 	},
+	{
+		url: "https://scoutingmagazine.org/backissues/",
+		title: "Scouting Magazine Back Issues",
+		type: "news",
+		description:
+			"Search, browse, and download nearly every issue of Scouting magazine from April 1913 to December 2013, archived by the University of North Texas.",
+		tags: ["national"],
+	},
 
 	// reference and guidance
 	{
