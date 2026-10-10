@@ -1,4 +1,5 @@
 import type { adapters } from "@/lib/news/ingest/adapters";
+import type { TagSlug } from "@/lib/tags/types";
 import z from "zod";
 
 import { feedConfigs } from "@/lib/news/feeds/config";
@@ -12,6 +13,8 @@ export type FeedConfig = {
 	homepageUrl: string;
 	/** set when the feed is a podcast, whose posts are episodes */
 	kind?: "podcast";
+	/** the tags whose hubs show this feed's posts. empty when it has none */
+	tags: TagSlug[];
 	adapter: AdapterConfig;
 };
 

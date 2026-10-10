@@ -4,6 +4,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting America News",
 		slug: "scouting-america-news",
+		tags: ["national"],
 		defaultVisible: true,
 		description:
 			"General news from Scouting America, covering everything on scouting.org that is not part of another feed here.",
@@ -31,6 +32,7 @@ export const feedConfigs = [
 	{
 		name: "International Adventure",
 		slug: "international-adventure",
+		tags: ["international"],
 		defaultVisible: true,
 		description:
 			"The Blog and Newsletter of the Scouting America International Committee & Department",
@@ -49,6 +51,7 @@ export const feedConfigs = [
 	{
 		name: "Scouts BSA Program Updates",
 		slug: "scouts-bsa-program-updates",
+		tags: ["scouts-bsa"],
 		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Scouts BSA program.",
@@ -67,6 +70,7 @@ export const feedConfigs = [
 	{
 		name: "Sea Scouts Program Updates",
 		slug: "sea-scouts-program-updates",
+		tags: ["sea-scouts"],
 		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Sea Scouts program.",
@@ -85,6 +89,7 @@ export const feedConfigs = [
 	{
 		name: "Cub Scouts Program Updates",
 		slug: "cub-scouts-program-updates",
+		tags: ["cub-scouts"],
 		defaultVisible: true,
 		description:
 			"Information about changes and updates to the Cub Scouts program.",
@@ -105,6 +110,7 @@ export const feedConfigs = [
 		name: "#CubChatLive",
 		slug: "cubchat",
 		kind: "podcast",
+		tags: ["cub-scouts"],
 		defaultVisible: true,
 		description: "The official video podcast of the Cub Scouts program.",
 		coverImageSrc:
@@ -134,6 +140,7 @@ export const feedConfigs = [
 	{
 		name: "On Scouting",
 		slug: "on-scouting",
+		tags: [],
 		defaultVisible: true,
 		description:
 			"Editorial content for parents and volunteers. The adult counterpart of Scout Life magazine.",
@@ -150,6 +157,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Magazine",
 		slug: "scouting-magazine",
+		tags: [],
 		defaultVisible: false,
 		description:
 			"The archived website of Scouting magazine, the former publication for adult volunteers. Articles from 1998 to 2021, when On Scouting took its place.",
@@ -167,6 +175,7 @@ export const feedConfigs = [
 	{
 		name: "Trail to Adventure",
 		slug: "trail-to-adventure",
+		tags: ["outdoor-program"],
 		defaultVisible: true,
 		description:
 			"News and updates regarding scout camp administration. The Official Blog of the National Outdoor Programs and Properties Subcommittees.",
@@ -184,6 +193,7 @@ export const feedConfigs = [
 	{
 		name: "Executive Communications",
 		slug: "executive-communications",
+		tags: ["national"],
 		defaultVisible: true,
 		description:
 			"Hear from Scouting's Leadership: executives share thoughts on a variety of key Scouting topics.",
@@ -201,6 +211,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni",
 		slug: "scouting-alumni",
+		tags: ["alumni"],
 		defaultVisible: true,
 		description:
 			"The news feed of Scouting Alumni. Primarily editorial content with occasional news.",
@@ -217,6 +228,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni - Ask the Chair",
 		slug: "scouting-alumni-chair",
+		tags: ["alumni"],
 		defaultVisible: true,
 		description:
 			"The doorway to Scouting is always open for our alumni! Scouting Alumni National Chair Andrew Miller is available to answer your questions. We look forward to hearing from you!",
@@ -234,6 +246,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Alumni - Alumni Highlights",
 		slug: "scouting-alumni-highlights",
+		tags: ["alumni"],
 		defaultVisible: true,
 		description:
 			"Miscellaneous news from Scouting Alumni, separate from their main news feed.",
@@ -251,6 +264,7 @@ export const feedConfigs = [
 	{
 		name: "Scout Life",
 		slug: "scout-life",
+		tags: [],
 		defaultVisible: false,
 		description: "Editorial and entertainment content mainly for youth.",
 		coverImageSrc:
@@ -270,6 +284,7 @@ export const feedConfigs = [
 		name: "PodAsk",
 		slug: "podask",
 		kind: "podcast",
+		tags: [],
 		defaultVisible: false,
 		description:
 			"A defunct kid-friendly podcast from Scout Life magazine, answering questions sent in by listeners.",
@@ -287,6 +302,7 @@ export const feedConfigs = [
 	{
 		name: "Eagle Scout Project Showcase",
 		slug: "eagle-project-showcase",
+		tags: [],
 		defaultVisible: false,
 		description:
 			"Eagle Scout service projects sent in by Scout Life readers, each a short writeup with photos.",
@@ -306,6 +322,7 @@ export const feedConfigs = [
 		name: "ScoutCast",
 		slug: "scoutcast",
 		kind: "podcast",
+		tags: ["scouts-bsa"],
 		defaultVisible: true,
 		description: "A defunct podcast for Scouts BSA unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/scoutcast",
@@ -324,6 +341,7 @@ export const feedConfigs = [
 		name: "CubCast",
 		slug: "cubcast",
 		kind: "podcast",
+		tags: ["cub-scouts"],
 		defaultVisible: true,
 		description: "A defunct podcast for Cub Scouts unit volunteers.",
 		homepageUrl: "https://podcast.scouting.org/category/cubcast",
@@ -342,6 +360,7 @@ export const feedConfigs = [
 		name: "The Lookout",
 		slug: "the-lookout",
 		kind: "podcast",
+		tags: ["sea-scouts"],
 		defaultVisible: true,
 		description:
 			"The Lookout: Sea Scout Podcast Network. Features both news and interviews.",
@@ -359,6 +378,7 @@ export const feedConfigs = [
 	{
 		name: "Hike On",
 		slug: "hike-on",
+		tags: ["high-adventure"],
 		kind: "podcast",
 		defaultVisible: true,
 		description:
@@ -377,6 +397,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Wire",
 		slug: "scouting-wire",
+		tags: ["national"],
 		defaultVisible: true,
 		description:
 			"Billed as 'The Official Blog of the Scouting Movement'. General news and updates for professionals, volunteers, and parents.",
@@ -394,6 +415,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting Newsroom",
 		slug: "scouting-newsroom",
+		tags: ["national"],
 		defaultVisible: true,
 		description:
 			"Provides updates and news press releases the national Scouting administration.",
@@ -411,6 +433,7 @@ export const feedConfigs = [
 	{
 		name: "Abilities Digest",
 		slug: "abilities-digest",
+		tags: ["abilities"],
 		defaultVisible: true,
 		description:
 			"Provides updates and news about special needs scouting. A publication of the National Special Needs and Disabilities Committee.",
@@ -431,6 +454,7 @@ export const feedConfigs = [
 	{
 		name: "Summit Blog",
 		slug: "summit-blog",
+		tags: ["high-adventure"],
 		defaultVisible: true,
 		description: "News and updates about the Summit Bechtel Reserve.",
 		coverImageSrc:
@@ -446,6 +470,7 @@ export const feedConfigs = [
 	{
 		name: "NESA News and Articles",
 		slug: "nesa",
+		tags: ["alumni"],
 		defaultVisible: true,
 		description:
 			"The news feed of the National Eagle Scout Association. A mixture of editorial content and news.",
@@ -462,6 +487,7 @@ export const feedConfigs = [
 	{
 		name: "NESA Events",
 		slug: "nesa-events",
+		tags: ["alumni"],
 		defaultVisible: true,
 		description:
 			"A feed of events run by the National Eagle Scout Association.",
@@ -479,6 +505,7 @@ export const feedConfigs = [
 	{
 		name: "Scouting America Foundation",
 		slug: "scouting-america-foundation",
+		tags: [],
 		defaultVisible: true,
 		description:
 			"The news feed of the Scouting America Foundation. Mostly entertainment and editorial content.",
@@ -495,6 +522,7 @@ export const feedConfigs = [
 	{
 		name: "OA News",
 		slug: "oa-news",
+		tags: ["order-of-the-arrow"],
 		defaultVisible: true,
 		description:
 			"News and updates about the Order of the Arrow on the national level.",
@@ -506,6 +534,7 @@ export const feedConfigs = [
 	{
 		name: "OA System Maintenance",
 		slug: "oa-system-maintenance",
+		tags: ["order-of-the-arrow"],
 		defaultVisible: true,
 		description:
 			"Updates on Order of the Arrow's digital infrastructure maintenance and outages.",
@@ -522,6 +551,7 @@ export const feedConfigs = [
 	{
 		name: "OA LodgeMaster Blog",
 		slug: "oa-lodgemaster",
+		tags: ["order-of-the-arrow"],
 		defaultVisible: true,
 		description:
 			"The OA LodgeMaster Support Center blog. Contains changelog and news about the LodgeMaster program.",
@@ -541,6 +571,7 @@ export const feedConfigs = [
 	{
 		name: "Sea Scouts News",
 		slug: "sea-scouts-news",
+		tags: ["sea-scouts"],
 		defaultVisible: true,
 		description: "News and updates about the Sea Scouts program.",
 		coverImageSrc:
@@ -556,6 +587,7 @@ export const feedConfigs = [
 	{
 		name: "Troop Leader Resource Updates",
 		slug: "troop-leader-resource-updates",
+		tags: ["scouts-bsa"],
 		defaultVisible: true,
 		description: "Updates and news about the Troop Leader Resource Hub.",
 		coverImageSrc:
@@ -571,6 +603,7 @@ export const feedConfigs = [
 	{
 		name: "Duty to God BSA",
 		slug: "duty-to-god",
+		tags: ["duty-to-god"],
 		defaultVisible: true,
 		description:
 			"The blog of the National Religious Relationships Committee, covering religious emblems, chaplaincy, and Duty to God resources.",
@@ -593,6 +626,7 @@ export const feedConfigs = [
 	{
 		name: "my.Scouting Announcements",
 		slug: "my-scouting-announcements",
+		tags: ["national"],
 		defaultVisible: true,
 		description: "Announcements from the my.Scouting homepage.",
 		coverImageSrc:

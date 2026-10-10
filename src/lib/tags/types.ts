@@ -9,8 +9,6 @@ export type TagConfig = {
 	description: string;
 	/** a CSS color identifying the tag */
 	color?: string;
-	/** the feeds whose posts belong to this tag */
-	newsSources: FeedSlug[];
 };
 
 export const tagSlugSchema = z.enum(tagConfigs.map((tag) => tag.slug));
@@ -24,7 +22,7 @@ export type Tag = {
 	slug: TagSlug;
 	description: string;
 	color: string | undefined;
-	/** the feeds whose posts belong to this tag. empty when the tag has none */
+	/** the feeds tagged with this tag. empty when the tag has none */
 	newsSources: FeedSlug[];
 	links: {
 		/** the tag's hub page */
