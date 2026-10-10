@@ -21,6 +21,17 @@ const tagsByFeedSlug = new Map(
 	feedConfigs.map((feed) => [feed.slug, feed.tags]),
 );
 
+/** the columns a hydrated post is built from. `content` stays out: it is large */
+const postColumns = {
+	feedSlug: posts.feedSlug,
+	url: posts.url,
+	title: posts.title,
+	description: posts.description,
+	thumbnail: posts.thumbnail,
+	audio: posts.audio,
+	publishedAt: posts.publishedAt,
+};
+
 /** the column each sort mode orders by */
 const sortColumns = {
 	date: posts.publishedAt,
@@ -43,7 +54,7 @@ export async function readPosts({
 	const direction = sort.direction === "asc" ? asc : desc;
 
 	const pageQuery = db
-		.select()
+		.select(postColumns)
 		.from(posts)
 		.where(where)
 		// id breaks ties, so a post can't move between pages
@@ -93,7 +104,9 @@ function nextDay(date: string) {
 }
 
 /** create a hydrated post from a stored post row */
-function hydratePost(row: typeof posts.$inferSelect): Post {
+function hydratePost(
+	row: Pick<typeof posts.$inferSelect, keyof typeof postColumns>,
+): Post {
 	return {
 		url: row.url,
 		title: row.title,

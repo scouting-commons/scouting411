@@ -8,6 +8,8 @@ export type PostData = {
 	title: string;
 	/** the description of the post */
 	description: string | undefined;
+	/** the full body of the post, as html */
+	content?: string | undefined;
 	/** the date the post was published */
 	date: string;
 	/** external image url to use as a thumbnail */

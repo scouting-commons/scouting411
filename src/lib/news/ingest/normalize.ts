@@ -19,6 +19,13 @@ function cleanHtmlString(html: string) {
 	return he.decode(stripped);
 }
 
+/** keep a post body's formatting and images, drop scripts, embeds, and styling */
+function sanitizeContentHtml(html: string) {
+	return sanitizeHtml(html, {
+		allowedTags: [...sanitizeHtml.defaults.allowedTags, "img"],
+	});
+}
+
 /** normalize empty/whitespace strings to undefined */
 function blankToUndefined(value: string | undefined) {
 	const trimmed = value?.trim();
@@ -50,6 +57,11 @@ const postDataSchema = z.object({
 	title: text.refine((value) => value !== "", { error: "is blank" }),
 	// an unusable optional field is dropped rather than failing the whole post
 	description: text.optional().transform(blankToUndefined),
+	content: z
+		.string()
+		.transform(sanitizeContentHtml)
+		.optional()
+		.transform(blankToUndefined),
 	date: instant,
 	thumbnail: webUrl.optional().catch(undefined).transform(blankToUndefined),
 	audio: webUrl.optional().catch(undefined).transform(blankToUndefined),

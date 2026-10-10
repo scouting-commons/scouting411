@@ -75,6 +75,8 @@ async function fetchPage(
 		url: post.link,
 		title: post.title.rendered,
 		description: post.yoast_head_json?.og_description ?? post.excerpt?.rendered,
+		// absent on post types registered without editor support
+		content: post.content?.rendered,
 
 		// date_gmt is gmt but carries no timezone designator, so it parses as local time without one
 		date: `${post.date_gmt}Z`,
@@ -107,6 +109,11 @@ const wordpressApiPostSchema = z.array(
 			rendered: z.string(),
 		}),
 		excerpt: z
+			.object({
+				rendered: z.string(),
+			})
+			.optional(),
+		content: z
 			.object({
 				rendered: z.string(),
 			})

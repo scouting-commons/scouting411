@@ -23,6 +23,8 @@ export const posts = pgTable(
 		url: text().notNull(),
 		title: text().notNull(),
 		description: text(),
+		/** the full body of the post, as sanitized html */
+		content: text(),
 		/** external image url to use as a thumbnail */
 		thumbnail: text(),
 		/** external audio file url, for a podcast episode */
