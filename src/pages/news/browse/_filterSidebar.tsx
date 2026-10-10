@@ -16,6 +16,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { FilterSidebarItem } from "@/components/react/filterSidebarItem";
+import { CheckboxFilter } from "@/components/react/checkboxFilter";
+import { tags } from "@/lib/tags/tag";
 import { feeds } from "@/lib/news/feeds/feed";
 import { type QueryInput, queryInputSchema } from "@/lib/news/query/types";
 import { type ResolvedQuery, resolveQuery } from "@/lib/news/query/resolve";
@@ -227,6 +229,17 @@ export function FilterSidebar({
 						))}
 					</div>
 				</FilterSidebarItem>
+
+				<form.Field name="tags">
+					{(field) => (
+						<CheckboxFilter
+							label="Tags"
+							options={tags}
+							selected={field.state.value ?? []}
+							setSelected={(next) => field.handleChange(next)}
+						/>
+					)}
+				</form.Field>
 
 				<form.Field name="feeds">
 					{(field) => {

@@ -1,6 +1,4 @@
 import z from "zod";
-import type { FeedSlug } from "@/lib/news/feeds/types";
-
 import { tagConfigs } from "@/lib/tags/config";
 
 export type TagConfig = {
@@ -22,14 +20,12 @@ export type Tag = {
 	slug: TagSlug;
 	description: string;
 	color: string | undefined;
-	/** the feeds tagged with this tag. empty when the tag has none */
-	newsSources: FeedSlug[];
 	links: {
 		/** the tag's hub page */
 		page: string;
 		/** the resources page, filtered to this tag */
 		browseResources: string;
-		/** the post browser, filtered to this tag's news sources. absent when it has none */
-		browsePosts: string | undefined;
+		/** the post browser, filtered to this tag */
+		browsePosts: string;
 	};
 };

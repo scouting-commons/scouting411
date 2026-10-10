@@ -39,7 +39,7 @@ The `posts` table is in `src/infra/db/schema.ts` (Drizzle over Neon). Its `feed_
 
 `query.ts`'s `queryPosts(input)` is the single read path: resolve, `read.ts` (one query over the selected feeds), filter, sort, paginate. Callers reach it through the `news.posts.query` procedure. `feeds/consumerOutput.ts` calls it directly because lib sits below the router.
 
-Input is **sparse**: every field optional, nothing filled in. Defaults live only in `resolve.ts`, which `queryPosts` applies itself, so callers pass just what they care about. Absent and empty `feeds` both mean every feed. `paginate: false` returns every match as one page.
+Input is **sparse**: every field optional, nothing filled in. Defaults live only in `resolve.ts`, which `queryPosts` applies itself, so callers pass just what they care about. Absent and empty `feeds` both mean every feed. `tags` narrows `feeds` to the feeds carrying any of those tags, and `resolve.ts` folds it into `feeds`, so `read.ts` never sees it. `paginate: false` returns every match as one page.
 
 `queryParams.ts` encodes the sparse input to and from URL params, so browse URLs record only what the user touched. Read its header comment before changing the `qs` options.
 

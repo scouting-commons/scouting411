@@ -15,16 +15,13 @@ if (!tag) {
 	return new Response(null, { status: 404 });
 }
 
-// an empty feeds query means every feed, so a tag without sources shows no posts
-const { posts, pagination } = tag.newsSources.length
-	? await rpc.news.posts.query({
-			feeds: tag.newsSources,
-			paginate: {
-				maxPageSize: 8,
-				page: 1,
-			},
-		})
-	: { posts: [], pagination: undefined };
+const { posts, pagination } = await rpc.news.posts.query({
+	tags: [tag.slug],
+	paginate: {
+		maxPageSize: 8,
+		page: 1,
+	},
+});
 
 const [featuredPost, ...recentPosts] = posts;
 
@@ -61,7 +58,7 @@ const formatDate = (date: Date) =>
 		<div class="flex min-w-0 flex-col gap-5">
 			<div class="flex items-center justify-between gap-4 border-b pb-2">
 				<h2 class="font-serif text-xl font-bold">Latest news</h2>
-				{tag.links.browsePosts && pagination && (
+				{pagination.totalItems > 0 && (
 					<a
 						href={tag.links.browsePosts}
 						class="text-primary flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:underline"

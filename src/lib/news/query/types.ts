@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { feedSlugSchema } from "@/lib/news/feeds/types";
 import type { Post } from "@/lib/news/post";
+import { tagSlugSchema } from "@/lib/tags/types";
 
 export const filterOptsSchema = z
 	.object({
@@ -56,6 +57,12 @@ export const queryInputSchema = z.object({
 		.optional()
 		.describe(
 			"Include results only from these sources. Omit or pass an empty array to include every source.",
+		),
+	tags: z
+		.array(tagSlugSchema)
+		.optional()
+		.describe(
+			"Include results only from sources that have at least one of these tags. Omit or pass an empty array to include every source. Combined with `feeds`, a source must match both.",
 		),
 	filter: filterOptsSchema.optional(),
 	sort: sortOptsSchema.optional(),
