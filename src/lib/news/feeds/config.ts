@@ -148,6 +148,23 @@ export const feedConfigs = [
 		},
 	},
 	{
+		name: "Scouting Magazine",
+		slug: "scouting-magazine",
+		defaultVisible: false,
+		description:
+			"The archived website of Scouting magazine, the former publication for adult volunteers. Articles from 1998 to 2021, when On Scouting took its place.",
+		coverImageSrc:
+			"https://scoutingmagazine.org/wp-content/uploads/2016/08/cropped-scouting-logo-512.jpg",
+		// the site's own homepage redirects to on scouting
+		homepageUrl: "https://scoutingmagazine.org/backissues/",
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://scoutingmagazine.org",
+			},
+		},
+	},
+	{
 		name: "Trail to Adventure",
 		slug: "trail-to-adventure",
 		defaultVisible: true,

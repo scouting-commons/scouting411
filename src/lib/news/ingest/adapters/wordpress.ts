@@ -78,17 +78,19 @@ async function fetchPage(
 
 		// date_gmt is gmt but carries no timezone designator, so it parses as local time without one
 		date: `${post.date_gmt}Z`,
-		// todo thumbnails come solely from yoast, so sites without the seo plugin
-		// installed get none at all - currently duty to god (0 of 78 posts) and
-		// sea scouts (0 of 30). both expose a `featured_media` attachment id
+		// yoast first, then jetpack, which sends "" for a post with no image.
+		// todo sites with neither plugin's field get no thumbnails - currently duty
+		// to god (0 of 83 posts). it exposes a `featured_media` attachment id
 		// instead, and appending `_embed=wp:featuredmedia` to the request inlines
 		// that attachment as `_embedded["wp:featuredmedia"][0].source_url`, so
 		// falling back to it would cost no extra requests. two caveats seen on
 		// seascout.org: an id can point at deleted media, which embeds as an empty
 		// object, and a restricted attachment embeds as a `rest_forbidden` error
 		// object rather than media - so the whole lookup has to be optional, not
-		// just the array index. that recovers 72 of 78 and 12 of 30 respectively.
-		thumbnail: post.yoast_head_json?.og_image?.[0]?.url,
+		// just the array index. that would recover 77 of 83.
+		thumbnail:
+			post.yoast_head_json?.og_image?.[0]?.url ||
+			post.jetpack_featured_media_url,
 	}));
 
 	return {
@@ -121,6 +123,7 @@ const wordpressApiPostSchema = z.array(
 					.optional(),
 			})
 			.optional(),
+		jetpack_featured_media_url: z.string().optional(),
 		date_gmt: z.string(),
 	}),
 );
