@@ -44,7 +44,12 @@ export function NavLink({
 						/>
 						{label}
 					</div>
-					{newTab && <Icon icon={SquareArrowOutUpRightIcon} />}
+					{newTab && (
+						<Icon
+							icon={SquareArrowOutUpRightIcon}
+							className="size-[0.875em]!"
+						/>
+					)}
 				</a>
 			}
 		/>
