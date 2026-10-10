@@ -5,7 +5,12 @@ import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { rpc } from "@/rpc/client";
 import { compileIssue } from "@/lib/newspaper/compile";
 import { toIsoDate } from "@/lib/newspaper/dates";
-import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
+import {
+	formatCounts,
+	formatDate,
+	formatStoryCount,
+	formatWeek,
+} from "@/lib/newspaper/format";
 import {
 	findIssueDate,
 	issueLinks,
@@ -15,10 +20,18 @@ import {
 import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
+	AwardIcon,
+	HammerIcon,
+	LibraryIcon,
 	PodcastIcon,
 	PrinterIcon,
 } from "lucide-react";
 import { Icon } from "@/components/react/icon";
+import { getTagBySlug } from "@/lib/tags/tag";
+import type { Tag } from "@/lib/tags/types";
+import type { Post } from "@/lib/news/post";
+import { meritBadgePath } from "@/lib/advancement/meritBadges/types";
+import { getResourceTypeBySlug } from "@/lib/resources/resourceTypes";
 
 export const prerender = false;
 
@@ -33,11 +46,58 @@ if (!date) {
 
 // compiled on request until issues are compiled ahead of time
 const query = { feeds: defaultVisibleFeedSlugs, filter: weekOf(date) };
-const { posts } = await rpc.news.posts.query({ ...query, paginate: false });
+const [{ posts }, meritBadges, resources] = await Promise.all([
+	rpc.news.posts.query({ ...query, paginate: false }),
+	rpc.advancement.meritBadges.list(),
+	rpc.resources.query(),
+]);
 const issue = compileIssue(date, posts);
 const links = issueLinks(date);
 
 const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
+
+/** colors a marker by its tag. without one it keeps its class's color */
+const markerStyle = (tag: Tag | undefined) =>
+	tag?.color && `background-color:${tag.color}`;
+
+/** "Oct 2" */
+const shortDate = (post: Post) =>
+	formatDate(toIsoDate(post.date), { month: "short", day: "numeric" });
+
+// fnv-1a over the issue date, so an issue keeps its picks until a list changes
+const seed =
+	[...date].reduce(
+		(hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619),
+		2166136261,
+	) >>> 0;
+
+const meritBadge = meritBadges[seed % meritBadges.length];
+const resource = resources[seed % resources.length];
+
+// oldest first and only up to this issue's week, so later projects never
+// change the pick. the count comes first, to fetch just the one project.
+const eagleProjectsQuery = {
+	feeds: ["eagle-project-showcase" as const],
+	filter: { to: issue.week.to },
+	sort: { direction: "asc" as const },
+};
+const eagleProjectCount = (
+	await rpc.news.posts.query({
+		...eagleProjectsQuery,
+		paginate: { maxPageSize: 1 },
+	})
+).pagination.totalItems;
+const eagleProject =
+	eagleProjectCount > 0
+		? (
+				await rpc.news.posts.query({
+					...eagleProjectsQuery,
+					paginate: { maxPageSize: 1, page: (seed % eagleProjectCount) + 1 },
+				})
+			).posts[0]
+		: undefined;
+
+const leadTags = issue.lead?.tags.map(getTagBySlug) ?? [];
 ---
 
 <Layout title="This Week in Scouting">
@@ -79,22 +139,29 @@ const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 		) : (
 			<>
 				{issue.lead && (
-					<article class="grid items-center gap-6 md:grid-cols-2">
-						{issue.lead.thumbnail && (
-							<img
-								class="aspect-video w-full object-cover"
-								src={issue.lead.thumbnail}
-								alt=""
-							/>
-						)}
-						<div
+					<div class="grid gap-8 lg:grid-cols-3">
+						<article
 							class:list={[
 								"flex flex-col gap-3",
-								!issue.lead.thumbnail && "md:col-span-2",
+								issue.headlines.length > 0 ? "lg:col-span-2" : "lg:col-span-3",
 							]}
 						>
+							{issue.lead.thumbnail && (
+								<img
+									class="aspect-video w-full object-cover"
+									src={issue.lead.thumbnail}
+									alt=""
+								/>
+							)}
 							<span class="text-primary text-xs font-bold tracking-widest uppercase">
-								Top story ·{" "}
+								{leadTags.map((tag) => (
+									<>
+										<a href={tag.links.page} class="hover:underline">
+											{tag.name}
+										</a>
+										{" · "}
+									</>
+								))}
 								<a
 									href={issue.lead.feed.links.overview}
 									class="hover:underline"
@@ -106,111 +173,313 @@ const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 								href={issue.lead.url}
 								rel="noopener noreferrer"
 								target="_blank"
-								class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline"
+								class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline md:text-5xl"
 							>
 								{issue.lead.title}
 							</a>
 							{issue.lead.description && (
-								<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
+								<p class="text-muted-foreground font-serif text-lg leading-relaxed hyphens-auto">
 									{issue.lead.description}
 								</p>
 							)}
-						</div>
-					</article>
-				)}
+							<span class="text-muted-foreground text-sm italic">
+								{formatDate(toIsoDate(issue.lead.date), {
+									weekday: "long",
+									month: "long",
+									day: "numeric",
+								})}
+							</span>
+						</article>
 
-				<div class="flex flex-col">
-					{issue.days.map((day) => (
-						<section class="border-foreground/40 grid gap-4 border-t py-6 md:grid-cols-[9rem_1fr]">
-							<h2 class="flex items-baseline gap-2 md:flex-col md:gap-0">
-								<span class="font-serif text-xl font-bold">
-									{formatDate(day.date, { weekday: "long" })}
-								</span>
-								<span class="text-muted-foreground text-xs tracking-widest uppercase">
-									{formatDate(day.date, { month: "short", day: "numeric" })}
-								</span>
-							</h2>
-							<div class="flex flex-col">
-								{day.posts.map((post) => (
-									<article class="flex gap-6 border-b py-3 first:pt-0">
-										<div class="flex min-w-0 flex-1 flex-col gap-1">
+						{issue.headlines.length > 0 && (
+							<aside class="flex flex-col lg:border-l lg:pl-8">
+								<h2 class="border-foreground text-muted-foreground border-b-2 pb-2 text-xs font-bold tracking-widest uppercase">
+									Also this week
+								</h2>
+								{issue.headlines.map((post) => (
+									<article class="flex flex-col gap-1 border-b py-4">
+										<a
+											href={post.url}
+											rel="noopener noreferrer"
+											target="_blank"
+											class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+										>
+											{post.title}
+										</a>
+										<span class="text-muted-foreground text-sm">
 											<a
 												href={post.feed.links.overview}
-												class="flex items-center gap-2 text-xs font-bold tracking-widest uppercase hover:underline"
+												class="hover:underline"
 											>
-												<span class="bg-primary size-2 shrink-0" />
 												{post.feed.name}
 											</a>
+											{" · "}
+											{shortDate(post)}
+										</span>
+									</article>
+								))}
+							</aside>
+						)}
+					</div>
+				)}
+
+				<div class="grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+					{issue.sections.map(({ tag, posts: sectionPosts }) => {
+						const [featured, ...others] = sectionPosts;
+						// a long section runs the full width, its headlines in columns
+						const wide = sectionPosts.length > 5;
+
+						return (
+							<section
+								class:list={[
+									"border-foreground flex flex-col gap-4 border-t-2 pt-4",
+									wide && "md:col-span-2 lg:col-span-3",
+								]}
+								style={tag?.color && `border-color:${tag.color}`}
+							>
+								<div class="flex items-baseline justify-between gap-4">
+									<h2 class="font-serif text-lg font-bold tracking-wide uppercase">
+										{tag ? (
+											<a href={tag.links.page} class="hover:underline">
+												{tag.name}
+											</a>
+										) : (
+											"Around Scouting"
+										)}
+									</h2>
+									<span class="text-muted-foreground shrink-0 text-xs tracking-widest uppercase">
+										{formatStoryCount(sectionPosts.length)}
+									</span>
+								</div>
+								<div
+									class:list={[
+										"flex flex-col gap-4",
+										wide && "md:grid md:grid-cols-2 md:gap-8 lg:grid-cols-3",
+									]}
+								>
+									{featured && (
+										<article class="flex flex-col gap-2">
+											{featured.thumbnail && (
+												<img
+													class="mb-1 aspect-8/5 w-full object-cover"
+													src={featured.thumbnail}
+													alt=""
+												/>
+											)}
 											<a
-												href={post.url}
+												href={featured.url}
 												rel="noopener noreferrer"
 												target="_blank"
-												class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+												class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
 											>
-												{post.title}
+												{featured.title}
 											</a>
-											{post.description && (
-												<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
-													{post.description}
+											{featured.description && (
+												<p class="text-muted-foreground line-clamp-4 font-serif leading-relaxed hyphens-auto">
+													{featured.description}
 												</p>
 											)}
+											<span class="text-muted-foreground text-sm">
+												<a
+													href={featured.feed.links.overview}
+													class="hover:underline"
+												>
+													{featured.feed.name}
+												</a>
+												{" · "}
+												{shortDate(featured)}
+											</span>
+										</article>
+									)}
+									<div
+										class:list={[wide && "lg:col-span-2 lg:columns-2 lg:gap-8"]}
+									>
+										{others.map((post) => (
+											<article class="flex break-inside-avoid flex-col gap-1 border-t py-3">
+												<a
+													href={post.url}
+													rel="noopener noreferrer"
+													target="_blank"
+													class="font-serif leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+												>
+													{post.title}
+												</a>
+												<span class="text-muted-foreground text-sm">
+													<a
+														href={post.feed.links.overview}
+														class="hover:underline"
+													>
+														{post.feed.name}
+													</a>
+													{" · "}
+													{shortDate(post)}
+												</span>
+											</article>
+										))}
+									</div>
+								</div>
+							</section>
+						);
+					})}
+				</div>
+
+				<div class="grid gap-x-8 gap-y-10 md:grid-cols-2">
+					{issue.episodes.length > 0 && (
+						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
+							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
+								<Icon icon={PodcastIcon} small />
+								On The Air
+							</h2>
+							<div class="flex flex-col">
+								{issue.episodes.map((post) => (
+									<article class="flex flex-col gap-1 border-b py-3 first:pt-0 last:border-b-0 last:pb-0">
+										<div class="flex items-baseline justify-between gap-2 text-xs tracking-widest uppercase">
+											<a
+												href={post.feed.links.overview}
+												class="flex items-center gap-2 font-bold hover:underline"
+											>
+												<span
+													class="bg-primary size-2 shrink-0"
+													style={markerStyle(post.tags.map(getTagBySlug)[0])}
+												/>
+												{post.feed.name}
+											</a>
+											<span class="text-muted-foreground shrink-0">
+												{formatDate(toIsoDate(post.date), {
+													month: "short",
+													day: "numeric",
+												})}
+											</span>
 										</div>
-										{post.thumbnail && (
-											<img
-												class="hidden aspect-8/5 w-28 shrink-0 object-cover sm:block"
-												src={post.thumbnail}
-												alt=""
-											/>
+										<a
+											href={post.url}
+											rel="noopener noreferrer"
+											target="_blank"
+											class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+										>
+											{post.title}
+										</a>
+										{post.description && (
+											<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
+												{post.description}
+											</p>
 										)}
 									</article>
 								))}
 							</div>
 						</section>
-					))}
-				</div>
+					)}
 
-				{issue.episodes.length > 0 && (
-					<section class="border-foreground grid gap-4 border-t-4 border-double py-6 md:grid-cols-[9rem_1fr]">
-						<h2 class="flex items-center gap-2 font-serif text-xl font-bold md:items-start">
-							<Icon icon={PodcastIcon} small />
-							On Air
-						</h2>
-						<div class="grid gap-x-8 sm:grid-cols-2">
-							{issue.episodes.map((post) => (
-								<article class="flex flex-col gap-1 border-b py-3">
-									<div class="flex items-baseline justify-between gap-2 text-xs tracking-widest uppercase">
-										<a
-											href={post.feed.links.overview}
-											class="flex items-center gap-2 font-bold hover:underline"
-										>
-											<span class="bg-primary size-2 shrink-0" />
-											{post.feed.name}
-										</a>
-										<span class="text-muted-foreground shrink-0">
-											{formatDate(toIsoDate(post.date), {
-												month: "short",
-												day: "numeric",
-											})}
-										</span>
-									</div>
+					{eagleProject && (
+						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
+							<h2 class="flex items-center gap-2 font-serif text-lg font-bold tracking-wide uppercase">
+								<Icon icon={HammerIcon} small />
+								Eagle Project Spotlight
+							</h2>
+							<article class="flex gap-4">
+								{eagleProject.thumbnail && (
+									<img
+										class="aspect-square w-28 shrink-0 self-start object-cover sm:w-40"
+										src={eagleProject.thumbnail}
+										alt=""
+									/>
+								)}
+								<div class="flex min-w-0 flex-col gap-2">
 									<a
-										href={post.url}
+										href={eagleProject.url}
 										rel="noopener noreferrer"
 										target="_blank"
-										class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+										class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
 									>
-										{post.title}
+										{eagleProject.title}
 									</a>
-									{post.description && (
-										<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
-											{post.description}
+									{eagleProject.description && (
+										<p class="text-muted-foreground line-clamp-3 font-serif leading-relaxed hyphens-auto">
+											{eagleProject.description}
 										</p>
 									)}
-								</article>
-							))}
-						</div>
-					</section>
-				)}
+									<span class="text-muted-foreground text-sm">
+										<a
+											href={eagleProject.feed.links.overview}
+											class="hover:underline"
+										>
+											{eagleProject.feed.name}
+										</a>
+										{" · "}
+										{formatDate(toIsoDate(eagleProject.date), {
+											dateStyle: "medium",
+										})}
+									</span>
+								</div>
+							</article>
+						</section>
+					)}
+
+					{meritBadge && (
+						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
+							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
+								<Icon icon={AwardIcon} small />
+								Featured Merit Badge
+							</h2>
+							<a
+								href={meritBadgePath(meritBadge.slug)}
+								class="group flex items-center gap-4"
+							>
+								<img
+									class="size-28 shrink-0 sm:size-40"
+									src={meritBadge.images.large}
+									alt=""
+								/>
+								<div class="flex min-w-0 flex-col gap-2">
+									<span class="font-serif text-xl leading-snug font-bold group-hover:underline">
+										{meritBadge.name}
+									</span>
+									<span class="text-muted-foreground text-xs tracking-widest uppercase">
+										{[
+											meritBadge.eagleRequired && "Eagle required",
+											...meritBadge.categories.map((category) => category.name),
+										]
+											.filter(Boolean)
+											.join(" · ")}
+									</span>
+								</div>
+							</a>
+						</section>
+					)}
+
+					{resource && (
+						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
+							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
+								<Icon icon={LibraryIcon} small />
+								Featured Resource
+							</h2>
+							<article class="flex flex-col gap-2">
+								<span class="text-primary text-xs font-bold tracking-widest uppercase">
+									{getResourceTypeBySlug(resource.type).name}
+									{resource.tags.map(getTagBySlug).map((tag) => (
+										<>
+											{" · "}
+											<a href={tag.links.page} class="hover:underline">
+												{tag.name}
+											</a>
+										</>
+									))}
+								</span>
+								<a
+									href={resource.url}
+									rel="noopener noreferrer"
+									target="_blank"
+									class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+								>
+									{resource.title}
+								</a>
+								<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
+									{resource.description}
+								</p>
+							</article>
+						</section>
+					)}
+				</div>
 			</>
 		)}
 

@@ -1,8 +1,11 @@
 import type { Post } from "@/lib/news/post";
 import type { IsoDate } from "@/lib/newspaper/dates";
+import type { Tag } from "@/lib/tags/types";
 
-type IssueDay = {
-	date: IsoDate;
+type IssueSection = {
+	/** undefined for the section of stories whose feed has no tags */
+	tag: Tag | undefined;
+	/** newest first */
 	posts: Post[];
 };
 
@@ -17,8 +20,10 @@ export type Issue = {
 	week: { from: IsoDate; to: IsoDate };
 	/** the newest story with its own photo, or else the newest story. podcast episodes never lead */
 	lead: Post | undefined;
-	/** the rest of the stories, by the day they were posted, newest first */
-	days: IssueDay[];
+	/** the newest few stories after the lead, teased beside it. they also run in their sections */
+	headlines: Post[];
+	/** the rest of the stories, by their first tag, biggest section first */
+	sections: IssueSection[];
 	/** posts from podcast feeds, kept out of the stories above, newest first */
 	episodes: Post[];
 	storyCount: number;
