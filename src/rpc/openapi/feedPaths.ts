@@ -25,7 +25,8 @@ export const feedPaths: OpenAPIV3_2.PathsObject = {
 		servers: siteRoot,
 		get: {
 			summary: "RSS feed for one source",
-			description: "One source's stored posts, re-published as RSS.",
+			description:
+				"One source's stored posts, re-published as RSS. Podcast episodes carry their audio as an enclosure.",
 			tags: ["Feeds"],
 			parameters: [slugParameter],
 			responses: {
@@ -38,7 +39,8 @@ export const feedPaths: OpenAPIV3_2.PathsObject = {
 		servers: siteRoot,
 		get: {
 			summary: "Atom feed for one source",
-			description: "One source's stored posts, re-published as Atom.",
+			description:
+				"One source's stored posts, re-published as Atom. Podcast episodes carry their audio as an enclosure link.",
 			tags: ["Feeds"],
 			parameters: [slugParameter],
 			responses: {

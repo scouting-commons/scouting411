@@ -69,6 +69,10 @@ export const GET: APIRoute = async (context) => {
 						title: post.title,
 						hreflang: "en-us",
 					},
+					// only the url is stored. every podcast upstream serves mp3
+					...(post.audio
+						? [{ rel: "enclosure", href: post.audio, type: "audio/mpeg" }]
+						: []),
 				],
 
 				...(post.thumbnail && {

@@ -52,6 +52,12 @@ export const GET: APIRoute = async (context) => {
 					value: post.url,
 				},
 
+				// only the url is stored. every podcast upstream serves mp3, and 0 is
+				// the conventional length when the size is unknown
+				...(post.audio && {
+					enclosures: [{ url: post.audio, length: 0, type: "audio/mpeg" }],
+				}),
+
 				...(post.thumbnail && {
 					media: {
 						thumbnails: [
