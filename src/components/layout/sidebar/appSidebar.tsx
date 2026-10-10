@@ -10,6 +10,7 @@ import {
 import {
 	BookMarkedIcon,
 	BlocksIcon,
+	BugIcon,
 	RssIcon,
 	MegaphoneIcon,
 	HouseIcon,
@@ -98,11 +99,10 @@ export function AppSidebar({ url }: { url: URL }) {
 						/>
 						{import.meta.env.DEV && (
 							<NavLink
-								href="/api/updateAllFeeds"
-								label="Ingest posts"
+								href="/news/debug"
+								label="Debug"
 								currentUrl={url}
-								icon={RefreshCwIcon}
-								newTab
+								icon={BugIcon}
 							/>
 						)}
 					</NavGroup>

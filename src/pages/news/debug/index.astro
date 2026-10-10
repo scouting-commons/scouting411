@@ -1,0 +1,84 @@
+---
+import Layout from "@/components/layout/Layout.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { feedConfigs } from "@/lib/news/feeds/config";
+
+export const prerender = false;
+
+// dev only: production answers with the 404 page
+if (!import.meta.env.DEV) return Astro.rewrite("/404");
+
+// set by the purge endpoint's redirect
+const purged = Astro.url.searchParams.get("purged");
+const deleted = Astro.url.searchParams.get("deleted");
+---
+
+<Layout title="Debug">
+	<div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-8">
+		<a
+			href="/api/updateAllFeeds"
+			target="_blank"
+			rel="noopener noreferrer"
+			class={buttonVariants({ variant: "outline", className: "self-start" })}
+		>
+			Update posts
+		</a>
+		{purged && (
+			<p class="text-sm">
+				Purged {deleted} posts from <span class="font-mono">{purged}</span>.
+			</p>
+		)}
+		<div class="overflow-x-auto rounded-lg border">
+			<table class="w-full border-collapse text-sm">
+				<thead>
+					<tr class="border-b">
+						<th class="px-4 py-3 text-left font-medium">Feed</th>
+						<th class="px-4 py-3 text-left font-medium">Slug</th>
+						<th class="px-4 py-3 text-left font-medium">Tags</th>
+						<th class="px-4 py-3 text-left font-medium">Default visible</th>
+						<th class="px-4 py-3 text-left font-medium">Kind</th>
+						<th class="px-4 py-3 text-left font-medium">Adapter</th>
+						<th class="px-4 py-3"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{feedConfigs.map((feed) => (
+						<tr class="hover:bg-muted border-b align-top last:border-0">
+							<td class="px-4 py-3">
+								<a
+									href={feed.homepageUrl}
+									class="text-primary font-medium hover:underline"
+								>
+									{feed.name}
+								</a>
+							</td>
+							<td class="px-4 py-3 font-mono">{feed.slug}</td>
+							<td class="px-4 py-3 font-mono">{feed.tags.join(", ")}</td>
+							<td class="px-4 py-3">{feed.defaultVisible ? "yes" : "no"}</td>
+							<td class="px-4 py-3">{"kind" in feed && feed.kind}</td>
+							<td class="px-4 py-3 font-mono">{feed.adapter.type}</td>
+							<td class="px-4 py-3">
+								<form
+									method="post"
+									action="/news/debug/purge"
+									onsubmit={`return confirm("Delete every stored post for ${feed.slug}?")`}
+								>
+									<input type="hidden" name="feed" value={feed.slug} />
+									<button
+										type="submit"
+										class={buttonVariants({
+											variant: "destructive",
+											size: "sm",
+										})}
+									>
+										Purge posts
+									</button>
+								</form>
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</Layout>

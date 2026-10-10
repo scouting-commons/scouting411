@@ -14,6 +14,16 @@ export async function getStoredUrls(feedSlug: FeedSlug) {
 	return new Set(rows.map((row) => row.url));
 }
 
+/** delete every post stored for a feed, returning how many were deleted */
+export async function deletePosts(feedSlug: FeedSlug) {
+	const rows = await db
+		.delete(posts)
+		.where(eq(posts.feedSlug, feedSlug))
+		.returning({ id: posts.id });
+
+	return rows.length;
+}
+
 /** store a feed's post data, skipping posts already stored (matched by feed and url) */
 export async function insertPosts({
 	feedSlug,
