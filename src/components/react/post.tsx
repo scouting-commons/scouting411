@@ -1,3 +1,4 @@
+import { TagBadges } from "@/components/react/tagBadges";
 import type { Post } from "@/lib/news/post";
 
 export function PostComponent({ post }: { post: Post }) {
@@ -35,6 +36,7 @@ export function PostComponent({ post }: { post: Post }) {
 					<span className="line-clamp-3 text-sm wrap-anywhere hyphens-auto">
 						{post.description || "No excerpt available."}
 					</span>
+					<TagBadges tags={post.tags} />
 					{post.audio && (
 						<audio
 							className="w-full"

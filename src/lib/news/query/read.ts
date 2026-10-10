@@ -11,11 +11,15 @@ import {
 } from "drizzle-orm";
 import { db } from "@/infra/db/client";
 import { posts } from "@/infra/db/schema";
+import { feedConfigs } from "@/lib/news/feeds/config";
 import { feeds } from "@/lib/news/feeds/feed";
 import type { Post } from "@/lib/news/post";
 import type { ResolvedQuery } from "@/lib/news/query/resolve";
 
 const feedsBySlug = new Map(feeds.map((feed) => [feed.slug, feed]));
+const tagsByFeedSlug = new Map(
+	feedConfigs.map((feed) => [feed.slug, feed.tags]),
+);
 
 /** the column each sort mode orders by */
 const sortColumns = {
@@ -96,6 +100,7 @@ function hydratePost(row: typeof posts.$inferSelect): Post {
 		description: row.description,
 		date: row.publishedAt,
 		feed: feedsBySlug.get(row.feedSlug)!,
+		tags: [...tagsByFeedSlug.get(row.feedSlug)!],
 		thumbnail: row.thumbnail,
 		audio: row.audio,
 	};

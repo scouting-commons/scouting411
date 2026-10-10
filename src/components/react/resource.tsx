@@ -1,9 +1,6 @@
-import { TagIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import type { Resource } from "@/lib/resources/types";
-import { getTagBySlug } from "@/lib/tags/tag";
+import { TagBadges } from "@/components/react/tagBadges";
 import { getResourceTypeBySlug } from "@/lib/resources/resourceTypes";
-import { cn } from "@/util/cn";
 
 export function Resource({ resource }: { resource: Resource }) {
 	return (
@@ -23,24 +20,7 @@ export function Resource({ resource }: { resource: Resource }) {
 
 				<p className="text-sm">{resource.description}</p>
 
-				{resource.tags.length > 0 && (
-					<div className="flex flex-wrap gap-1.5">
-						{resource.tags.map(getTagBySlug).map((tag) => (
-							<Badge
-								key={tag.slug}
-								variant="outline"
-								render={<a href={tag.links.page} />}
-							>
-								<TagIcon
-									data-icon="inline-start"
-									className={cn(!tag.color && "text-muted-foreground")}
-									style={{ color: tag.color }}
-								/>
-								{tag.name}
-							</Badge>
-						))}
-					</div>
-				)}
+				<TagBadges tags={resource.tags} />
 			</div>
 		</div>
 	);
