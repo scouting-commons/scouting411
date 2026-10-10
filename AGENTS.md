@@ -99,6 +99,7 @@ The feed re-publishing routes are documented by hand in `src/rpc/openapi/feedPat
 - A page's own React island sits beside it with a `_` prefix (`_index.tsx`, `_filterSidebar.tsx`). Cross-page islands go in `src/components/react/`, the page frame (head, layouts, sidebar) in `src/components/layout/`.
 - Pages wrap their content in `Layout.astro` and supply `title`.
 - `src/components/ui/` is shadcn/ui on `@base-ui/react` (not Radix). Add components with the `shadcn` CLI so they match `components.json`.
+- Render every lucide icon through `Icon` (`src/components/react/icon.tsx`), as `<Icon icon={RssIcon} />`, never the lucide component directly. It sizes and aligns the icon to the surrounding text.
 - Tailwind v4: the theme lives in `src/global.css` (there is no `tailwind.config`). Fonts are declared in `astro.config.ts` via Astro font providers.
 - Write imports as full `@/` paths (`@/*` → `src/*`), even within the same directory.
 - Server env vars are schema-validated in `astro.config.ts` and imported from `astro:env/server`. Local values live in a gitignored `.env`.

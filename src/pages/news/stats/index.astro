@@ -3,6 +3,8 @@ import Layout from "@/components/layout/Layout.astro";
 import { buttonVariants } from "@/components/ui/button";
 import Coverage from "@/pages/news/stats/_Coverage.astro";
 import { getFeedMetrics } from "@/lib/news/feeds/metrics";
+import { Icon } from "@/components/react/icon";
+import { RotateCwClockIcon } from "lucide-react";
 
 export const prerender = false;
 
@@ -22,6 +24,7 @@ const numberFormat = Intl.NumberFormat();
 				rel="noopener noreferrer"
 				class={buttonVariants({ variant: "outline", className: "self-start" })}
 			>
+				<Icon icon={RotateCwClockIcon} />
 				Update posts
 			</a>
 		)}
