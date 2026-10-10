@@ -243,6 +243,43 @@ export const feedConfigs = [
 			type: "wordpress-api",
 			opts: {
 				baseUrl: "https://scoutlife.org",
+				categoryExcludeFilter: [
+					399195616, // podask - has its own feed
+				],
+			},
+		},
+	},
+	{
+		name: "PodAsk",
+		slug: "podask",
+		kind: "podcast",
+		defaultVisible: false,
+		description:
+			"A defunct kid-friendly podcast from Scout Life magazine, answering questions sent in by listeners.",
+		coverImageSrc:
+			"https://d1kn0x9vzr5n76.cloudfront.net/images/ranks/neweagle200.png",
+		homepageUrl: "https://scoutlife.org/section/podask/",
+		adapter: {
+			type: "rss",
+			opts: {
+				// the category's wordpress feed, which jetpack serves as a podcast feed
+				feedUrl: "https://scoutlife.org/section/podask/feed/",
+			},
+		},
+	},
+	{
+		name: "Eagle Scout Project Showcase",
+		slug: "eagle-project-showcase",
+		defaultVisible: false,
+		description:
+			"Eagle Scout service projects sent in by Scout Life readers, each a short writeup with photos.",
+		coverImageSrc:
+			"https://eagleprojects.scoutlife.org/files/2017/05/cropped-eaglebadge.png",
+		homepageUrl: "https://eagleprojects.scoutlife.org",
+		adapter: {
+			type: "wordpress-api",
+			opts: {
+				baseUrl: "https://eagleprojects.scoutlife.org",
 			},
 		},
 	},

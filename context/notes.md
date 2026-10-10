@@ -31,9 +31,9 @@
 ## defunct podcasts
 
 - https://oa-scouting.org/article/council-fire-first-episode-2023
-- https://scoutlife.org/section/podask/
 - https://scoutingwire.org/planning-new-post-club-listen/
-- https://onscouting.org/2021/12/16/our-five-favorite-things-about-the-official-philmont-podcast/
+- https://web.archive.org/web/20171111143924/http://www.scouting.org/Scoutcast.aspx - older episodes of CubCast / ScoutCast, + access to ExploringCast. mp3 zip and transcript downloads still available
+- also check archives of podcast.scouting.org
 
 ## periodicals
 
@@ -101,6 +101,16 @@ connect.scouting.org
 
 rssbridge
 rsshub
+
+## scout life
+
+- https://mediakit.scoutlife.org/
+- https://headsup.scoutlife.org/
+- https://scoutlife.org/peewee/
+- https://scoutlife.org/wacky-adventures/
+- https://scoutlife.org/scouts-in-action/
+- https://jokes.scoutlife.org/
+- https://fishing.scoutlife.org/
 
 ## high adventure bases
 
