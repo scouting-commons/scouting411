@@ -10,7 +10,6 @@ import {
 import {
 	BookMarkedIcon,
 	BlocksIcon,
-	BugIcon,
 	RssIcon,
 	MegaphoneIcon,
 	HouseIcon,
@@ -97,14 +96,6 @@ export function AppSidebar({ url }: { url: URL }) {
 							currentUrl={url}
 							icon={ChartColumnIcon}
 						/>
-						{import.meta.env.DEV && (
-							<NavLink
-								href="/news/debug"
-								label="Debug"
-								currentUrl={url}
-								icon={BugIcon}
-							/>
-						)}
 					</NavGroup>
 
 					<NavGroup label="advancement">

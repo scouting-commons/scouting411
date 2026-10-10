@@ -1,5 +1,6 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
+import { buttonVariants } from "@/components/ui/button";
 import { feeds } from "@/lib/news/feeds/feed";
 import {
 	formatPercentage,
@@ -28,6 +29,16 @@ const numberFormat = Intl.NumberFormat();
 
 <Layout title="Feed Statistics">
 	<div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-8">
+		{import.meta.env.DEV && (
+			<a
+				href="/api/updateAllFeeds"
+				target="_blank"
+				rel="noopener noreferrer"
+				class={buttonVariants({ variant: "outline", className: "self-start" })}
+			>
+				Update posts
+			</a>
+		)}
 		<div class="overflow-x-auto rounded-lg border">
 			<table class="w-full border-collapse text-sm">
 				<thead>
@@ -38,6 +49,7 @@ const numberFormat = Intl.NumberFormat();
 						<th class="px-4 py-3 text-right font-medium">Thumbnails</th>
 						<th class="px-4 py-3 text-right font-medium">Unique thumbnails</th>
 						<th class="px-4 py-3 text-left font-medium">Adapter</th>
+						{import.meta.env.DEV && <th class="px-4 py-3" />}
 					</tr>
 				</thead>
 				<tbody>
@@ -64,6 +76,22 @@ const numberFormat = Intl.NumberFormat();
 								{formatPercentage(metrics.thumbnail.uniqueCoverage)}
 							</td>
 							<td class="px-4 py-3">{feed.adapter}</td>
+							{import.meta.env.DEV && (
+								<td class="px-4 py-3">
+									<a
+										href={`/api/purgePosts?feed=${feed.slug}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										onclick={`return confirm("Delete every stored post for ${feed.slug}?")`}
+										class={buttonVariants({
+											variant: "destructive",
+											size: "sm",
+										})}
+									>
+										Purge posts
+									</a>
+								</td>
+							)}
 						</tr>
 					))}
 				</tbody>
@@ -85,6 +113,7 @@ const numberFormat = Intl.NumberFormat();
 							{formatPercentage(totals.thumbnail.uniqueCoverage)}
 						</td>
 						<td></td>
+						{import.meta.env.DEV && <td />}
 					</tr>
 				</tfoot>
 			</table>
