@@ -2,6 +2,7 @@
 import Layout from "@/components/layout/Layout.astro";
 import { PostComponent } from "@/components/react/post";
 import { getFeedBySlug, isFeedSlug } from "@/lib/news/feeds/feed";
+import { getFeedMetrics } from "@/lib/news/feeds/metrics";
 import { rpc } from "@/rpc/client";
 import {
 	ArrowLeftIcon,
@@ -20,14 +21,14 @@ if (!slug || !isFeedSlug(slug)) {
 }
 
 const feed = getFeedBySlug(slug);
-const { posts } = await rpc.news.posts.query({
-	feeds: [slug],
-	paginate: false,
-});
+const [{ posts: recentPosts }, { feeds: feedMetrics }] = await Promise.all([
+	rpc.news.posts.query({ feeds: [slug], paginate: { maxPageSize: 10 } }),
+	getFeedMetrics(),
+]);
 
-const recentPosts = posts.slice(0, 10);
-const latestPost = posts.at(0);
-const oldestPost = posts.at(-1);
+const { count, newest, oldest } = feedMetrics.find(
+	(entry) => entry.feed.slug === slug,
+)!.metrics.posts;
 
 const formatDate = (date: Date) =>
 	date.toLocaleDateString("en-US", {
@@ -37,9 +38,9 @@ const formatDate = (date: Date) =>
 	});
 
 const details = [
-	`${Intl.NumberFormat().format(posts.length)} posts`,
-	latestPost && `Latest ${formatDate(latestPost.date)}`,
-	oldestPost && `Since ${formatDate(oldestPost.date)}`,
+	`${Intl.NumberFormat().format(count)} posts`,
+	newest && `Latest ${formatDate(newest)}`,
+	oldest && `Since ${formatDate(oldest)}`,
 ].filter(Boolean);
 
 const links = [
