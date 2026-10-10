@@ -1,0 +1,24 @@
+---
+import { Icon } from "@/components/react/icon";
+import { CheckIcon, XIcon } from "lucide-react";
+
+type Props = {
+	/** a coverage fraction, undefined when there is nothing to measure */
+	value: number | undefined;
+};
+
+const { value } = Astro.props;
+
+const percentFormat = Intl.NumberFormat("en-us", {
+	style: "percent",
+	maximumFractionDigits: 2,
+});
+---
+
+{value === undefined || value === 0 ? (
+	<Icon icon={XIcon} aria-label="None" className="text-destructive" />
+) : value === 1 ? (
+	<Icon icon={CheckIcon} aria-label="All" className="text-success" />
+) : (
+	percentFormat.format(value)
+)}

@@ -1,10 +1,5 @@
-import { feeds } from "@/lib/news/feeds/feed";
 import type { Feed } from "@/lib/news/feeds/types";
-import {
-	getAggregatedFeedMetrics,
-	getFeedMetrics,
-} from "@/lib/news/feeds/metrics";
-import { queryPosts } from "@/lib/news/query/query";
+import { getFeedMetrics } from "@/lib/news/feeds/metrics";
 
 const site = import.meta.env.SITE;
 
@@ -29,30 +24,23 @@ function absolutizeLinks(links: Feed["links"]) {
 }
 
 export async function getFeedConsumerOutput() {
-	const entries = await Promise.all(
-		feeds.map(async (feed) => {
-			const { posts } = await queryPosts({
-				feeds: [feed.slug],
-				paginate: false,
-			});
+	const { feeds, totals } = await getFeedMetrics();
 
-			return {
-				name: feed.name,
-				slug: feed.slug,
-				description: feed.description,
-				coverImageSrc: feed.coverImageSrc,
-				adapter: feed.adapter,
-				links: absolutizeLinks(feed.links),
-				metrics: getFeedMetrics(posts),
-			};
-		}),
-	);
+	const entries = feeds.map(({ feed, metrics }) => ({
+		name: feed.name,
+		slug: feed.slug,
+		description: feed.description,
+		coverImageSrc: feed.coverImageSrc,
+		adapter: feed.adapter,
+		links: absolutizeLinks(feed.links),
+		metrics,
+	}));
 
 	const body = {
 		feeds: entries,
 		summary: {
 			feedCount: entries.length,
-			metrics: getAggregatedFeedMetrics(entries.map(({ metrics }) => metrics)),
+			metrics: totals,
 		},
 	};
 

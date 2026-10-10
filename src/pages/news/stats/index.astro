@@ -1,28 +1,14 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
 import { buttonVariants } from "@/components/ui/button";
-import { feeds } from "@/lib/news/feeds/feed";
-import {
-	formatPercentage,
-	getAggregatedFeedMetrics,
-	getFeedMetrics,
-} from "@/lib/news/feeds/metrics";
-import { rpc } from "@/rpc/client";
+import Coverage from "@/pages/news/stats/_Coverage.astro";
+import { getFeedMetrics } from "@/lib/news/feeds/metrics";
 
 export const prerender = false;
 
-const feedRows = await Promise.all(
-	feeds.map(async (feed) => {
-		const { posts } = await rpc.news.posts.query({
-			feeds: [feed.slug],
-			paginate: false,
-		});
+const { feeds: feedRows, totals } = await getFeedMetrics();
 
-		return { feed, metrics: getFeedMetrics(posts) };
-	}),
-);
-
-const totals = getAggregatedFeedMetrics(feedRows.map(({ metrics }) => metrics));
+const formatDate = (date: Date | undefined) => date?.toISOString().slice(0, 10);
 
 const numberFormat = Intl.NumberFormat();
 ---
@@ -45,7 +31,10 @@ const numberFormat = Intl.NumberFormat();
 					<tr class="border-b">
 						<th class="px-4 py-3 text-left font-medium">Feed</th>
 						<th class="px-4 py-3 text-right font-medium">Posts</th>
+						<th class="px-4 py-3 text-right font-medium">Newest</th>
+						<th class="px-4 py-3 text-right font-medium">Oldest</th>
 						<th class="px-4 py-3 text-right font-medium">Descriptions</th>
+						<th class="px-4 py-3 text-right font-medium">Content</th>
 						<th class="px-4 py-3 text-right font-medium">Thumbnails</th>
 						<th class="px-4 py-3 text-right font-medium">Unique thumbnails</th>
 						<th class="px-4 py-3 text-left font-medium">Adapter</th>
@@ -66,14 +55,23 @@ const numberFormat = Intl.NumberFormat();
 							<td class="px-4 py-3 text-right tabular-nums">
 								{numberFormat.format(metrics.posts.count)}
 							</td>
-							<td class="px-4 py-3 text-right tabular-nums">
-								{formatPercentage(metrics.description.coverage)}
+							<td class="px-4 py-3 text-right whitespace-nowrap tabular-nums">
+								{formatDate(metrics.posts.newest)}
+							</td>
+							<td class="px-4 py-3 text-right whitespace-nowrap tabular-nums">
+								{formatDate(metrics.posts.oldest)}
 							</td>
 							<td class="px-4 py-3 text-right tabular-nums">
-								{formatPercentage(metrics.thumbnail.coverage)}
+								<Coverage value={metrics.description.coverage} />
 							</td>
 							<td class="px-4 py-3 text-right tabular-nums">
-								{formatPercentage(metrics.thumbnail.uniqueCoverage)}
+								<Coverage value={metrics.content.coverage} />
+							</td>
+							<td class="px-4 py-3 text-right tabular-nums">
+								<Coverage value={metrics.thumbnail.coverage} />
+							</td>
+							<td class="px-4 py-3 text-right tabular-nums">
+								<Coverage value={metrics.thumbnail.uniqueCoverage} />
 							</td>
 							<td class="px-4 py-3">{feed.adapter}</td>
 							{import.meta.env.DEV && (
@@ -103,14 +101,23 @@ const numberFormat = Intl.NumberFormat();
 						<td class="px-4 py-3 text-right font-bold tabular-nums">
 							{numberFormat.format(totals.posts.count)}
 						</td>
-						<td class="px-4 py-3 text-right font-bold tabular-nums">
-							{formatPercentage(totals.description.coverage)}
+						<td class="px-4 py-3 text-right font-bold whitespace-nowrap tabular-nums">
+							{formatDate(totals.posts.newest)}
+						</td>
+						<td class="px-4 py-3 text-right font-bold whitespace-nowrap tabular-nums">
+							{formatDate(totals.posts.oldest)}
 						</td>
 						<td class="px-4 py-3 text-right font-bold tabular-nums">
-							{formatPercentage(totals.thumbnail.coverage)}
+							<Coverage value={totals.description.coverage} />
 						</td>
 						<td class="px-4 py-3 text-right font-bold tabular-nums">
-							{formatPercentage(totals.thumbnail.uniqueCoverage)}
+							<Coverage value={totals.content.coverage} />
+						</td>
+						<td class="px-4 py-3 text-right font-bold tabular-nums">
+							<Coverage value={totals.thumbnail.coverage} />
+						</td>
+						<td class="px-4 py-3 text-right font-bold tabular-nums">
+							<Coverage value={totals.thumbnail.uniqueCoverage} />
 						</td>
 						<td></td>
 						{import.meta.env.DEV && <td />}

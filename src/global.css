@@ -10,6 +10,7 @@
 
 	--color-blue: #003f87;
 	--color-blue-light: #067eeb;
+	--color-green: #039b03; /* matrix green */
 
 	--color-gray-1: #f2f2f2;
 	--color-gray-2: #e6e6e6;
@@ -150,7 +151,7 @@
 	--accent: oklch(0.97 0 0);
 	--accent-foreground: oklch(0.205 0 0);
 	--destructive: oklch(0.577 0.245 27.325);
-	--success: #039b03; /* the green status.scouting.org uses */
+	--success: var(--color-green);
 	--border: var(--color-gray-3);
 	--input: var(--border);
 	--ring: oklch(0.708 0 0);
