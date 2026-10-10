@@ -2,6 +2,8 @@
 import Layout from "@/components/layout/Layout.astro";
 import { buttonVariants } from "@/components/ui/button";
 import { feedConfigs } from "@/lib/news/feeds/config";
+import { getFeedMetrics } from "@/lib/news/feeds/metrics";
+import { rpc } from "@/rpc/client";
 
 export const prerender = false;
 
@@ -11,6 +13,18 @@ if (!import.meta.env.DEV) return Astro.rewrite("/404");
 // set by the purge endpoint's redirect
 const purged = Astro.url.searchParams.get("purged");
 const deleted = Astro.url.searchParams.get("deleted");
+
+const feedRows = await Promise.all(
+	feedConfigs.map(async (feed) => {
+		const { posts } = await rpc.news.posts.query({
+			feeds: [feed.slug],
+			paginate: false,
+		});
+
+		return { feed, metrics: getFeedMetrics(posts) };
+	}),
+);
+const numberFormat = Intl.NumberFormat();
 ---
 
 <Layout title="Debug">
@@ -38,11 +52,12 @@ const deleted = Astro.url.searchParams.get("deleted");
 						<th class="px-4 py-3 text-left font-medium">Default visible</th>
 						<th class="px-4 py-3 text-left font-medium">Kind</th>
 						<th class="px-4 py-3 text-left font-medium">Adapter</th>
+						<th class="px-4 py-3 text-right font-medium">Posts</th>
 						<th class="px-4 py-3"></th>
 					</tr>
 				</thead>
 				<tbody>
-					{feedConfigs.map((feed) => (
+					{feedRows.map(({ feed, metrics }) => (
 						<tr class="hover:bg-muted border-b align-top last:border-0">
 							<td class="px-4 py-3">
 								<a
@@ -57,6 +72,9 @@ const deleted = Astro.url.searchParams.get("deleted");
 							<td class="px-4 py-3">{feed.defaultVisible ? "yes" : "no"}</td>
 							<td class="px-4 py-3">{"kind" in feed && feed.kind}</td>
 							<td class="px-4 py-3 font-mono">{feed.adapter.type}</td>
+							<td class="px-4 py-3 text-right tabular-nums">
+								{numberFormat.format(metrics.posts.count)}
+							</td>
 							<td class="px-4 py-3">
 								<form
 									method="post"
