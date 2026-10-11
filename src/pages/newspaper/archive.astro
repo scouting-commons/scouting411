@@ -13,7 +13,7 @@ const { posts } = await rpc.news.posts.query({
 	paginate: false,
 });
 
-const issues = getNewspaperArchive(posts);
+const issues = await getNewspaperArchive(posts);
 ---
 
 <Layout title="This Week in Scouting: Archive">

@@ -1,16 +1,13 @@
 ---
 import Layout from "@/components/layout/Layout.astro";
+import Photo from "@/pages/newspaper/_Photo.astro";
 import { defaultVisibleFeedSlugs } from "@/lib/news/feeds/types";
 import { queryPostsUrlParams } from "@/lib/news/query/urlParams";
 import { rpc } from "@/rpc/client";
 import { compileIssue } from "@/lib/newspaper/compile";
+import { rateByValue } from "@/lib/newspaper/rank";
 import { toIsoDate } from "@/lib/newspaper/dates";
-import {
-	formatCounts,
-	formatDate,
-	formatStoryCount,
-	formatWeek,
-} from "@/lib/newspaper/format";
+import { formatCounts, formatDate, formatWeek } from "@/lib/newspaper/format";
 import {
 	findIssueDate,
 	issueLinks,
@@ -20,18 +17,15 @@ import {
 import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
-	AwardIcon,
-	HammerIcon,
-	LibraryIcon,
-	PodcastIcon,
+	PlayIcon,
 	PrinterIcon,
 } from "lucide-react";
 import { Icon } from "@/components/react/icon";
 import { getTagBySlug } from "@/lib/tags/tag";
-import type { Tag } from "@/lib/tags/types";
 import type { Post } from "@/lib/news/post";
 import { meritBadgePath } from "@/lib/advancement/meritBadges/types";
 import { getResourceTypeBySlug } from "@/lib/resources/resourceTypes";
+import { QrCode } from "@/components/react/qrCode";
 
 export const prerender = false;
 
@@ -51,18 +45,32 @@ const [{ posts }, meritBadges, resources] = await Promise.all([
 	rpc.advancement.meritBadges.list(),
 	rpc.resources.query(),
 ]);
-const issue = compileIssue(date, posts);
+// `?ranked` lists every story by jev's rating in place of the laid-out issue
+const showRanking = Astro.url.searchParams.has("ranked");
+const ranked = await rateByValue(
+	posts.filter((post) => post.feed.kind !== "podcast"),
+);
+const issue = await compileIssue(date, posts, () => ranked);
 const links = issueLinks(date);
+// the dated address, which keeps pointing at this issue after newer ones come out
+const permalink = new URL(`/newspaper/${date}`, Astro.url).href;
 
 const browseHref = `/news/browse?${queryPostsUrlParams.encode(query)}`;
 
-/** colors a marker by its tag. without one it keeps its class's color */
-const markerStyle = (tag: Tag | undefined) =>
-	tag?.color && `background-color:${tag.color}`;
+/** tints a card with a color, or leaves it alone without one */
+const tintStyle = (color: string | undefined) =>
+	color && `background-color:color-mix(in oklab, ${color} 18%, transparent)`;
 
-/** "Oct 2" */
-const shortDate = (post: Post) =>
-	formatDate(toIsoDate(post.date), { month: "short", day: "numeric" });
+/** "Friday": every story in an issue ran in its one week */
+const weekday = (post: Post) =>
+	formatDate(toIsoDate(post.date), { weekday: "long" });
+
+/** a section of the side column, under a small ruled label */
+const sideSection = "flex flex-col gap-4";
+const sideLabel =
+	"text-muted-foreground border-b pb-2 text-xs font-bold tracking-widest uppercase";
+/** the source and day under a headline */
+const meta = "text-muted-foreground text-xs";
 
 // fnv-1a over the issue date, so an issue keeps its picks until a list changes
 const seed =
@@ -98,6 +106,13 @@ const eagleProject =
 		: undefined;
 
 const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
+// the bottom panel: its top story with a photo, a few beside it, the rest below
+// the two stories ranked after the lead run larger than the rest of the headlines
+const bigHeadlines = issue.headlines.slice(0, 2);
+const smallHeadlines = issue.headlines.slice(2);
+const [goodNewsFeatured, ...goodNewsOthers] = issue.goodNews;
+const goodNewsBeside = goodNewsOthers.slice(0, 5);
+const goodNewsBelow = goodNewsOthers.slice(5);
 ---
 
 <Layout title="This Week in Scouting">
@@ -114,6 +129,12 @@ const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
 						<Icon icon={PrinterIcon} small />
 						Print
 					</button>
+					<a
+						href={showRanking ? links.self : `${links.self}?ranked`}
+						class="hover:text-foreground print:hidden"
+					>
+						{showRanking ? "Issue layout" : "Ranked list"}
+					</a>
 					<a
 						href="/newspaper/archive"
 						class="hover:text-foreground print:hidden"
@@ -132,179 +153,108 @@ const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
 			</div>
 		</header>
 
-		{issue.storyCount === 0 ? (
+		{showRanking ? (
+			<ol class="flex flex-col divide-y">
+				{ranked.map(({ story, score, confidence }, index) => (
+					<li class="flex gap-4 py-3">
+						<span class="text-muted-foreground w-6 shrink-0 text-right tabular-nums">
+							{index + 1}
+						</span>
+						<span class="w-10 shrink-0 font-bold tabular-nums">
+							{score.toFixed(2)}
+						</span>
+						<div class="flex min-w-0 flex-col gap-1">
+							<a
+								href={story.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="font-serif text-lg leading-snug font-bold wrap-anywhere hover:underline"
+							>
+								{story.title}
+							</a>
+							<span class="text-muted-foreground text-xs">
+								{story.feed.name} · {weekday(story)} · confidence{" "}
+								{confidence.toFixed(2)}
+							</span>
+							{story.description && (
+								<p class="text-muted-foreground line-clamp-2 text-sm">
+									{story.description}
+								</p>
+							)}
+						</div>
+					</li>
+				))}
+			</ol>
+		) : issue.storyCount === 0 ? (
 			<p class="text-muted-foreground text-center font-serif italic">
 				Nothing was posted this week.
 			</p>
 		) : (
 			<>
-				{issue.lead && (
-					<div class="grid gap-8 lg:grid-cols-3">
-						<article
-							class:list={[
-								"flex flex-col gap-3",
-								issue.headlines.length > 0 ? "lg:col-span-2" : "lg:col-span-3",
-							]}
-						>
-							{issue.lead.thumbnail && (
-								<img
-									class="aspect-video w-full object-cover"
-									src={issue.lead.thumbnail}
-									alt=""
-								/>
-							)}
-							<span class="text-primary text-xs font-bold tracking-widest uppercase">
-								{leadTags.map((tag) => (
-									<>
-										<a href={tag.links.page} class="hover:underline">
-											{tag.name}
-										</a>
-										{" · "}
-									</>
-								))}
-								<a
-									href={issue.lead.feed.links.overview}
-									class="hover:underline"
-								>
-									{issue.lead.feed.name}
-								</a>
-							</span>
-							<a
-								href={issue.lead.url}
-								rel="noopener noreferrer"
-								target="_blank"
-								class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline md:text-5xl"
-							>
-								{issue.lead.title}
-							</a>
-							{issue.lead.description && (
-								<p class="text-muted-foreground font-serif text-lg leading-relaxed hyphens-auto">
-									{issue.lead.description}
-								</p>
-							)}
-							<span class="text-muted-foreground text-sm italic">
-								{formatDate(toIsoDate(issue.lead.date), {
-									weekday: "long",
-									month: "long",
-									day: "numeric",
-								})}
-							</span>
-						</article>
-
-						{issue.headlines.length > 0 && (
-							<aside class="flex flex-col lg:border-l lg:pl-8">
-								<h2 class="border-foreground text-muted-foreground border-b-2 pb-2 text-xs font-bold tracking-widest uppercase">
-									Also this week
-								</h2>
-								{issue.headlines.map((post) => (
-									<article class="flex flex-col gap-1 border-b py-4">
-										<a
-											href={post.url}
-											rel="noopener noreferrer"
-											target="_blank"
-											class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
-										>
-											{post.title}
-										</a>
-										<span class="text-muted-foreground text-sm">
-											<a
-												href={post.feed.links.overview}
-												class="hover:underline"
-											>
-												{post.feed.name}
-											</a>
-											{" · "}
-											{shortDate(post)}
-										</span>
-									</article>
-								))}
-							</aside>
-						)}
-					</div>
-				)}
-
-				<div class="grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-					{issue.sections.map(({ tag, posts: sectionPosts }) => {
-						const [featured, ...others] = sectionPosts;
-						// a long section runs the full width, its headlines in columns
-						const wide = sectionPosts.length > 5;
-
-						return (
-							<section
-								class:list={[
-									"border-foreground flex flex-col gap-4 border-t-2 pt-4",
-									wide && "md:col-span-2 lg:col-span-3",
-								]}
-								style={tag?.color && `border-color:${tag.color}`}
-							>
-								<div class="flex items-baseline justify-between gap-4">
-									<h2 class="font-serif text-lg font-bold tracking-wide uppercase">
-										{tag ? (
+				<div class="grid gap-8 lg:grid-cols-3">
+					{issue.lead && (
+						<div class="flex flex-col gap-8 lg:col-span-2">
+							<article class="flex flex-col gap-3">
+								{issue.lead.thumbnail && (
+									<Photo src={issue.lead.thumbnail} fit="capped" />
+								)}
+								<span class="text-primary text-xs font-bold tracking-widest uppercase">
+									{leadTags.map((tag) => (
+										<>
 											<a href={tag.links.page} class="hover:underline">
 												{tag.name}
 											</a>
-										) : (
-											"Around Scouting"
-										)}
-									</h2>
-									<span class="text-muted-foreground shrink-0 text-xs tracking-widest uppercase">
-										{formatStoryCount(sectionPosts.length)}
-									</span>
-								</div>
-								<div
-									class:list={[
-										"flex flex-col gap-4",
-										wide && "md:grid md:grid-cols-2 md:gap-8 lg:grid-cols-3",
-									]}
-								>
-									{featured && (
-										<article class="flex flex-col gap-2">
-											{featured.thumbnail && (
-												<img
-													class="mb-1 aspect-8/5 w-full object-cover"
-													src={featured.thumbnail}
-													alt=""
-												/>
-											)}
-											<a
-												href={featured.url}
-												rel="noopener noreferrer"
-												target="_blank"
-												class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
-											>
-												{featured.title}
-											</a>
-											{featured.description && (
-												<p class="text-muted-foreground line-clamp-4 font-serif leading-relaxed hyphens-auto">
-													{featured.description}
-												</p>
-											)}
-											<span class="text-muted-foreground text-sm">
-												<a
-													href={featured.feed.links.overview}
-													class="hover:underline"
-												>
-													{featured.feed.name}
-												</a>
-												{" · "}
-												{shortDate(featured)}
-											</span>
-										</article>
-									)}
-									<div
-										class:list={[wide && "lg:col-span-2 lg:columns-2 lg:gap-8"]}
+											{" · "}
+										</>
+									))}
+									<a
+										href={issue.lead.feed.links.overview}
+										class="hover:underline"
 									>
-										{others.map((post) => (
-											<article class="flex break-inside-avoid flex-col gap-1 border-t py-3">
+										{issue.lead.feed.name}
+									</a>
+								</span>
+								<a
+									href={issue.lead.url}
+									rel="noopener noreferrer"
+									target="_blank"
+									class="font-serif text-3xl leading-tight font-bold wrap-anywhere hyphens-auto hover:underline md:text-5xl"
+								>
+									{issue.lead.title}
+								</a>
+								{/* a dateline: the day leads into the description, or stands alone without one */}
+								<p class="text-muted-foreground font-serif text-lg leading-relaxed hyphens-auto">
+									<span class="text-foreground text-sm font-bold tracking-widest uppercase">
+										{weekday(issue.lead)}
+									</span>
+									{issue.lead.description && ` - ${issue.lead.description}`}
+								</p>
+							</article>
+
+							{bigHeadlines.length > 0 && (
+								<div class="flex flex-col divide-y border-t">
+									{bigHeadlines.map((post) => (
+										<article class="flex flex-col gap-4 py-5 sm:flex-row sm:gap-6">
+											<Photo
+												src={post.thumbnail ?? post.feed.coverImageSrc}
+												fit="box"
+												class="w-full shrink-0 self-start sm:w-2/5"
+											/>
+											<div class="flex min-w-0 flex-col gap-2">
 												<a
 													href={post.url}
 													rel="noopener noreferrer"
 													target="_blank"
-													class="font-serif leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+													class="font-serif text-2xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
 												>
 													{post.title}
 												</a>
-												<span class="text-muted-foreground text-sm">
+												{post.description && (
+													<p class="text-muted-foreground line-clamp-3 font-serif leading-relaxed hyphens-auto">
+														{post.description}
+													</p>
+												)}
+												<span class={meta}>
 													<a
 														href={post.feed.links.overview}
 														class="hover:underline"
@@ -312,79 +262,141 @@ const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
 														{post.feed.name}
 													</a>
 													{" · "}
-													{shortDate(post)}
+													{weekday(post)}
 												</span>
-											</article>
-										))}
-									</div>
+											</div>
+										</article>
+									))}
 								</div>
-							</section>
-						);
-					})}
-				</div>
+							)}
 
-				<div class="grid gap-x-8 gap-y-10 md:grid-cols-2">
-					{issue.episodes.length > 0 && (
-						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
-							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
-								<Icon icon={PodcastIcon} small />
-								On The Air
-							</h2>
-							<div class="flex flex-col">
+							{smallHeadlines.length > 0 && (
+								<div class="grid gap-x-10 sm:grid-cols-2">
+									{smallHeadlines.map((post) => (
+										<article class="flex justify-between gap-4 border-t py-4">
+											<div class="flex min-w-0 flex-col gap-1">
+												<a
+													href={post.url}
+													rel="noopener noreferrer"
+													target="_blank"
+													class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+												>
+													{post.title}
+												</a>
+												<span class={meta}>
+													<a
+														href={post.feed.links.overview}
+														class="hover:underline"
+													>
+														{post.feed.name}
+													</a>
+													{" · "}
+													{weekday(post)}
+												</span>
+											</div>
+											{post.thumbnail && (
+												<img
+													class="size-20 shrink-0 object-cover"
+													src={post.thumbnail}
+													alt=""
+												/>
+											)}
+										</article>
+									))}
+								</div>
+							)}
+						</div>
+					)}
+
+					<aside class="flex flex-col gap-8 lg:border-l lg:pl-8">
+						{issue.episodes.length > 0 && (
+							<section class={sideSection}>
+								<h2 class={sideLabel}>On The Air</h2>
 								{issue.episodes.map((post) => (
-									<article class="flex flex-col gap-1 border-b py-3 first:pt-0 last:border-b-0 last:pb-0">
-										<div class="flex items-baseline justify-between gap-2 text-xs tracking-widest uppercase">
+									<article
+										class="bg-muted flex overflow-hidden rounded-lg border"
+										style={tintStyle(post.tags?.map(getTagBySlug)[0]?.color)}
+									>
+										<div class="flex min-w-0 flex-1 flex-col items-start gap-3 p-4">
 											<a
 												href={post.feed.links.overview}
-												class="flex items-center gap-2 font-bold hover:underline"
+												class="flex items-center gap-2 text-xs font-bold tracking-widest uppercase hover:underline"
 											>
-												<span
-													class="bg-primary size-2 shrink-0"
-													style={markerStyle(post.tags?.map(getTagBySlug)[0])}
+												<img
+													class="size-6 shrink-0 rounded-sm object-cover"
+													src={post.feed.coverImageSrc}
+													alt=""
 												/>
 												{post.feed.name}
 											</a>
-											<span class="text-muted-foreground shrink-0">
-												{formatDate(toIsoDate(post.date), {
-													month: "short",
-													day: "numeric",
-												})}
-											</span>
+											<a
+												href={post.url}
+												rel="noopener noreferrer"
+												target="_blank"
+												class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+											>
+												{post.title}
+											</a>
+											<a
+												href={post.url}
+												rel="noopener noreferrer"
+												target="_blank"
+												aria-label="Listen to this episode"
+												class="bg-background text-foreground flex size-9 items-center justify-center rounded-full"
+											>
+												<Icon icon={PlayIcon} small />
+											</a>
 										</div>
-										<a
-											href={post.url}
-											rel="noopener noreferrer"
-											target="_blank"
-											class="font-serif text-lg leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
-										>
-											{post.title}
-										</a>
-										{post.description && (
-											<p class="text-muted-foreground line-clamp-2 font-serif text-sm leading-relaxed hyphens-auto">
-												{post.description}
-											</p>
+										{post.thumbnail && (
+											<img
+												class="w-2/5 shrink-0 object-cover"
+												src={post.thumbnail}
+												alt=""
+											/>
 										)}
 									</article>
 								))}
-							</div>
-						</section>
-					)}
+							</section>
+						)}
 
-					{eagleProject && (
-						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
-							<h2 class="flex items-center gap-2 font-serif text-lg font-bold tracking-wide uppercase">
-								<Icon icon={HammerIcon} small />
-								Eagle Project Spotlight
-							</h2>
-							<article class="flex gap-4">
+						{resource && (
+							<section class={sideSection}>
+								<h2 class={sideLabel}>Featured Resource</h2>
+								<a
+									href={resource.url}
+									rel="noopener noreferrer"
+									target="_blank"
+									class="group bg-muted flex flex-col gap-2 rounded-lg border p-4"
+								>
+									<span class="text-muted-foreground flex items-baseline justify-between gap-2 text-xs">
+										<span class="font-bold tracking-widest uppercase">
+											{getResourceTypeBySlug(resource.type).name}
+										</span>
+										<span class="truncate">
+											{new URL(resource.url).hostname.replace(/^www\./, "")}
+										</span>
+									</span>
+									<span class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto group-hover:underline">
+										{resource.title}
+									</span>
+									<p class="text-muted-foreground line-clamp-3 font-serif leading-relaxed hyphens-auto">
+										{resource.description}
+									</p>
+								</a>
+							</section>
+						)}
+
+						{eagleProject && (
+							<section class={sideSection}>
+								<h2 class={sideLabel}>This Eagle Scout...</h2>
 								{eagleProject.thumbnail && (
 									<img
-										class="aspect-square w-28 shrink-0 self-start object-cover sm:w-40"
+										class="aspect-video w-full object-cover"
 										src={eagleProject.thumbnail}
 										alt=""
 									/>
 								)}
-								<div class="flex min-w-0 flex-col gap-2">
+								<div class="flex flex-col gap-2">
 									<a
 										href={eagleProject.url}
 										rel="noopener noreferrer"
@@ -393,93 +405,210 @@ const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
 									>
 										{eagleProject.title}
 									</a>
+									<a
+										href={eagleProject.feed.links.overview}
+										class:list={[meta, "hover:underline"]}
+									>
+										{eagleProject.feed.name}
+									</a>
 									{eagleProject.description && (
 										<p class="text-muted-foreground line-clamp-3 font-serif leading-relaxed hyphens-auto">
 											{eagleProject.description}
 										</p>
 									)}
-									<span class="text-muted-foreground text-sm">
-										<a
-											href={eagleProject.feed.links.overview}
-											class="hover:underline"
-										>
-											{eagleProject.feed.name}
-										</a>
-										{" · "}
-										{formatDate(toIsoDate(eagleProject.date), {
-											dateStyle: "medium",
-										})}
-									</span>
 								</div>
-							</article>
-						</section>
-					)}
+							</section>
+						)}
 
-					{meritBadge && (
-						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
-							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
-								<Icon icon={AwardIcon} small />
-								Featured Merit Badge
-							</h2>
-							<a
-								href={meritBadgePath(meritBadge.slug)}
-								class="group flex items-center gap-4"
-							>
-								<img
-									class="size-28 shrink-0 sm:size-40"
-									src={meritBadge.images.large}
-									alt=""
-								/>
-								<div class="flex min-w-0 flex-col gap-2">
-									<span class="font-serif text-xl leading-snug font-bold group-hover:underline">
+						{meritBadge && (
+							<section class={sideSection}>
+								<h2 class={sideLabel}>Featured Merit Badge</h2>
+								<a
+									href={meritBadgePath(meritBadge.slug)}
+									class="group flex flex-col gap-3 rounded-lg border p-4"
+									style={tintStyle("#4d7c0f")}
+								>
+									<img
+										class="size-32 self-center"
+										src={meritBadge.images.large}
+										alt=""
+									/>
+									<span class="font-serif text-2xl leading-snug font-bold">
 										{meritBadge.name}
 									</span>
-									<span class="text-muted-foreground text-xs tracking-widest uppercase">
+									<span class="flex flex-wrap gap-2">
 										{[
 											meritBadge.eagleRequired && "Eagle required",
 											...meritBadge.categories.map((category) => category.name),
 										]
 											.filter(Boolean)
-											.join(" · ")}
+											.map((label) => (
+												<span class="bg-background/60 rounded-sm px-2 py-0.5 text-xs tracking-widest uppercase">
+													{label}
+												</span>
+											))}
 									</span>
-								</div>
-							</a>
-						</section>
-					)}
+									<span class="flex items-center gap-1 text-sm font-medium group-hover:underline">
+										View requirements
+										<Icon icon={ArrowRightIcon} small />
+									</span>
+								</a>
+							</section>
+						)}
 
-					{resource && (
-						<section class="border-foreground flex flex-col gap-4 border-t-2 pt-4">
-							<h2 class="font-serif flex items-center gap-2 text-lg font-bold tracking-wide uppercase">
-								<Icon icon={LibraryIcon} small />
-								Featured Resource
-							</h2>
-							<article class="flex flex-col gap-2">
-								<span class="text-primary text-xs font-bold tracking-widest uppercase">
-									{getResourceTypeBySlug(resource.type).name}
-									{resource.tags.map(getTagBySlug).map((tag) => (
-										<>
-											{" · "}
-											<a href={tag.links.page} class="hover:underline">
-												{tag.name}
-											</a>
-										</>
-									))}
-								</span>
+						<section class={sideSection}>
+							<h2 class={sideLabel}>About This Paper</h2>
+							<div class="flex flex-col gap-3 text-sm leading-relaxed">
+								<p>
+									<span class="font-serif font-bold">
+										This Week in Scouting
+									</span>{" "}
+									comes out every Sunday. It gathers the past week of posts from
+									Scouting America's official national sources and orders them
+									by how useful they are to volunteers.
+								</p>
+								<p class="text-muted-foreground">
+									This page has been compiled automatically by Scouting411. It
+									is not affiliated with, endorsed by, or sponsored by Scouting
+									America, and every story links to its original.
+								</p>
+								<div class="hidden items-center gap-3 print:flex">
+									<QrCode value={permalink} className="size-20 shrink-0" />
+									<div class="flex min-w-0 flex-col gap-1 text-xs">
+										<span class="text-muted-foreground">
+											Scan to read this issue online.
+										</span>
+										<a
+											href={permalink}
+											class="font-medium break-all hover:underline"
+										>
+											{permalink.replace(/^https?:\/\//, "")}
+										</a>
+									</div>
+								</div>
+								<div class="flex flex-wrap gap-x-4 gap-y-1 font-medium print:hidden">
+									<a href="/about" class="hover:underline">
+										About Scouting411
+									</a>
+									<a href="/news/sources" class="hover:underline">
+										Sources
+									</a>
+									<a href="/newspaper/archive" class="hover:underline">
+										Past issues
+									</a>
+								</div>
+							</div>
+						</section>
+					</aside>
+				</div>
+
+				{goodNewsFeatured && (
+					<section class="bg-muted/40 flex flex-col gap-6 rounded-lg p-6 md:p-8">
+						<div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b pb-4">
+							<h2 class="font-serif text-2xl font-bold">Good News</h2>
+							<span class="text-muted-foreground font-serif italic">
+								People and moments from around Scouting
+							</span>
+						</div>
+						<div class="grid gap-8 lg:grid-cols-2">
+							<article class="flex flex-col gap-3">
+								{goodNewsFeatured.thumbnail && (
+									<Photo src={goodNewsFeatured.thumbnail} fit="capped" />
+								)}
 								<a
-									href={resource.url}
+									href={goodNewsFeatured.url}
 									rel="noopener noreferrer"
 									target="_blank"
-									class="font-serif text-xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+									class="font-serif text-2xl leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
 								>
-									{resource.title}
+									{goodNewsFeatured.title}
 								</a>
-								<p class="text-muted-foreground font-serif leading-relaxed hyphens-auto">
-									{resource.description}
-								</p>
+								<span class={meta}>
+									<a
+										href={goodNewsFeatured.feed.links.overview}
+										class="hover:underline"
+									>
+										{goodNewsFeatured.feed.name}
+									</a>
+									{" · "}
+									{weekday(goodNewsFeatured)}
+								</span>
 							</article>
-						</section>
-					)}
-				</div>
+							{goodNewsBeside.length > 0 && (
+								<div class="flex flex-col divide-y *:first:pt-0">
+									{goodNewsBeside.map((post) => (
+										<article class="flex gap-4 py-4">
+											{post.thumbnail && (
+												<img
+													class="size-16 shrink-0 object-cover"
+													src={post.thumbnail}
+													alt=""
+												/>
+											)}
+											<div class="flex min-w-0 flex-col gap-1">
+												<a
+													href={post.url}
+													rel="noopener noreferrer"
+													target="_blank"
+													class="font-serif leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+												>
+													{post.title}
+												</a>
+												<span class={meta}>
+													<a
+														href={post.feed.links.overview}
+														class="hover:underline"
+													>
+														{post.feed.name}
+													</a>
+													{" · "}
+													{weekday(post)}
+												</span>
+											</div>
+										</article>
+									))}
+								</div>
+							)}
+						</div>
+						{goodNewsBelow.length > 0 && (
+							<div class="grid gap-x-8 lg:grid-cols-2">
+								{goodNewsBelow.map((post) => (
+									<div class="border-t">
+										<article class="flex gap-4 py-4">
+											{post.thumbnail && (
+												<img
+													class="size-16 shrink-0 object-cover"
+													src={post.thumbnail}
+													alt=""
+												/>
+											)}
+											<div class="flex min-w-0 flex-col gap-1">
+												<a
+													href={post.url}
+													rel="noopener noreferrer"
+													target="_blank"
+													class="font-serif leading-snug font-bold wrap-anywhere hyphens-auto hover:underline"
+												>
+													{post.title}
+												</a>
+												<span class={meta}>
+													<a
+														href={post.feed.links.overview}
+														class="hover:underline"
+													>
+														{post.feed.name}
+													</a>
+													{" · "}
+													{weekday(post)}
+												</span>
+											</div>
+										</article>
+									</div>
+								))}
+							</div>
+						)}
+					</section>
+				)}
 			</>
 		)}
 
