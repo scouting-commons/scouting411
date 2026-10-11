@@ -1,0 +1,77 @@
+---
+import { z } from "zod";
+import Layout from "@/components/layout/Layout.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { feeds } from "@/lib/news/feeds/feed";
+import { getUntaggedPosts, setPostTags } from "@/lib/news/ingest/store";
+import { tags } from "@/lib/tags/tag";
+import { tagSlugSchema } from "@/lib/tags/types";
+
+export const prerender = false;
+
+// dev only: production answers 404
+if (!import.meta.env.DEV) return new Response(null, { status: 404 });
+
+if (Astro.request.method === "POST") {
+	const form = await Astro.request.formData();
+
+	await setPostTags(
+		z.coerce.number().int().parse(form.get("id")),
+		z.array(tagSlugSchema).parse(form.getAll("tags")),
+	);
+
+	return Astro.redirect(Astro.url.pathname, 303);
+}
+
+const { posts, total } = await getUntaggedPosts(20);
+
+const feedNames = new Map(feeds.map((feed) => [feed.slug, feed.name]));
+
+const numberFormat = Intl.NumberFormat();
+---
+
+<Layout title="Tag Posts">
+	<div class="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+		<p class="text-muted-foreground text-sm">
+			{numberFormat.format(total)} untagged posts. Saving with nothing checked
+			marks a post as having no tags.
+		</p>
+		{posts.map((post) => (
+			<form method="post" class="flex flex-col gap-3 rounded-lg border p-4">
+				<input type="hidden" name="id" value={post.id} />
+				<div class="text-muted-foreground flex justify-between gap-2 text-xs">
+					<span>{feedNames.get(post.feedSlug)}</span>
+					<span>{post.publishedAt.toISOString().slice(0, 10)}</span>
+				</div>
+				<a
+					href={post.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="font-serif text-lg font-bold hover:underline"
+				>
+					{post.title}
+				</a>
+				{post.description && <p class="text-sm">{post.description}</p>}
+				<div class="flex flex-wrap gap-2">
+					{tags.map((tag) => (
+						<label class="has-checked:bg-primary has-checked:text-primary-foreground cursor-pointer rounded-full border px-3 py-1 text-sm select-none">
+							<input
+								type="checkbox"
+								name="tags"
+								value={tag.slug}
+								class="sr-only"
+							/>
+							{tag.name}
+						</label>
+					))}
+				</div>
+				<button
+					type="submit"
+					class={buttonVariants({ size: "sm", className: "self-start" })}
+				>
+					Save
+				</button>
+			</form>
+		))}
+	</div>
+</Layout>

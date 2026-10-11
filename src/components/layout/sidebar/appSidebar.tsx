@@ -96,6 +96,14 @@ export function AppSidebar({ url }: { url: URL }) {
 							currentUrl={url}
 							icon={ChartColumnIcon}
 						/>
+						{import.meta.env.DEV && (
+							<NavLink
+								href="/news/tag"
+								label="Tag posts"
+								currentUrl={url}
+								icon={TagIcon}
+							/>
+						)}
 					</NavGroup>
 
 					<NavGroup label="advancement">

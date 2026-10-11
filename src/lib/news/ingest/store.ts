@@ -2,7 +2,8 @@ import { db } from "@/infra/db/client";
 import { posts } from "@/infra/db/schema";
 import type { PostData } from "@/lib/news/ingest/types";
 import type { FeedSlug } from "@/lib/news/feeds/types";
-import { eq } from "drizzle-orm";
+import type { TagSlug } from "@/lib/tags/types";
+import { count, desc, eq, isNull } from "drizzle-orm";
 
 /** the url of every post stored for a feed */
 export async function getStoredUrls(feedSlug: FeedSlug) {
@@ -22,6 +23,38 @@ export async function deletePosts(feedSlug: FeedSlug) {
 		.returning({ id: posts.id });
 
 	return rows.length;
+}
+
+/** the newest posts that have not been tagged, plus how many there are in all */
+export async function getUntaggedPosts(limit: number) {
+	const untagged = isNull(posts.tags);
+
+	const [rows, [total]] = await Promise.all([
+		db
+			.select({
+				id: posts.id,
+				feedSlug: posts.feedSlug,
+				url: posts.url,
+				title: posts.title,
+				description: posts.description,
+				publishedAt: posts.publishedAt,
+			})
+			.from(posts)
+			.where(untagged)
+			.orderBy(desc(posts.publishedAt), desc(posts.id))
+			.limit(limit),
+		db.select({ count: count() }).from(posts).where(untagged),
+	]);
+
+	return { posts: rows, total: total!.count };
+}
+
+/** set a post's tags. an empty array records that it was tagged with none */
+export async function setPostTags(id: number, tags: TagSlug[]) {
+	await db
+		.update(posts)
+		.set({ tags, updatedAt: new Date() })
+		.where(eq(posts.id, id));
 }
 
 /** store a feed's post data, skipping posts already stored (matched by feed and url) */
