@@ -82,6 +82,13 @@ export default defineConfig({
 				access: "secret",
 				includes: "@",
 			}),
+
+			/** typesafe.ai api key for the jev model */
+			TYPESAFE_API_KEY: envField.string({
+				context: "server",
+				access: "secret",
+				startsWith: "apikey_",
+			}),
 		},
 	},
 
