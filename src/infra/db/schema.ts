@@ -9,9 +9,13 @@ import {
 	unique,
 } from "drizzle-orm/pg-core";
 import { feedSlugSchema } from "@/lib/news/feeds/types";
+import { tagSlugSchema } from "@/lib/tags/types";
 
 /** enum of feed slugs, built from the feeds config file */
 export const feedSlugEnum = pgEnum("feed_slug", feedSlugSchema.enum);
+
+/** enum of tag slugs, built from the tags config file */
+export const tagSlugEnum = pgEnum("tag_slug", tagSlugSchema.enum);
 
 /** every post ingested from an upstream feed */
 export const posts = pgTable(
@@ -29,6 +33,8 @@ export const posts = pgTable(
 		thumbnail: text(),
 		/** external audio file url, for a podcast episode */
 		audio: text(),
+		/** the post's own topic tags. null until the post has been tagged */
+		tags: tagSlugEnum().array(),
 		/** when upstream says the post was published */
 		publishedAt: timestamp({ withTimezone: true }).notNull(),
 		/** when ingest first saw the post / when this database row was created */

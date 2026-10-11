@@ -1,5 +1,6 @@
 import {
 	and,
+	arrayOverlaps,
 	asc,
 	count,
 	desc,
@@ -11,15 +12,11 @@ import {
 } from "drizzle-orm";
 import { db } from "@/infra/db/client";
 import { posts } from "@/infra/db/schema";
-import { feedConfigs } from "@/lib/news/feeds/config";
 import { feeds } from "@/lib/news/feeds/feed";
 import type { Post } from "@/lib/news/post";
 import type { ResolvedQuery } from "@/lib/news/query/resolve";
 
 const feedsBySlug = new Map(feeds.map((feed) => [feed.slug, feed]));
-const tagsByFeedSlug = new Map(
-	feedConfigs.map((feed) => [feed.slug, feed.tags]),
-);
 
 /** the columns a hydrated post is built from. `content` stays out: it is large */
 const postColumns = {
@@ -29,6 +26,7 @@ const postColumns = {
 	description: posts.description,
 	thumbnail: posts.thumbnail,
 	audio: posts.audio,
+	tags: posts.tags,
 	publishedAt: posts.publishedAt,
 };
 
@@ -43,12 +41,15 @@ const sortColumns = {
  */
 export async function readPosts({
 	feeds: feedSlugs,
+	tags,
 	filter,
 	sort,
 	paginate,
 }: ResolvedQuery): Promise<{ posts: Post[]; totalItems: number }> {
 	const where = and(
 		inArray(posts.feedSlug, feedSlugs),
+		// an empty selection is no restriction, the same as leaving it out
+		tags?.length ? arrayOverlaps(posts.tags, tags) : undefined,
 		...filterConditions(filter),
 	);
 	const direction = sort.direction === "asc" ? asc : desc;
@@ -113,7 +114,7 @@ function hydratePost(
 		description: row.description,
 		date: row.publishedAt,
 		feed: feedsBySlug.get(row.feedSlug)!,
-		tags: [...tagsByFeedSlug.get(row.feedSlug)!],
+		tags: row.tags,
 		thumbnail: row.thumbnail,
 		audio: row.audio,
 	};

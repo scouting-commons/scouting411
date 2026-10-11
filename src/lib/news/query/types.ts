@@ -62,7 +62,7 @@ export const queryInputSchema = z.object({
 		.array(tagSlugSchema)
 		.optional()
 		.describe(
-			"Include results only from sources that have at least one of these tags. Omit or pass an empty array to include every source. Combined with `feeds`, a source must match both.",
+			"Include only results that have at least one of these tags. Omit or pass an empty array to include every result. Combined with `feeds`, a result must match both.",
 		),
 	filter: filterOptsSchema.optional(),
 	sort: sortOptsSchema.optional(),

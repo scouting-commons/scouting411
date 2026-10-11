@@ -8,8 +8,8 @@ export type Post = {
 	description: string | null;
 	date: Date;
 	feed: Feed;
-	/** inherited from the post's feed */
-	tags: TagSlug[];
+	/** the post's own topic tags. null means the post has not been tagged, empty arrary means it was tagged with no tags */
+	tags: TagSlug[] | null;
 	thumbnail: string | null;
 	/** external audio file url, for a podcast episode */
 	audio: string | null;
