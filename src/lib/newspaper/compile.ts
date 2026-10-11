@@ -16,17 +16,19 @@ export async function compileIssue(
 ): Promise<Issue> {
 	const isEpisode = (post: Post) => post.feed.kind === "podcast";
 	const [lead, ...rest] = await rate(posts.filter((post) => !isEpisode(post)));
-	// below this score a story is filler, which runs as good news
-	const goodNewsBelow = 0.8;
-	const stories = (keep: (rated: RatedStory) => boolean) =>
-		rest.filter(keep).map(({ story }) => story);
+	// below this score a story is fluff, which runs in its own section
+	const fluffBelow = 0.8;
+	const lowScoring = rest.filter(({ score }) => score < fluffBelow);
+	// one story can't fill the fluff section, so it stays a headline
+	const fluff = lowScoring.length > 1 ? lowScoring : [];
+	const stories = (rated: RatedStory[]) => rated.map(({ story }) => story);
 
 	return {
 		date,
 		week: weekOf(date),
 		lead: lead?.story,
-		headlines: stories(({ score }) => score >= goodNewsBelow),
-		goodNews: stories(({ score }) => score < goodNewsBelow),
+		headlines: stories(rest.filter((rated) => !fluff.includes(rated))),
+		fluff: stories(fluff),
 		episodes: posts.filter(isEpisode),
 		storyCount: posts.length,
 		sourceCount: new Set(posts.map((post) => post.feed.slug)).size,

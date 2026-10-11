@@ -20,7 +20,7 @@ import type { SearchItem } from "@/lib/search/types";
 /** site navigation pages */
 const navigation = [
 	{ href: "/", label: "Home" },
-	{ href: "/newspaper", label: "Newspaper" },
+	{ href: "/newspaper", label: "The Sunday Bugler" },
 	{ href: "/news/browse", label: "Posts Archive" },
 	{ href: "/news/sources", label: "Sources" },
 	{ href: "/news/stats", label: "Stats" },

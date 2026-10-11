@@ -64,7 +64,7 @@ export function Page() {
 				</p>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-					<Card icon={NewspaperIcon} title="This Week in Scouting">
+					<Card icon={NewspaperIcon} title="The Sunday Bugler">
 						<p>
 							Last week's news from official sources, gathered into one edition
 							every Sunday.

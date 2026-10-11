@@ -11,7 +11,7 @@ Scouting411 (scouting411.org) is an Astro + React site that aggregates official 
 
 ## Cron writes, pages read
 
-News (Postgres) and advancement (Redis) share one rule: a daily Vercel cron (`vercel.json`) fetches upstream and writes storage, and a page request only reads storage. The cron routes in `src/pages/api/` check a `Bearer ${CRON_SECRET}` header. System status is the one exception.
+News (Postgres) and advancement (Redis) share one rule: a daily Vercel cron (`vercel.json`) fetches upstream and writes storage, and a page request only reads storage. The cron routes in `src/pages/api/` check a `Bearer ${CRON_SECRET}` header. System status and the newspaper's joke (`src/lib/newspaper/joke.ts`) are the exceptions.
 
 Any page or route that reads Redis or the database must `export const prerender = false`.
 
@@ -66,7 +66,7 @@ Per-type quirks:
 
 ## System status: `src/lib/status/`
 
-`status.ts` reads the Uptime Kuma instance behind status.scouting.org (not Statuspage, so the news adapter doesn't apply). It is the one exception to "pages only read storage": a day-old status is useless, so it's read live and memoized for a minute. The homepage fetches it after mount so a slow status page never blocks the render.
+`status.ts` reads the Uptime Kuma instance behind status.scouting.org (not Statuspage, so the news adapter doesn't apply). It is an exception to "pages only read storage": a day-old status is useless, so it's read live and memoized for a minute. The homepage fetches it after mount so a slow status page never blocks the render.
 
 ## Resources
 

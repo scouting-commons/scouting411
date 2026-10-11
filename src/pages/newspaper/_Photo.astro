@@ -2,10 +2,11 @@
 interface Props {
 	src: string;
 	/**
-	 * `box` fits the photo inside a fixed 16:9 box. `capped` shows it at its
-	 * natural height, up to a 3:2 box that a taller photo is fit inside
+	 * `box` fits the photo inside a fixed 16:9 box, and `tall-box` inside a
+	 * fixed 3:2 one. `capped` shows it at its natural height, up to a 3:2 box
+	 * that a taller photo is fit inside
 	 */
-	fit: "box" | "capped";
+	fit: "box" | "tall-box" | "capped";
 	class?: string;
 }
 
@@ -17,6 +18,7 @@ const { src, fit, class: className } = Astro.props;
 	class:list={[
 		"@container relative overflow-hidden",
 		fit === "box" && "aspect-video",
+		fit === "tall-box" && "aspect-3/2",
 		className,
 	]}
 >
@@ -29,7 +31,7 @@ const { src, fit, class: className } = Astro.props;
 	<img
 		class:list={[
 			"relative w-full object-contain",
-			fit === "box" ? "h-full" : "h-auto max-h-[66.667cqw]",
+			fit === "capped" ? "h-auto max-h-[66.667cqw]" : "h-full",
 		]}
 		src={src}
 		alt=""

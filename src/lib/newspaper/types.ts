@@ -12,10 +12,10 @@ export type Issue = {
 	week: { from: IsoDate; to: IsoDate };
 	/** the top story in the issue's ranking. podcast episodes never lead */
 	lead: Post | undefined;
-	/** every story after the lead that scores above the good news cutoff, teased below it, most important first */
+	/** every story after the lead that isn't fluff, teased below it, most important first */
 	headlines: Post[];
-	/** every story after the lead that scores under the good news cutoff, most important first */
-	goodNews: Post[];
+	/** every story after the lead that scores under the fluff cutoff, most important first. empty when there's only one, which runs as a headline */
+	fluff: Post[];
 	/** posts from podcast feeds, kept out of the stories above, newest first */
 	episodes: Post[];
 	storyCount: number;

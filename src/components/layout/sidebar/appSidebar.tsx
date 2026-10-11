@@ -59,7 +59,7 @@ export function AppSidebar({ url }: { url: URL }) {
 						<NavLink href="/" label="Home" currentUrl={url} icon={HouseIcon} />
 						<NavLink
 							href="/newspaper"
-							label="Newspaper"
+							label="The Sunday Bugler"
 							currentUrl={url}
 							icon={NewspaperIcon}
 						/>
