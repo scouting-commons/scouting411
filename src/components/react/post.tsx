@@ -36,7 +36,7 @@ export function PostComponent({ post }: { post: Post }) {
 					<span className="line-clamp-3 text-sm wrap-anywhere hyphens-auto">
 						{post.description || "No excerpt available."}
 					</span>
-					<TagBadges tags={post.tags} />
+					{post.tags && <TagBadges tags={post.tags} />}
 					{post.audio && (
 						<audio
 							className="w-full"

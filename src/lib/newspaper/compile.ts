@@ -12,7 +12,7 @@ export function compileIssue(date: IsoDate, posts: Post[]): Issue {
 
 	const rest = stories.filter((post) => post !== lead);
 
-	const sections = [...Map.groupBy(rest, (post) => post.tags[0])]
+	const sections = [...Map.groupBy(rest, (post) => post.tags?.[0])]
 		.map(([slug, sectionPosts]) => ({
 			tag: slug && getTagBySlug(slug),
 			posts: sectionPosts,

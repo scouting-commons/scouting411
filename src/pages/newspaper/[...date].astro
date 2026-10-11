@@ -97,7 +97,7 @@ const eagleProject =
 			).posts[0]
 		: undefined;
 
-const leadTags = issue.lead?.tags.map(getTagBySlug) ?? [];
+const leadTags = issue.lead?.tags?.map(getTagBySlug) ?? [];
 ---
 
 <Layout title="This Week in Scouting">
@@ -340,7 +340,7 @@ const leadTags = issue.lead?.tags.map(getTagBySlug) ?? [];
 											>
 												<span
 													class="bg-primary size-2 shrink-0"
-													style={markerStyle(post.tags.map(getTagBySlug)[0])}
+													style={markerStyle(post.tags?.map(getTagBySlug)[0])}
 												/>
 												{post.feed.name}
 											</a>
