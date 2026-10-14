@@ -63,7 +63,7 @@ You'll need a `.env` with `DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_RED
 
 ## 🤝 Contributing
 
-Bug reports, feature ideas, resource requests, and pull requests are all welcome on the [issue tracker](https://github.com/scouting-commons/scouting411/issues/new/choose). To report a security issue, see [SECURITY.md](SECURITY.md). Our [code of conduct](https://github.com/scouting-commons/.github/blob/main/CODE_OF_CONDUCT.md) is short: follow the Scout Oath and Scout Law.
+Bug reports, feature ideas, resource requests, and pull requests are all welcome on the [issue tracker](https://github.com/scouting-commons/scouting411/issues/new/choose). To report a security issue, see [SECURITY.md](https://github.com/scouting-commons/.github/blob/main/SECURITY.md). Our [code of conduct](https://github.com/scouting-commons/.github/blob/main/CODE_OF_CONDUCT.md) is short: follow the Scout Oath and Scout Law.
 
 ---
 
