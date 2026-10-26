@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-	getAwardRequirements,
-	listAwards,
-} from "@scouting-commons/scouting-api/api.scouting.org";
+import { scoutingApi } from "@/infra/scoutingApi";
 import { plainText, slugify } from "@/lib/advancement/upstream";
 import {
 	orderRequirements,
@@ -18,7 +15,7 @@ import type { Award, AwardDetail } from "@/lib/advancement/awards/types";
  * leaves `expiredDate` blank on but whose every version has expired
  */
 export async function fetchAwards(): Promise<Award[]> {
-	const { data, error } = await listAwards();
+	const { data, error } = await scoutingApi.advancement.listAwards();
 
 	if (error) throw new Error(`failed to fetch awards - ${error.message}`);
 
@@ -55,8 +52,8 @@ export async function fetchAwards(): Promise<Award[]> {
 
 /** fetch the newest requirements for an award */
 export async function fetchAwardDetail(award: Award): Promise<AwardDetail> {
-	const { data, error } = await getAwardRequirements({
-		path: { awardId: Number(award.id) },
+	const { data, error } = await scoutingApi.advancement.getAwardRequirements({
+		awardId: Number(award.id),
 	});
 
 	if (error) {

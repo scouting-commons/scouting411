@@ -1,5 +1,5 @@
 import type { FeedAdapter, PostData } from "@/lib/news/ingest/types";
-import { authenticate } from "@scouting-commons/scouting-api/auth.scouting.org";
+import { scoutingApiToken } from "@/infra/scoutingApi";
 import { z } from "zod";
 
 /** the announcements behind the my.scouting.org homepage, which has no other public source */
@@ -21,8 +21,6 @@ const announcementsUrl =
  * recent ones.
  */
 export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
-	const token = await signIn();
-
 	const url = new URL(announcementsUrl);
 	url.search = new URLSearchParams({
 		communicationType: "Announcement",
@@ -37,7 +35,7 @@ export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
 	}).toString();
 
 	const response = await fetch(url, {
-		headers: { Authorization: `Bearer ${token}` },
+		headers: { Authorization: `Bearer ${scoutingApiToken}` },
 	});
 
 	if (response.status !== 200) {
@@ -64,27 +62,6 @@ export const myScoutingAnnouncementsAdapter: FeedAdapter = async function* () {
 
 	yield postData;
 };
-
-/** sign in to my.scouting and return a bearer token for api.scouting.org */
-async function signIn() {
-	// feed configs reach island bundles, which can't load server env
-	if (!import.meta.env.SSR) {
-		throw new Error("my.scouting sign-in is server only");
-	}
-
-	const { MY_SCOUTING_USERNAME, MY_SCOUTING_PASSWORD } =
-		await import("astro:env/server");
-
-	const { data, error } = await authenticate({
-		path: { username: MY_SCOUTING_USERNAME },
-		body: { password: MY_SCOUTING_PASSWORD },
-	});
-
-	if (error)
-		throw new Error(`failed to sign in to my.scouting - ${error.message}`);
-
-	return data.token;
-}
 
 /** the fields used from the announcements endpoint */
 const announcementsResponseSchema = z.object({
