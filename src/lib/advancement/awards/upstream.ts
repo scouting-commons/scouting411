@@ -1,10 +1,8 @@
-import { z } from "zod";
-import { scoutingApi } from "@/infra/scoutingApi";
+import { scoutingClient } from "@/infra/scoutingApi";
 import { plainText, slugify } from "@/lib/advancement/upstream";
 import {
 	orderRequirements,
 	parseRequirement,
-	upstreamRequirementSchema,
 } from "@/lib/advancement/parseRequirements";
 import type { Award, AwardDetail } from "@/lib/advancement/awards/types";
 
@@ -15,7 +13,7 @@ import type { Award, AwardDetail } from "@/lib/advancement/awards/types";
  * leaves `expiredDate` blank on but whose every version has expired
  */
 export async function fetchAwards(): Promise<Award[]> {
-	const { data, error } = await scoutingApi.advancement.listAwards();
+	const { data, error } = await scoutingClient.api.advancement.listAwards();
 
 	if (error) throw new Error(`failed to fetch awards - ${error.message}`);
 
@@ -52,9 +50,10 @@ export async function fetchAwards(): Promise<Award[]> {
 
 /** fetch the newest requirements for an award */
 export async function fetchAwardDetail(award: Award): Promise<AwardDetail> {
-	const { data, error } = await scoutingApi.advancement.getAwardRequirements({
-		awardId: Number(award.id),
-	});
+	const { data, error } =
+		await scoutingClient.api.advancement.getAwardRequirements({
+			awardId: Number(award.id),
+		});
 
 	if (error) {
 		throw new Error(
@@ -62,21 +61,10 @@ export async function fetchAwardDetail(award: Award): Promise<AwardDetail> {
 		);
 	}
 
-	// without `versionId`, upstream returns every value as a string
-	const { version, versionEffectiveDt, requirements } =
-		upstreamRequirementsSchema.parse(data);
-
 	return {
 		...award,
-		version: version || undefined,
-		versionEffective: versionEffectiveDt || undefined,
-		requirements: orderRequirements(requirements.map(parseRequirement)),
+		version: data.version || undefined,
+		versionEffective: data.versionEffectiveDt || undefined,
+		requirements: orderRequirements(data.requirements.map(parseRequirement)),
 	};
 }
-
-/** the fields used from https://api.scouting.org/advancements/awards/{id}/requirements */
-const upstreamRequirementsSchema = z.object({
-	version: z.string(),
-	versionEffectiveDt: z.union([z.iso.date(), z.literal("")]),
-	requirements: z.array(upstreamRequirementSchema),
-});

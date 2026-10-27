@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { fetchUpstream, plainText, slugify } from "@/lib/advancement/upstream";
+import { scoutingClient } from "@/infra/scoutingApi";
+import { plainText, slugify } from "@/lib/advancement/upstream";
 import {
 	orderRequirements,
 	parseRequirement,
@@ -31,9 +31,11 @@ const rankOrder = [
  * required adventures before its electives
  */
 export async function fetchAdventures(): Promise<Adventure[]> {
-	const { adventures } = await fetchUpstream("/adventures", upstreamListSchema);
+	const { data, error } = await scoutingClient.api.advancement.listAdventures();
 
-	return adventures
+	if (error) throw new Error(`failed to fetch adventures - ${error.message}`);
+
+	return data.adventures
 		.filter((adventure) => adventure.version === programVersion)
 		.toSorted(
 			(a, b) =>
@@ -64,55 +66,21 @@ export async function fetchAdventures(): Promise<Adventure[]> {
 export async function fetchAdventureDetail(
 	adventure: Adventure,
 ): Promise<AdventureDetail> {
-	const data = await fetchUpstream(
-		`/adventures/${adventure.id}/requirements`,
-		upstreamRequirementsSchema,
-	);
+	const { data, error } =
+		await scoutingClient.api.advancement.getAdventureRequirements({
+			adventureId: Number(adventure.id),
+		});
+
+	if (error) {
+		throw new Error(
+			`failed to fetch requirements for adventure ${adventure.id} - ${error.message}`,
+		);
+	}
 
 	return {
 		...adventure,
 		version: String(data.version),
-		versionEffective: data.versionEffectiveDt ?? undefined,
+		versionEffective: data.versionEffectiveDt,
 		requirements: orderRequirements(data.requirements.map(parseRequirement)),
 	};
 }
-
-/** the fields used from https://api.scouting.org/advancements/adventures */
-const upstreamListSchema = z.object({
-	adventures: z.array(
-		z.object({
-			id: z.number(),
-			name: z.string(),
-			rank: z.string(),
-			required: z.boolean(),
-			version: z.number(),
-			imageUrl100: z.url(),
-			imageUrl200: z.url(),
-			imageUrl300: z.url(),
-		}),
-	),
-});
-
-/**
- * unlike the other advancement types, adventures return real numbers and
- * nulls. convert them to the strings the shared requirement parser reads
- */
-const upstreamString = (schema: z.ZodString | z.ZodNumber) =>
-	schema.nullable().transform((value) => (value === null ? "" : String(value)));
-
-/** the fields used from https://api.scouting.org/advancements/adventures/{id}/requirements */
-const upstreamRequirementsSchema = z.object({
-	version: z.number(),
-	versionEffectiveDt: z.iso.date().nullable(),
-	requirements: z.array(
-		z.object({
-			id: z.number().transform(String),
-			name: z.string(),
-			listNumber: upstreamString(z.string()),
-			sortOrder: upstreamString(z.number()),
-			childrenRequired: upstreamString(z.number()),
-			parentRequirementId: upstreamString(z.number()),
-			footer: upstreamString(z.string()),
-		}),
-	),
-});

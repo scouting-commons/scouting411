@@ -114,8 +114,8 @@ importers:
         specifier: ^2.18.0
         version: 2.18.0
       scouting-api:
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.0
+        version: 0.4.0
       shadcn:
         specifier: ^4.21.3
         version: 4.21.3
@@ -4648,8 +4648,8 @@ packages:
   scheduler@0.28.0:
     resolution: {integrity: sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==}
 
-  scouting-api@0.3.0:
-    resolution: {integrity: sha512-xkVzNkIKl89DFhEcUN4nT72iSOQualB9q7T40Kusdi8CIM1AhlCUv9/v4KKdhO8CfIz5w4jSH0TreVI2nNZk7Q==}
+  scouting-api@0.4.0:
+    resolution: {integrity: sha512-WK8TMUa+iLf0OKUuatfi7ZxR1Gbtwnfq6lsQD5vb7vGpqEnI3usqMEPRlL1JjP8snCoNmldKnTJ0zfQIv/jjMQ==}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -9553,7 +9553,7 @@ snapshots:
 
   scheduler@0.28.0: {}
 
-  scouting-api@0.3.0:
+  scouting-api@0.4.0:
     dependencies:
       zod: 4.6.7
 

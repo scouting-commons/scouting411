@@ -1,17 +1,27 @@
 import type { Requirement } from "@/lib/advancement/requirements";
 import sanitizeHtml from "sanitize-html";
-import { z } from "zod";
 
-/** the requirement fields every advancement type's requirements endpoint shares */
-export const upstreamRequirementSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	listNumber: z.string(),
-	sortOrder: z.string(),
-	childrenRequired: z.string(),
-	parentRequirementId: z.string(),
-	footer: z.string(),
-});
+/**
+ * the requirement fields every advancement type's requirements endpoint
+ * shares. most send every value as a string, but adventures (and awards asked
+ * for a specific version) send real numbers and nulls
+ */
+type UpstreamRequirement = {
+	id: string | number;
+	name: string;
+	listNumber: UpstreamValue;
+	sortOrder: UpstreamValue;
+	childrenRequired: UpstreamValue;
+	parentRequirementId: UpstreamValue;
+	footer: UpstreamValue;
+};
+
+type UpstreamValue = string | number | null;
+
+/** an upstream value as a string, with null as blank */
+function text(value: UpstreamValue) {
+	return value === null ? "" : String(value);
+}
 
 /** a requirement as parsed from upstream, before it is ordered */
 type UnorderedRequirement = Omit<
@@ -31,18 +41,18 @@ type OrderedRequirement<T extends UnorderedRequirement> = Requirement &
 
 /** normalize one of upstream's requirements, ready for `orderRequirements` */
 export function parseRequirement(
-	requirement: z.infer<typeof upstreamRequirementSchema>,
+	requirement: UpstreamRequirement,
 ): UnorderedRequirement {
 	return {
-		id: requirement.id,
-		parentId: requirement.parentRequirementId || undefined,
+		id: String(requirement.id),
+		parentId: text(requirement.parentRequirementId) || undefined,
 		// blank sorts first, alongside the other notes. siblings that are all
 		// blank keep upstream's order, which is right in that case
 		sortOrder: Number(requirement.sortOrder) || 0,
-		label: requirement.listNumber || undefined,
+		label: text(requirement.listNumber) || undefined,
 		html: sanitizeRequirementHtml(requirement.name),
-		footerHtml: sanitizeRequirementHtml(requirement.footer) || undefined,
-		childrenRequired: requirement.childrenRequired
+		footerHtml: sanitizeRequirementHtml(text(requirement.footer)) || undefined,
+		childrenRequired: text(requirement.childrenRequired)
 			? Number(requirement.childrenRequired)
 			: undefined,
 	};

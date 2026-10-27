@@ -1,14 +1,8 @@
-import { z } from "zod";
-import {
-	fetchUpstream,
-	plainText,
-	slugify,
-	upstreamBool,
-} from "@/lib/advancement/upstream";
+import { scoutingClient } from "@/infra/scoutingApi";
+import { plainText, slugify } from "@/lib/advancement/upstream";
 import {
 	orderRequirements,
 	parseRequirement,
-	upstreamRequirementSchema,
 } from "@/lib/advancement/parseRequirements";
 import { fetchMeritBadgePages } from "@/lib/advancement/meritBadges/scoutingOrg";
 import type {
@@ -18,12 +12,12 @@ import type {
 
 /** fetch the list of all merit badges */
 export async function fetchMeritBadges(): Promise<MeritBadge[]> {
-	const { meritBadges } = await fetchUpstream(
-		"/meritBadges",
-		upstreamListSchema,
-	);
+	const { data, error } =
+		await scoutingClient.api.advancement.listMeritBadges();
 
-	const named = meritBadges.map((badge) => {
+	if (error) throw new Error(`failed to fetch merit badges - ${error.message}`);
+
+	const named = data.meritBadges.map((badge) => {
 		const name = plainText(badge.name);
 
 		return { badge, name, slug: slugify(name) };
@@ -39,7 +33,7 @@ export async function fetchMeritBadges(): Promise<MeritBadge[]> {
 			slug,
 			name,
 			categories: mergeCategories([plainText(badge.category), ...page.groups]),
-			eagleRequired: badge.eagleRequired,
+			eagleRequired: badge.eagleRequired === "True",
 			url: page.url,
 			images: {
 				small: badge.imageUrl50,
@@ -70,10 +64,16 @@ function mergeCategories(names: string[]) {
 export async function fetchMeritBadgeDetail(
 	badge: MeritBadge,
 ): Promise<MeritBadgeDetail> {
-	const data = await fetchUpstream(
-		`/meritBadges/${badge.id}/requirements`,
-		upstreamRequirementsSchema,
-	);
+	const { data, error } =
+		await scoutingClient.api.advancement.getMeritBadgeRequirements({
+			meritBadgeId: Number(badge.id),
+		});
+
+	if (error) {
+		throw new Error(
+			`failed to fetch requirements for merit badge ${badge.id} - ${error.message}`,
+		);
+	}
 
 	return {
 		...badge,
@@ -82,32 +82,8 @@ export async function fetchMeritBadgeDetail(
 		requirements: orderRequirements(
 			data.requirements.map((requirement) => ({
 				...parseRequirement(requirement),
-				counselorApproval: requirement.counselorApproval,
+				counselorApproval: requirement.counselorApproval === "True",
 			})),
 		),
 	};
 }
-
-/** the fields used from https://api.scouting.org/advancements/meritBadges */
-const upstreamListSchema = z.object({
-	meritBadges: z.array(
-		z.object({
-			id: z.string(),
-			name: z.string(),
-			category: z.string(),
-			eagleRequired: upstreamBool,
-			imageUrl50: z.url(),
-			imageUrl100: z.url(),
-			imageUrl200: z.url(),
-		}),
-	),
-});
-
-/** the fields used from https://api.scouting.org/advancements/meritBadges/{id}/requirements */
-const upstreamRequirementsSchema = z.object({
-	version: z.string(),
-	versionEffectiveDt: z.union([z.iso.date(), z.literal("")]),
-	requirements: z.array(
-		upstreamRequirementSchema.extend({ counselorApproval: upstreamBool }),
-	),
-});

@@ -49,20 +49,20 @@ The browse page (`src/pages/news/browse/`) decodes params server-side and hands 
 
 ## Advancement: `src/lib/advancement/`
 
-Official advancement data from the Scouting America API (`api.scouting.org/advancements`), one folder per type (`meritBadges/`, `ranks/`, `adventures/`, `awards/`). Each has an `upstream.ts` that fetches and normalizes and an `ingest.ts` that writes the list to `advancement:{type}` and each item's requirements to `advancement:{type}:{slug}`, isolating failures per item. `src/pages/api/updateAdvancement.ts` ingests every type in parallel.
+Official advancement data from the Scouting America API (`api.scouting.org/advancements`), one folder per type (`meritBadges/`, `ranks/`, `adventures/`, `awards/`). Each has an `upstream.ts` that fetches through the `scouting-api` client (`scoutingClient` in `src/infra/scoutingApi.ts`, which validates responses against the spec) and normalizes and an `ingest.ts` that writes the list to `advancement:{type}` and each item's requirements to `advancement:{type}:{slug}`, isolating failures per item. `src/pages/api/updateAdvancement.ts` ingests every type in parallel.
 
 Requirements:
 
 - `requirements.ts` holds only the `Requirement` schema. Parsing and sanitizing live in `parseRequirements.ts`, imported only by ingest code. `sanitize-html` stays out of `requirements.ts`: pages, search, and islands reach that file through each type's `types.ts`, and `sanitize-html` crashes on Vercel (`ERR_REQUIRE_ESM` via `htmlparser2`).
 - Upstream sends requirements as a flat list in unreliable order. `orderRequirements` sorts siblings by `sortOrder` **as a decimal** ("1.05" < "1.1").
 - Requirement text is HTML, sanitized at ingest and rendered with `set:html` by `src/components/advancement/Requirements.astro`.
-- A type-specific field (a merit badge's `counselorApproval`) is added to `upstreamRequirementSchema` with `.extend` and passes through `orderRequirements`.
+- A type-specific field (a merit badge's `counselorApproval`) is added after `parseRequirement` and passes through `orderRequirements`.
 
 Per-type quirks:
 
 - **Ranks:** upstream lists a rank once per version in use (Sea Scouting runs two during a transition). Entries are merged by id, each version's requirements are fetched with `?versionId=`, and a rank carries `versions` newest first. The rank page picks one with `?version=`.
-- **Adventures:** upstream mixes in retired programs with no expiry date, so `upstream.ts` keeps only `programVersion` (2024). Bump it when a new program ships. Adventures return real numbers and nulls, which `upstream.ts` converts to the strings `parseRequirement` expects.
-- **Awards:** fetched through the `@scouting-commons/scouting-api` client rather than `fetchUpstream`. Only the newest requirements version is kept. About half have no requirements and some have no art, so an empty list and missing `images` are normal.
+- **Adventures:** upstream mixes in retired programs with no expiry date, so `upstream.ts` keeps only `programVersion` (2024). Bump it when a new program ships. Adventures return real numbers and nulls where the other types send strings; `parseRequirement` accepts both.
+- **Awards:** Only the newest requirements version is kept. About half have no requirements and some have no art, so an empty list and missing `images` are normal.
 
 ## System status: `src/lib/status/`
 
