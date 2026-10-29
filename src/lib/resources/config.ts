@@ -146,11 +146,13 @@ export const resources: Resource[] = [
 		description: "Philmont Scout Ranch's online store",
 		tags: ["high-adventure"],
 	},
-	// {
-	// 	url: "https://store.ntier.org/",
-	// 	title: "Northern Tier Trading Post",
-	// 	description: "Northern Tier's online store",
-	// },
+	{
+		url: "https://store.ntier.org/",
+		title: "Northern Tier Trading Post",
+		type: "store",
+		description: "Northern Tier's online store",
+		tags: ["high-adventure"]
+	},
 	{
 		url: "https://store.summitbsa.org/",
 		title: "Garden Ground Outfitters",
