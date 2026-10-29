@@ -151,7 +151,7 @@ export const resources: Resource[] = [
 		title: "Northern Tier Trading Post",
 		type: "store",
 		description: "Northern Tier's online store",
-		tags: ["high-adventure"]
+		tags: ["high-adventure"],
 	},
 	{
 		url: "https://store.summitbsa.org/",
