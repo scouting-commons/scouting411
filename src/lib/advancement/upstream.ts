@@ -1,4 +1,4 @@
-import he from "he";
+import * as he from "he";
 
 /** decode upstream's html entities in a plain-text field */
 export function plainText(value: string) {

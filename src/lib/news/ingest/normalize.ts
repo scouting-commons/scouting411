@@ -1,5 +1,5 @@
 import type { PostData } from "@/lib/news/ingest/types";
-import he from "he";
+import * as he from "he";
 import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 
