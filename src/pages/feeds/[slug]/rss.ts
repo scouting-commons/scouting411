@@ -84,6 +84,8 @@ export const GET: APIRoute = async (context) => {
 	return new Response(generated, {
 		headers: {
 			"Content-Type": "text/xml",
+			// posts only change in the daily cron, so let the cdn absorb feed reader polling
+			"Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
 		},
 	});
 };
