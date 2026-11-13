@@ -17,6 +17,10 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()],
+		ssr: {
+			// sanitize-html require()s the ESM-only htmlparser2, which Vercel's runtime refuses to load
+			noExternal: ["sanitize-html"],
+		},
 	},
 	integrations: [
 		sitemap({

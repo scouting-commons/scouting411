@@ -53,7 +53,7 @@ Official advancement data from the Scouting America API (`api.scouting.org/advan
 
 Requirements:
 
-- `requirements.ts` holds only the `Requirement` schema. Parsing and sanitizing live in `parseRequirements.ts`, imported only by ingest code. `sanitize-html` stays out of `requirements.ts`: pages, search, and islands reach that file through each type's `types.ts`, and `sanitize-html` crashes on Vercel (`ERR_REQUIRE_ESM` via `htmlparser2`).
+- `requirements.ts` holds only the `Requirement` schema. Parsing and sanitizing live in `parseRequirements.ts`, imported only by ingest code. `sanitize-html` stays out of `requirements.ts`: pages, search, and islands reach that file through each type's `types.ts`, and `sanitize-html` would ship to the browser with them.
 - Upstream sends requirements as a flat list in unreliable order. `orderRequirements` sorts siblings by `sortOrder` **as a decimal** ("1.05" < "1.1").
 - Requirement text is HTML, sanitized at ingest and rendered with `set:html` by `src/components/advancement/Requirements.astro`.
 - A type-specific field (a merit badge's `counselorApproval`) is added after `parseRequirement` and passes through `orderRequirements`.
