@@ -16,6 +16,7 @@ const apiUrl = "https://www.scouting.org/wp-json/wp/v2";
 const pageSlugAliases: Record<string, string> = {
 	"artificial-intelligence-ai": "artificial-intelligence",
 	"fish-and-wildlife-management": "fish-wildlife-management",
+	"military-service-and-veterans": "military-service-veterans",
 };
 
 type MeritBadgePage = {
